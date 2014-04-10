@@ -8,19 +8,20 @@
     <link>https://tobert.github.io/tags/hacks/index.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2007-02-27 02:50:30 -0700 -0700</pubDate>
-	<lastBuildDate>2007-02-27 02:50:30 -0700 -0700</lastBuildDate>
+	<pubDate>2004-07-01 01:00:00 -0700 PDT</pubDate>
+	<lastBuildDate>2004-07-01 01:00:00 -0700 PDT</lastBuildDate>
 	<generator>Hugo</generator>
     
     <item>
       <title>root-tail on nautilus/kde/xfdesktop</title>
       <link>https://tobert.github.io/post/2004-07-01-i-hacked-root-tail-to-work-with</link>
-      <pubDate>Tue, 27 Feb 2007 02:50:30 -0700</pubDate>
+      <pubDate>Thu, 01 Jul 2004 01:00:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>https://tobert.github.io/post/2004-07-01-i-hacked-root-tail-to-work-with</guid>
       <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
 &lt;span class=&#34;boldunder&#34;&gt;&lt;/span&gt;I hacked &lt;a href=&#34;http://www.goof.com/pcg/marc/root-tail.html&#34;&gt;root-tail&lt;/a&gt; to work with Nautilus, KDE, and hopefully XFCE4&#39;s xfdesktop.  I took the toon_root.c file from &lt;a href=&#34;http://xpenguins.seul.org/&#34;&gt;xpenguins&lt;/a&gt; and :r&#39;d it into root-tail.c.  A few modifications later and I had a working root-tail for nautilus.  &lt;br /&gt;&lt;br /&gt;Download the tarball: &lt;a href=&#34;http://tobert.googlepages.com/root-tail-xpenguins.tar.gz&#34;&gt;root-tail-xpenguins.tar.gz&lt;/a&gt; or just &lt;a href=&#34;http://tobert.googlepages.com/root-tail.c&#34;&gt;root-tail.c&lt;/a&gt;. Here it is in HTML: &lt;a href=&#34;http://tobert.googlepages.com/root-tail.c.html&#34;&gt;root-tail.c.html&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;&lt;a href=&#34;http://tobert.googlepages.com/screenshot-gnome-root-tail.jpg&#34;&gt;Screenshot (40k)&lt;/a&gt;
-&lt;/div&gt;</description>
+&lt;/div&gt;
+</description>
     </item>
     
   </channel>

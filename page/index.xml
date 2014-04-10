@@ -13,12 +13,22 @@
 	<generator>Hugo</generator>
     
     <item>
-      <title>About @AlTobey</title>
-      <link>https://tobert.github.io/about</link>
+      <title>License and Credits</title>
+      <link>https://tobert.github.io/attributes</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
-      <guid>https://tobert.github.io/about</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://twitter.com/AlTobey&#34;&gt;@AlTobey&lt;/a&gt; is a father, technologist, musician, and open source mechanic working for Datastax. While attending university as a music major, Al got into MUDs, C, and Linux, eventually ending up with a career as a sysadmin. Over the last 15 years, Al has worked on everything from kernel drivers to CSS, mostly from inside operations.&lt;/p&gt;
+      <guid>https://tobert.github.io/attributes</guid>
+      <description>&lt;p&gt;Made by &lt;a href=&#34;https://twitter.com/AlTobey&#34;
+           class=&#34;twitter-follow-button&#34;
+           data-link-color=&#34;#0069D6&#34;
+           data-show-count=&#34;false&#34;&gt;@AlTobey&lt;/a&gt;
+with &lt;a href=&#34;http://hugo.spf13.com/&#34;&gt;Hugo&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;span xmlns:dct=&#34;http://purl.org/dc/terms/&#34; property=&#34;dct:title&#34;&gt;Content&lt;/span&gt;
+by
+&lt;span xmlns:cc=&#34;http://creativecommons.org/ns#&#34; property=&#34;cc:attributionName&#34;&gt;Al Tobey&lt;/span&gt;
+is licensed under a
+&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by/4.0/&#34;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.&lt;/p&gt;
 </description>
     </item>
     
@@ -37,22 +47,12 @@
     </item>
     
     <item>
-      <title>License and Credits</title>
-      <link>https://tobert.github.io/attributes</link>
+      <title>About @AlTobey</title>
+      <link>https://tobert.github.io/about</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
-      <guid>https://tobert.github.io/attributes</guid>
-      <description>&lt;p&gt;Made by &lt;a href=&#34;https://twitter.com/AlTobey&#34;
-           class=&#34;twitter-follow-button&#34;
-           data-link-color=&#34;#0069D6&#34;
-           data-show-count=&#34;false&#34;&gt;@AlTobey&lt;/a&gt;
-with &lt;a href=&#34;http://hugo.spf13.com/&#34;&gt;Hugo&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;span xmlns:dct=&#34;http://purl.org/dc/terms/&#34; property=&#34;dct:title&#34;&gt;Content&lt;/span&gt;
-by
-&lt;span xmlns:cc=&#34;http://creativecommons.org/ns#&#34; property=&#34;cc:attributionName&#34;&gt;Al Tobey&lt;/span&gt;
-is licensed under a
-&lt;a rel=&#34;license&#34; href=&#34;http://creativecommons.org/licenses/by/4.0/&#34;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.&lt;/p&gt;
+      <guid>https://tobert.github.io/about</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://twitter.com/AlTobey&#34;&gt;@AlTobey&lt;/a&gt; is a father, technologist, musician, and open source mechanic working for Datastax. While attending university as a music major, Al got into MUDs, C, and Linux, eventually ending up with a career as a sysadmin. Over the last 15 years, Al has worked on everything from kernel drivers to CSS, mostly from inside operations.&lt;/p&gt;
 </description>
     </item>
     

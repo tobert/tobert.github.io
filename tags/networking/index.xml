@@ -8,14 +8,14 @@
     <link>https://tobert.github.io/tags/networking/index.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2007-09-07 20:52:08 -0700 PDT</pubDate>
-	<lastBuildDate>2007-09-07 20:52:08 -0700 PDT</lastBuildDate>
+	<pubDate>2007-09-07 15:18:00 -0700 PDT</pubDate>
+	<lastBuildDate>2007-09-07 15:18:00 -0700 PDT</lastBuildDate>
 	<generator>Hugo</generator>
     
     <item>
       <title>Xen Networking</title>
       <link>https://tobert.github.io/post/2007-09-07-xen-networking</link>
-      <pubDate>Fri, 07 Sep 2007 20:52:08 PDT</pubDate>
+      <pubDate>Fri, 07 Sep 2007 15:18:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>https://tobert.github.io/post/2007-09-07-xen-networking</guid>
       <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
@@ -38,7 +38,8 @@
   &lt;/div&gt;
   &lt;br/&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description>
+&lt;/div&gt;
+</description>
     </item>
     
   </channel>

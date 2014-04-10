@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="description" content="">
     <meta name="HandheldFriendly" content="True">
-    <meta name="description" content="">
+    <meta name="description" content="Compiling Perl on HP-UX/Itanium">
     <meta name="keywords" content="">
     <meta property="article:published_time" content="2005-10-13"/>
     <meta property="article:modified_time" content="2005-10-13"/>
@@ -17,7 +17,7 @@
      <meta name="twitter:site" content="@AlTobey">
      <meta name="twitter:title" content="64-bit perl on HP-UX (PARISC or Itanium) : @AlTobey Writes">
      <meta name="twitter:creator" content="@AlTobey">
-     <meta name="twitter:description" content="">
+     <meta name="twitter:description" content="Compiling Perl on HP-UX/Itanium">
      <meta name="twitter:domain" content="tobert.github.io">
 
     <title>64-bit perl on HP-UX (PARISC or Itanium)</title>
@@ -66,6 +66,7 @@
 <div class="css-full-post-content js-full-post-content">
 Here's something that took me a few hours to get dialed in.    This is all set for linking DBD::Oracle and DBD::Sybase to their respective 64-bit client libraries without hassle.   I'm assuming the HP ANSI C compiler is installed.   I never even tried with gcc due to some custom extensions that require the HP compiler.<br /><br /><pre><code><br />CC=/opt/ansic/bin/cc \<br />CXX=/opt/aCC/bin/aCC \<br />CFLAGS="+DD64 +Z -I/opt/perl-5.8/local/include" \<br />CXXFLAGS=$CFLAGS \<br />LDFLAGS="-L/opt/perl-5.8/local/lib -L/usr/lib/hpux64" \<br />PATH=/opt/ansic/bin:/usr/ccs/bin:/opt/perl-5.8/local/bin:/opt/perl-5.8/bin:/usr/bin:/usr/local/bin:/bin:/sbin \<br />PERL=/opt/perl-5.8/bin/perl \ <br />MAKE=/usr/local/bin/gmake \<br />./Configure -der \<br />            -A prepend:libswanted='cl pthread ' \<br />            -Dprefix=/opt/perl-5.8 \<br />            -Dinstallprefix=/opt/perl-5.8 \<br />            -Duselargefiles \<br />            -Dusethreads \<br />            -Duse64bitall \<br />            -Dyacc='/usr/local/bin/bison -y' \<br />            -Uusemallocwrap \<br />            -Dcf_by="Al Tobey" \<br />            -Dperladmin='tobert@gmail.com' \<br />            -Dcf_email='tobert@gmail.com'<br /><br />make<br />make test<br />make install<br /><br />(cd /usr/include; /opt/perl-5.8/bin/h2ph -r -l .)<br /></code></pre>
 </div>
+
 <hr/>
 <hr/>
 </div>
