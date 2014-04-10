@@ -13,16 +13,6 @@
 	<generator>Hugo</generator>
     
     <item>
-      <title>About @AlTobey</title>
-      <link>https://tobert.github.io/about</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>https://tobert.github.io/about</guid>
-      <description>&lt;p&gt;I am awesome.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Contacting @AlTobey</title>
       <link>https://tobert.github.io/contact</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -33,6 +23,16 @@
 &lt;p class=&#34;heading&#34;&gt;&lt;a href=&#34;http://www.linkedin.com/in/altobey&#34;&gt;&lt;img class=&#34;icon&#34; src=&#34;/images/linkedin_12x12.gif&#34; width=&#34;16&#34; height=&#34;16&#34; alt=&#34;&#34; /&gt;&lt;span class=&#34;smedia&#34;&gt;LinkedIn: Al Tobey&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p class=&#34;heading&#34;&gt;&lt;a href=&#34;http://www.facebook.com/people/Albert-Tobey/100001506241937&#34;&gt;&lt;img class=&#34;icon&#34; src=&#34;/images/eIpbnVKI9lR.png&#34; width=&#34;16&#34; height=&#34;16&#34; alt=&#34;Facebook&#34; /&gt;&lt;span class=&#34;smedia&#34;&gt;Facebook: Albert Tobey&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p class=&#34;heading&#34;&gt;&lt;a href=&#34;https://github.com/tobert&#34;&gt;&lt;img class=&#34;icon&#34; src=&#34;/images/github.png&#34; alt=&#34;Github&#34;/&gt;&lt;span class=&#34;smedia&#34;&gt;Github: tobert&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>About @AlTobey</title>
+      <link>https://tobert.github.io/about</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>https://tobert.github.io/about</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://twitter.com/AlTobey&#34;&gt;@AlTobey&lt;/a&gt; is a father, technologist, musician, and open source mechanic working for Datastax. While attending university as a music major, Al got into MUDs, C, and Linux, eventually ending up with a career as a sysadmin. Over the last 15 years, Al has worked on everything from kernel drivers to CSS, mostly from inside operations.&lt;/p&gt;
 </description>
     </item>
     
