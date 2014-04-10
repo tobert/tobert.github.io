@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta property="article:published_time" content="2011-09-21"/>
+    <meta property="article:modified_time" content="2011-09-21"/>
+    
+
+     
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Over-breeding &amp; Culling EC2 Instances for IO Performance : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="">
+     <meta name="twitter:domain" content="tobert.github.io">
+
+    <title>Over-breeding &amp; Culling EC2 Instances for IO Performance</title>
+    <link rel="canonical" href="https://tobert.github.io/post/2011-09-21-over-breeding-culling-ec2-instances-for">
+
+    <link rel="shortcut icon" href="/favicon.ico">
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/sticky-footer.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<div class="container" id="content-body">
+<h2><a href='https://tobert.github.io/post/2011-09-21-over-breeding-culling-ec2-instances-for'>Over-breeding &amp; Culling EC2 Instances for IO Performance</a></h2>
+<a href="https://twitter.com/AlTobey">@AlTobey</a> 2011-09-21
+<hr/>
+<hr/>
+<div class="css-full-post-content js-full-post-content">
+I've heard other people talk about this on Twitter or at conferences, but as far as I can remember, nobody has described the nuts and bolts of finding tolerable-performance ephemeral disks in EC2.<br /><br />I recently spun up a 12-node Cassandra cluster in EC2 and, since it's a database, I decided to do some basic tire-kicking and learned a few things along the way.<br /><br />Rule: always zero your ephemerals if you care about performance.<br /><br />Why: Amazon is likely using <a href="http://en.wikipedia.org/wiki/Sparse_file">sparse files</a> to back ephemerals (and probably EBS, I have no experience there). This makes perfect sense, because: <ul><li>you get free thin provisioning, so unused disk doesn't go to waste</li><li>Xen supports it well</li><li>it's easy to manage lots & lots of them</li><li>it's trivial to export over all common network block protocols (e.g. AoE, iSCSI) </ul><br />Because there is an extra step of allocating a backing block for a sparse file for every block in your VM, performance will be all over the map while zeroing the disks.<br /><br />Script #1:&nbsp; <br /><script src="https://gist.github.com/1231302.js"></script><br /><br />I usually launch my zeroing script with <span style="font-family: monospace;">cl-run.pl --list burnin -s zero-drives.sh</span>. The "burnin" list is just all the ec2 hostnames, one per line, in ~/.dsh/machines.burnin. <br/><br/><b>Culling round 1</b>: Look at the raw throughput of all of the nodes and cull anything that looks abnormally low. For example, when building the aforementioned cluster, I kept getting really obviously bad instances in one of the us-east-1 AZ's.  This is what I saw when using my <a href="https://github.com/tobert/perl-ssh-tools/blob/master/cl-netstat.pl">cluster netstat</a> tool for a batch of m1.xlarge's in us-east-1c.<br/><br/> <script src="https://gist.github.com/1215444.js"> </script> I immediately culled off everything doing under 10k IOPS for more than a minute. If you examine the per-disk stats with <span style="font-family: monospace;">iostat -x 2</span>, you'll usually see one disk with insanely high (>1000ms) latency all the time. There are certainly false-negatives at this phase, but I don't really care since instances are cheap and time is not. I ended up starting around 30 instances in that one troublesome AZ to find 3 with sustainable IOPS in the most trivial of tests (dd). <br/><br/>When I think I have enough obviously tolerable nodes for a race, I kick off another zero round. Once the load levels out a  little, I take a snapshot I like of the cl-netstat.pl output and process it in a hacky way to sort by IOPS and add which EC2 zone the instance is in and its instance ID so I can kill the losers without digging around.  Here's an example from a round of testing I did for a recent MySQL cluster deployment: <br/><br/><script src="https://gist.github.com/1231333.js"> </script><br/>I picked the top few instances from each AZ and terminated the rest. Job done. <br/><br/>This is a pretty crude process in many ways. It's very manual, it requires a lot of human judgement, and most importantly, dd if=/dev/zero not a good measure of real-world performance. This process is just barely good enough to cull the worst offenders in EC2, which seem to be quite common in my recent experience. <br/><br/>In the future, I will likely automate most of this burn-in process and add some real-world I/O generation, probably using real data. 
+</div>
+<hr/>
+<hr/>
+</div>
+
+
+<footer class="footer">
+  <div id="footer" class="container">
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+

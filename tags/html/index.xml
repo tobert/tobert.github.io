@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0"
+     xmlns:creativeCommons="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
+  <channel>
+    <title>Html on @AlTobey Writes </title>
+    <link>https://tobert.github.io/tags/html/index.xml</link>
+    <language>en-us</language>
+    <author>Albert P Tobey</author>
+	<pubDate>2007-02-27 02:38:05 -0700 -0700</pubDate>
+	<lastBuildDate>2007-02-27 02:38:05 -0700 -0700</lastBuildDate>
+	<generator>Hugo</generator>
+    
+    <item>
+      <title>First Post!</title>
+      <link>https://tobert.github.io/post/2007-02-27-hi-my-name-is-al-tobey</link>
+      <pubDate>Tue, 27 Feb 2007 02:38:05 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>https://tobert.github.io/post/2007-02-27-hi-my-name-is-al-tobey</guid>
+      <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
+Hi, my name is Al Tobey.    For now, go to &lt;a href=&#34;http://www.tobert.org&#34;&gt;http://www.tobert.org&lt;/a&gt; to learn the grossly-out-of-date details.&lt;br /&gt;&lt;br /&gt;I&#39;m investigating whether or not I want to move &lt;a href=&#34;http://www.tobert.org&#34;&gt;http://www.tobert.org&lt;/a&gt; to Blogger.    I&#39;m doing it to save time/money and to take advantage of integration between the various Google tools, where it exists.   I&#39;ve also often considered posting more often, which I avoid because my current setup is still a PITA.&lt;br /&gt;&lt;br /&gt;The main snag I&#39;m working on right now is how to post code examples.   So far, it looks like nobody is really doing it well.    Most of the &#34;solutions&#34; I&#39;ve found involve stuff like &lt;span style=&#34;font-family: monospace;&#34;&gt;sed &#39;s/ /\&amp;amp;nbsp;/g&#39;&lt;/span&gt;, which isn&#39;t very elegant when HTML has tags specifically for this kind of thing.&lt;br /&gt;&lt;br /&gt;Previously, I defaulted to using the &amp;lt;pre&amp;gt; tag for code examples.   So far, I&#39;ve tried &amp;lt;blockquote&amp;gt; and &amp;lt;p style=&#34;white-space: pre;&#34;&amp;gt; (which I learned about at &lt;a href=&#34;http://www.htmldog.com/ptg/archives/000077.php&#34;&gt;http://www.htmldog.com/ptg/archives/000077.php&lt;/a&gt;)&lt;br /&gt;&lt;br /&gt;Anyways, I&#39;m going to keep editing this post adding copies of the below code until it works.&lt;br /&gt;&lt;br /&gt;Using &amp;lt;pre&amp;gt;:&lt;br/&gt;&lt;br /&gt;&lt;pre&gt;&lt;br /&gt;#!/bin/ksh&lt;br /&gt;&lt;br /&gt;for file in *.html&lt;br /&gt;do&lt;br /&gt;    # this should be indented by 4 spaces&lt;br /&gt;    sed &#39;s/ /\&amp;amp;nbsp;/g&#39; &lt; &#34;$file&#34; &gt; &#34;$file.new&#34;&lt;br /&gt;    mv &#34;$file.new&#34; &#34;$file&#34;&lt;br /&gt;done&lt;br /&gt;&lt;/pre&gt;&lt;br /&gt;&lt;br /&gt;&lt;strong&gt;Problem solved:&lt;/strong&gt;:   It appears that &amp;lt;pre&amp;gt; is ignored in the preview you get in the edit posts view, but not on the published page.
+&lt;/div&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

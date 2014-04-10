@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0"
+     xmlns:creativeCommons="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
+  <channel>
+    <title>Snmp on @AlTobey Writes </title>
+    <link>https://tobert.github.io/tags/snmp/index.xml</link>
+    <language>en-us</language>
+    <author>Albert P Tobey</author>
+	<pubDate>2007-02-27 02:13:37 -0700 -0700</pubDate>
+	<lastBuildDate>2007-02-27 02:13:37 -0700 -0700</lastBuildDate>
+	<generator>Hugo</generator>
+    
+    <item>
+      <title>i-wrote-couple-snmp-plugins-for-nagios</title>
+      <link>https://tobert.github.io/post/2004-06-30-i-wrote-couple-snmp-plugins-for-nagios</link>
+      <pubDate>Tue, 27 Feb 2007 02:13:37 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>https://tobert.github.io/post/2004-06-30-i-wrote-couple-snmp-plugins-for-nagios</guid>
+      <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
+&lt;span class=&#34;boldunder&#34;&gt;&lt;/span&gt;I wrote a couple SNMP plugins for Nagios to check disk space and running processes. They are now in the contrib directory in the &lt;a href=&#34;http://nagiosplug.sourceforge.net/&#34;&gt;Nagios Plugins&lt;/a&gt; package.&lt;br /&gt;They both should work on Windows 2000 (and up) and Novell. HP-UX, unfortunately, does not ship with the Host-Resource MIB by default, so I&#39;m using the Net-SNMP daemon at work. It&#39;s a little flakey, but gets the job done. &lt;a href=&#34;http://www.snmpresearch.com/&#34;&gt;SNMP Research&lt;/a&gt; provides an extended SNMP daemon for HP-UX and other operating systems that includes the host resource MIB.&lt;br /&gt;&lt;br /&gt;I&#39;m also author and maintainer of the &lt;a href=&#34;http://search.cpan.org/%7Etobeya/Nagios-Object/&#34;&gt;Nagios::Object&lt;/a&gt; and &lt;a href=&#34;http://search.cpan.org/%7Etobeya/Nagios-Cmd/&#34;&gt;Nagios::Cmd&lt;/a&gt; modules on &lt;a href=&#34;http://search.cpan.org/&#34;&gt;CPAN&lt;/a&gt;.
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
