@@ -27,7 +27,7 @@
 
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="/css/sticky-footer.css">
+    <link rel="stylesheet" href="/css/tobert.css">
   </head>
 <body>
 
@@ -66,7 +66,7 @@
   <header>
     <h2><a href='https://tobert.github.io/post/fio-output-explained'>Fio Output Explained</a> </h2>
   </header>
-2014-04-09 - NOTE: THIS IS AN UNPUBLISHED DRAFT Previously, I blogged about setting up my benchmarking machine. Now that it&rsquo;s up and running, I&rsquo;ve started exploring the fio benchmarking tool. In doing so, I&rsquo;ve had to learn all of the abbreviations and terms that fio uses for the kinds of latency it measures. read : io=10240MB, bw=63317KB/s, iops=15829, runt=165607msec The first line is pretty easy to read. fio did a total of 10GB of IO at 63.317MB/s for a total of 15829 IOPS (at the default 4k block size), and ran for 2 minutes and 45 seconds.
+2014-04-09 - Previously, I blogged about setting up my benchmarking machine. Now that it&rsquo;s up and running, I&rsquo;ve started exploring the fio benchmarking tool. In doing so, I&rsquo;ve had to learn all of the abbreviations and terms that fio uses for the kinds of latency it measures. I didn&rsquo;t find the documentation for the default output very helpful, so here&rsquo;s a line-by-line breakdown that I hope is useful to new users. Most of the data being displayed was generated on a Samsung 840 Pro SSD.
   <footer>
     <a href='https://tobert.github.io/post/fio-output-explained'><nobr>...</nobr></a>
   </footer>
@@ -85,6 +85,17 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
 
 </body>
 </html>

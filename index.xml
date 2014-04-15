@@ -28,7 +28,7 @@ I need a more customizable platform to generate my content.&lt;/p&gt;
     <item>
       <title>Benchmarking Disk Latency: Setup</title>
       <link>https://tobert.github.io/post/2014-03-29-benchmarking-disk-latency-setup</link>
-      <pubDate>Sat, 29 Mar 2014 01:56:59 PDT</pubDate>
+      <pubDate>Sat, 29 Mar 2014 01:56:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>https://tobert.github.io/post/2014-03-29-benchmarking-disk-latency-setup</guid>
       <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
@@ -50,7 +50,7 @@ Most modern hardware ships with &lt;a href=&#34;http://en.wikipedia.org/wiki/Uni
     <item>
       <title>Running at Night</title>
       <link>https://tobert.github.io/post/2014-03-22-running-at-night</link>
-      <pubDate>Sat, 22 Mar 2014 01:52:58 PDT</pubDate>
+      <pubDate>Sat, 22 Mar 2014 01:18:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>https://tobert.github.io/post/2014-03-22-running-at-night</guid>
       <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
@@ -72,7 +72,7 @@ I regularly see posts on Twitter about some new whiz-bang shell or vim plugin th
     <item>
       <title>Open Source Video Production</title>
       <link>https://tobert.github.io/post/2014-03-10-open-source-video-production</link>
-      <pubDate>Mon, 10 Mar 2014 19:52:00 PDT</pubDate>
+      <pubDate>Mon, 10 Mar 2014 19:52:59 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>https://tobert.github.io/post/2014-03-10-open-source-video-production</guid>
       <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
@@ -179,7 +179,7 @@ Joe Armstrong is the author of Erlang, an old computer programming language that
     <item>
       <title>Thermocouples: safe &amp; silent failures</title>
       <link>https://tobert.github.io/post/2013-12-12-thermocouples-safe-silent-failures</link>
-      <pubDate>Thu, 12 Dec 2013 23:34:30 -0700</pubDate>
+      <pubDate>Thu, 12 Dec 2013 23:32:00 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>https://tobert.github.io/post/2013-12-12-thermocouples-safe-silent-failures</guid>
       <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
@@ -190,7 +190,7 @@ Captain! The thermocouple is failing, the engines are down and we can’t start 
     <item>
       <title>Arch Linux on ZFS</title>
       <link>https://tobert.github.io/post/2013-11-12-arch-linux-on-zfs</link>
-      <pubDate>Tue, 12 Nov 2013 22:12:00 -0700</pubDate>
+      <pubDate>Tue, 12 Nov 2013 22:12:48 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>https://tobert.github.io/post/2013-11-12-arch-linux-on-zfs</guid>
       <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
@@ -201,7 +201,7 @@ I&#39;m starting to work on a new talk about disk latency and decided it&#39;s t
     <item>
       <title>Foodfight!</title>
       <link>https://tobert.github.io/post/2013-11-06-foodfight</link>
-      <pubDate>Wed, 06 Nov 2013 05:41:00 -0700</pubDate>
+      <pubDate>Wed, 06 Nov 2013 05:41:41 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>https://tobert.github.io/post/2013-11-06-foodfight</guid>
       <description>&lt;div class=&#34;css-full-post-content js-full-post-content&#34;&gt;
@@ -318,6 +318,16 @@ I now have all of my hardware for the virtualization project I&#39;ve been worki
     </item>
     
     <item>
+      <title>About @AlTobey</title>
+      <link>https://tobert.github.io/about</link>
+      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>https://tobert.github.io/about</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://twitter.com/AlTobey&#34;&gt;@AlTobey&lt;/a&gt; is a father, technologist, musician, and open source mechanic working for Datastax. While attending university as a music major, Al got into MUDs, C, and Linux, eventually ending up with a career as a sysadmin. Over the last 15 years, Al has worked on everything from kernel drivers to CSS, mostly from inside operations.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>License and Credits</title>
       <link>https://tobert.github.io/attributes</link>
       <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
@@ -362,16 +372,6 @@ is licensed under a
 &lt;p&gt;Doloremque, veritatis qui impedit expedita quas distinctio temporibus repellendus dicta debitis iure molestias recusandae cum facere natus esse saepe inventore beatae ipsum soluta voluptas in quaerat nam culpa id autem!&lt;/p&gt;
 
 &lt;p&gt;Sequi eum impedit distinctio facilis repudiandae provident iure illo quia autem optio. Ea, facilis, possimus dolor nobis explicabo recusandae numquam ducimus minus eum totam odio architecto nesciunt accusamus expedita natus.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>About @AlTobey</title>
-      <link>https://tobert.github.io/about</link>
-      <pubDate>Tue, 01 Jan 2008 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>https://tobert.github.io/about</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://twitter.com/AlTobey&#34;&gt;@AlTobey&lt;/a&gt; is a father, technologist, musician, and open source mechanic working for Datastax. While attending university as a music major, Al got into MUDs, C, and Linux, eventually ending up with a career as a sysadmin. Over the last 15 years, Al has worked on everything from kernel drivers to CSS, mostly from inside operations.&lt;/p&gt;
 </description>
     </item>
     
