@@ -1,0 +1,11 @@
+---
+id: "2010-08-12-blocking-ssh-attacks"
+title: "Blocking SSH Attacks"
+pubdate: "2010-08-12T19:12:00-07:00"
+abstract: Blocking SSH attacks with nothing but iptables
+tags: [ssh, iptables]
+---
+
+<div class="css-full-post-content js-full-post-content">
+I run this on almost any server that isn't behind another firewall blocking $SSH_PORT.   I got this from somewhere else, but it was a long time ago and I don't remember the source anymore.<br /><br /><pre><br />SSH_PORT=22  # I think ssh on !22 is silly, but to each their own<br />TRUSTED_SUBNET_OR_HOST=mybox.homeip.com # or a subnet you trust<br /><br />iptables -A ssh_drop -j DROP -m comment --comment "SSH attack drop"<br />iptables -A INPUT  -p tcp -m tcp -s $TRUSTED_SUBNET_OR_HOST --dport $SSH_PORT  -m state --state NEW -j ACCEPT<br />iptables -A INPUT -p tcp -m state --state NEW --dport $SSH_PORT -m recent --name sshattack --set<br />iptables -A INPUT -p tcp --dport $SSH_PORT -m state --state NEW -m recent --name sshattack --rcheck --seconds 60 --hitcount 3 -j LOG --log-prefix 'SSH Attack DROP: '<br />iptables -A INPUT -p tcp --dport $SSH_PORT -m state --state NEW -m recent --name sshattack --rcheck --seconds 60 --hitcount 3 -j ssh_drop<br /></pre><br /><br />Basically, this counts connection attempts on port 22 and starts dropping attempts after the third one (obviously adjust --hitcount to taste).   It times out after 60 seconds, so I don't accidentally lock myself out.    I see a few attacks a day start then go away after the drop.  I've never seen one come back after the window reopens (unless it was myself trying to "attack").  It's also 0 maintenance unlike the userspace solutions.   A lot of people like tcp wrappers, but that still lets attackers hammer the port.   Using both works nicely.<br /><br />This and DenyHosts don't help with distributed attacks, which is why I'm moving towards key-only logins and maybe picking up some YubiKeys. (yubico.com)
+</div>

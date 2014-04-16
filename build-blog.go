@@ -16,10 +16,10 @@ import (
 )
 
 type Config struct {
-	RepoRoot string  // /home/atobye/src/tobert.github.io
-	SiteURL  url.URL // http://tobert.github.io
-	PageDir  string  // src
-	SnipDir  string  // snippets
+	RepoRoot    string  // /home/atobye/src/tobert.github.io
+	SiteURL     url.URL // http://tobert.github.io
+	PageDir string  // src
+	SnipDir string  // snippets
 }
 
 type Snippet struct {

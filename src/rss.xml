@@ -1,0 +1,32 @@
+---
+id: "rss"
+title: "@AlTobey Writes: RSS"
+abstract: "RSS XML"
+tags: [ "altobey", "rss", "atom" ]
+pubdate: 1970-01-01T00:00:00Z
+draft: false
+---
+<rss version="2.0"
+     xmlns:creativeCommons="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
+  <channel>
+    <title>{{ .Title }} on {{ .Site.Title }} </title>
+    <link>{{ .Permalink }}</link>
+    <language>en-us</language>
+    <author>Albert P Tobey</author>
+	<pubDate>{{ .Date }}</pubDate>
+	<lastBuildDate>{{ .Date }}</lastBuildDate>
+	<generator>Hugo</generator>
+    {{ range .Data.Pages }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 MST" }}</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>{{ .Permalink }}</guid>
+      <description>{{ .Content | html }}</description>
+    </item>
+    {{ end }}
+  </channel>
+</rss>

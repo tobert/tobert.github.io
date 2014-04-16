@@ -1,0 +1,40 @@
+---
+id: "index"
+title: "@AlTobey Writes"
+abstract: "The Blog of Al Tobey"
+tags: [
+  "altobey",
+  "tobey",
+  "linux",
+  "unix",
+  "golang",
+  "cassandra",
+  "datastax",
+  "perl",
+  "monitoring",
+  "storage",
+  "life",
+  "universe",
+  "everything"
+]
+pubdate: 1970-01-01T00:00:00Z
+draft: false
+---
+{{ template "header" . }}
+
+<div class="container-fluid" id="index-body">
+  <div class="col-md-8">
+    <ul class="nav nav-sidebar">
+      {{ range $i, $page := .Pages }}
+          {{ $page.Abstract }}
+      {{ end }}
+    </ul>
+  </div>
+
+  <div class="col-md-4" id="timeline">
+{{ template "timeline" . }}
+  </div>
+</div>
+
+<!-- end of header.html -->
+{{ template "footer" . }}
