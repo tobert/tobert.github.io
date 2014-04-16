@@ -41,7 +41,9 @@ type Page struct {
 	Date     time.Time // 9999-12-31
 	Draft    bool      // don't render pages with draft: true
 	SrcPath  string    // the relative path of the source file
+	SrcRel   string    // relative path of the source doc
 	PubPath  string    // the path the file will be written to
+	PubRel   string    // relative path of the published doc
 	Type     string    // md html txt xml json
 	src      string    // raw data
 }
@@ -205,7 +207,6 @@ func findPages(c Config) (pages Pages) {
 		tmplBytes := src[end+7 : len(src)] // second --- is always followed by \n, so 3 + 4
 
 		page := Page{
-			SrcPath: fpath,
 			Type:    ext[1:len(ext)],
 			src:     string(tmplBytes),
 			Draft:   false, // TODO: support draft skipping
@@ -216,8 +217,8 @@ func findPages(c Config) (pages Pages) {
 			log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\tid: is required!\n", page.PubDate, fpath)
 		}
 
-		// strip the root & filename to get the relative path to write to
-		dname, _ := path.Split(fpath)
+		// these variables are used below to build paths in the Page struct
+		dname, fname := path.Split(fpath)
 		subpath := strings.TrimPrefix(dname, path.Join(c.RepoRoot, c.PageDir))
 		fparts := []string{page.Id}
 		// markdown will get rendered to HTML, everything goes as-is
@@ -226,6 +227,10 @@ func findPages(c Config) (pages Pages) {
 		} else {
 			fparts = append(fparts, ext)
 		}
+
+		page.SrcPath = fpath
+		page.SrcRel = path.Join(subpath, fname) // will include leading /
+		page.PubRel = path.Join(subpath, strings.Join(fparts, ""))
 		page.PubPath = path.Join(c.RepoRoot, subpath, strings.Join(fparts, ""))
 
 		// now convert pubdate -> date, which is required to be RFC3339 format
