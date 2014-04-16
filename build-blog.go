@@ -16,10 +16,10 @@ import (
 )
 
 type Config struct {
-	RepoRoot    string  // /home/atobye/src/tobert.github.io
-	SiteURL     url.URL // http://tobert.github.io
-	PageDir string  // src
-	SnipDir string  // snippets
+	RepoRoot string   // /home/atobye/src/tobert.github.io
+	SiteURL  *url.URL // http://tobert.github.io
+	PageDir  string   // src
+	SnipDir  string   // snippets
 }
 
 type Snippet struct {
@@ -60,11 +60,14 @@ type TmplData struct {
 func main() {
 	// I may or may not make this stuff configurable someday
 	root := path.Join(os.Getenv("HOME"), "src/tobert.github.io")
-	siteUrl, _ := url.Parse("http://tobert.github.io")
+	siteUrl, err := url.Parse("http://tobert.github.io")
+	if err != nil {
+		panic("could not parse domain")
+	}
 
 	c := Config{
 		root,
-		*siteUrl,
+		siteUrl,
 		"src",
 		"snippets",
 	}
