@@ -59,7 +59,7 @@ type TmplData struct {
 
 func main() {
 	// I may or may not make this stuff configurable someday
-	root := "/home/atobey/src/tobert.github.io"
+	root := path.Join(os.Getenv("HOME"), "src/tobert.github.io")
 	siteUrl, _ := url.Parse("http://tobert.github.io")
 
 	c := Config{
