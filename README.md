@@ -4,7 +4,7 @@
 This is my blog. There are many like it ...
 
 Front Matter
-============
+------------
 
 Similar to what Jekyll and Hugo use. It's YAML at the top of the file,
 either HTML or Markdown and will be stripped before rendering.
@@ -20,7 +20,7 @@ either HTML or Markdown and will be stripped before rendering.
 All fields shown above are required.
 
 Generating Content
-==================
+------------------
 
     git clone git@github.com:tobert/tobert.github.io.git
     cd tobert.github.io
@@ -30,7 +30,7 @@ Generating Content
     git commit -a
 
 License
-=======
+-------
 
 Content and code by Al Tobey is licensed under a Creative Commons Attribution 4.0 International License.
 
