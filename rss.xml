@@ -1,5 +1,10 @@
+<!-- begin container-top -->
 <div class="container">
+<hr/>
 <h1>@AlTobey Writes: RSS</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
 <rss version="2.0"
      xmlns:creativeCommons="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html"
      xmlns:cc="http://creativecommons.org/ns#"
@@ -358,4 +363,4 @@
     
   </channel>
 </rss>
-</div>
+</div><!-- container-bottom -->
