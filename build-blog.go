@@ -1,5 +1,16 @@
 package main
 
+/* build-blog.go
+ * A simple bespoke static content processor by @AlTobey.
+ *
+ * This is tailored to my workflow and I do not expect it to be useful
+ * to anybody else.
+ *
+ * License: Creative Commons Attribution 4.0 International
+ *
+ * Usage: go run build-blog.go
+ */
+
 import (
 	"bytes"
 	"github.com/russross/blackfriday"
