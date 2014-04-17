@@ -126,6 +126,11 @@ func main() {
 			}
 		}
 
+		// front page is full width, everything else is has larger gutters
+		if path.Base(page.SrcRel) != "index.html" {
+			fd.Write([]byte("<div class=\"container\">\n"))
+		}
+
 		// everything in the source directory is treated as a template
 		// run the template into a buffer instead of the file so it can
 		// be processed with blackfriday or similar before output
@@ -144,6 +149,11 @@ func main() {
 		}
 		if err != nil {
 			log.Fatalf("Error writing content to file '%s': %s'\n", page.PubPath, err)
+		}
+
+		// close the container injected earlier
+		if path.Base(page.SrcRel) != "index.html" {
+			fd.Write([]byte("</div>\n"))
 		}
 
 		// add the footer to the file
