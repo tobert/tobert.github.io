@@ -44,6 +44,7 @@ type Page struct {
 	SrcRel   string    // relative path of the source doc
 	PubPath  string    // the path the file will be written to
 	PubRel   string    // relative path of the published doc
+	Dir      string    // the subdirectory, e.g. / for index.html, 'post' for posts
 	Type     string    // md html txt xml json
 	src      string    // raw data
 }
@@ -57,6 +58,7 @@ type TmplData struct {
 	Snippets Snippets
 	Pages    Pages
 	TagIndex TagPagesIdx
+	Now      time.Time
 }
 
 func main() {
@@ -90,7 +92,7 @@ func main() {
 	// render pages
 	for _, page := range pages {
 		var buf bytes.Buffer
-		td := TmplData{page, c, snippets, pages, tagIdx}
+		td := TmplData{page, c, snippets, pages, tagIdx, time.Now()}
 
 		// parse the page template
 		tmpl, err := template.New(page.Id).Parse(page.src)
@@ -98,7 +100,7 @@ func main() {
 			log.Fatalf("Template parsing of page file '%s' failed: %s", page.SrcPath, err)
 		}
 
-		// load snippets too
+		// load snippets too, names are basename $file
 		for _, s := range snippets {
 			_, err = tmpl.ParseFiles(s.SrcPath)
 			if err != nil {
@@ -106,15 +108,10 @@ func main() {
 			}
 		}
 
-		/* see the names of the templates
-		for i, t := range tmpl.Templates() {
-			log.Printf("%d: %s\n", i, t.Name())
+		err = tmpl.Execute(&buf, td)
+		if err != nil {
+			log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
 		}
-		*/
-
-		snippets["header"].tmpl.Execute(&buf, td)
-		//tmpl.Execute(&buf, td)
-		snippets["footer"].tmpl.Execute(&buf, td)
 
 		switch page.Type {
 		case "txt", "html", "xml":
@@ -207,9 +204,9 @@ func findPages(c Config) (pages Pages) {
 		tmplBytes := src[end+7 : len(src)] // second --- is always followed by \n, so 3 + 4
 
 		page := Page{
-			Type:    ext[1:len(ext)],
-			src:     string(tmplBytes),
-			Draft:   false, // TODO: support draft skipping
+			Type:  ext[1:len(ext)],
+			src:   string(tmplBytes),
+			Draft: false, // TODO: support draft skipping
 		}
 		err = yaml.Unmarshal(yamlBytes, &page)
 
@@ -232,6 +229,10 @@ func findPages(c Config) (pages Pages) {
 		page.SrcRel = path.Join(subpath, fname) // will include leading /
 		page.PubRel = path.Join(subpath, strings.Join(fparts, ""))
 		page.PubPath = path.Join(c.RepoRoot, subpath, strings.Join(fparts, ""))
+		page.Dir = strings.Trim(subpath, "/")
+		if page.Dir == "" {
+			page.Dir = "/"
+		}
 
 		// now convert pubdate -> date, which is required to be RFC3339 format
 		page.Date, err = time.Parse(time.RFC3339, page.PubDate)
