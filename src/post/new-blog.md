@@ -1,10 +1,10 @@
 ---
-id: "2014-04-09-new-blog"
+id: "2014-04-17-new-blog"
 title: "New Blog"
 section: "post"
 abstract: "Sometimes you need a sharper tool."
 tags: ["blogging", "blogger", "golang"]
-pubdate: 2014-04-09T00:00:00Z
+pubdate: 2014-04-17T16:30:00Z
 ---
 
 I've been blogging a bit more often lately and as a result, I've been getting

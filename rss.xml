@@ -14,10 +14,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-04-16</pubDate>
+	<pubDate>2014-04-17</pubDate>
 	<lastBuildDate>2014-04-17</lastBuildDate>
 	<generator>Hugo</generator>
 	
+    
+    <item>
+      <title>New Blog</title>
+	  <link>http://tobert.github.io/post/2014-04-17-new-blog.html</link>
+      <pubDate>Thu, 17 Apr 2014 16:30:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-04-17-new-blog</guid>
+	  <description>Sometimes you need a sharper tool.</description>
+    </item>
     
     <item>
       <title>@AlTobey Writes</title>
@@ -35,24 +44,6 @@
       <author>Albert P Tobey</author>
       <guid>2014-04-09-fio-output-explained</guid>
 	  <description>Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you.</description>
-    </item>
-    
-    <item>
-      <title>Lorem Ipsum</title>
-	  <link>http://tobert.github.io/post/lorem-ipsum.html</link>
-      <pubDate>Wed, 09 Apr 2014 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>lorem-ipsum</guid>
-	  <description>A fake post for testing purposes.</description>
-    </item>
-    
-    <item>
-      <title>New Blog</title>
-	  <link>http://tobert.github.io/post/2014-04-09-new-blog.html</link>
-      <pubDate>Wed, 09 Apr 2014 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>2014-04-09-new-blog</guid>
-	  <description>Sometimes you need a sharper tool.</description>
     </item>
     
     <item>
@@ -350,6 +341,15 @@
       <author>Albert P Tobey</author>
       <guid>contact</guid>
 	  <description>How to get a hold of me.</description>
+    </item>
+    
+    <item>
+      <title>Lorem Ipsum</title>
+	  <link>http://tobert.github.io/post/lorem-ipsum.html</link>
+      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>lorem-ipsum</guid>
+	  <description>A fake post for testing purposes.</description>
     </item>
     
     <item>
