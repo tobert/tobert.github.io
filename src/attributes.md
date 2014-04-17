@@ -11,9 +11,9 @@ Made by <a href="https://twitter.com/AlTobey"
            class="twitter-follow-button"
            data-link-color="#0069D6"
            data-show-count="false">@AlTobey</a>
-with <a href="http://hugo.spf13.com/">Hugo</a>.
+with [Go](https://github.com/tobert/tobert.github.io/blob/master/build-blog.go)
 
-<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Content</span>
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Content and code</span>
 by
 <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Al Tobey</span>
 is licensed under a
