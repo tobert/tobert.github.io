@@ -1,33 +1,22 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="description" content="">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="description" content="Xen Networking">
-    <meta name="keywords" content="redhat, vlan, linux, centos, 802.1q, virtualization, rhel, xen, bridging, networking, ">
-    <meta property="article:published_time" content="<!-- begin footer.html -->
-<footer class="footer">
-  <div id="footer" class="container">
-    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+
+<div class="css-full-post-content js-full-post-content">
+<span style="font-family:trebuchet ms;"></span>I've been working on evaluating Xen for all the reasons most companies look into virtualization.      One of the most confusing parts of Xen to learn is the way it does networking.   This is because the Xen team has devised a default configuration that is quite flexible, but also takes some time to get used to.   I'm not even going to talk about that, because I think there's  a better way.<br /><br />This is a description of how to set up networking for Xen on CentOS 5.0 using 802.1q VLAN trunking with a bridge on dom0 for each VLAN.   In my setup, eth0 is dedicated to dom0 tasks like live migration, iSCSI, and console access.    eth1 is dedicated as a VLAN trunk.   NO VLAN interfaces are configured with addresses in dom0, which should help reduce security implications.<br /><br />Files:<span style="font-size:85%;"><span style="font-family:courier new;"><span style="font-weight: bold;">/etc/sysconfig/network-scripts/ifcfg-eth0</span><br /><br />  DEVICE=eth0</span><br /><span style="font-family:courier new;">BOOTPROTO=static</span><br /><span style="font-family:courier new;">BROADCAST=192.168.1.255</span><br /><span style="font-family:courier new;">HWADDR=00:19:D1:4D:CD:D1</span><br /><span style="font-family:courier new;">IPADDR=192.168.1.25</span><br /><span style="font-family:courier new;">NETMASK=255.255.255.0</span><br /><span style="font-family:courier new;">NETWORK=192.168.1.0</span><br /><span style="font-family:courier new;">ONBOOT=yes<br /><br /><span style="font-weight: bold;">/etc/sysconfig/network-scripts/ifcfg-eth1</span><br /><br />DEVICE=eth1</span><br /><span style="font-family:courier new;">HWADDR=00:19:D1:4D:CD:D2</span><br /><span style="font-family:courier new;">ONBOOT=yes</span><br /><span style="font-family:courier new;"># note, no address configured<br /><br /><span style="font-weight: bold;">/etc/sysconfig/network-scripts/ifcfg-eth1.4</span><br /><br />DEVICE=eth1.4</span><br /><span style="font-family:courier new;">BOOTPROTO=static</span><br /><span style="font-family:courier new;">ONBOOT=yes</span><br /><span style="font-family:courier new;">VLAN=yes</span><br /><span style="font-family:courier new;">BRIDGE=br4</span><br /><span style="font-family:courier new;"># again, no address configured<br /><br /></span><span style="font-family:courier new;"><span style="font-weight: bold;">/etc/sysconfig/network-scripts/ifcfg-br4</span><br /><br />DEVICE=br4</span><br /><span style="font-family:courier new;">TYPE=Bridge</span><br /><span style="font-family:courier new;">BOOTPROTO=static</span><br /><span style="font-family:courier new;">ONBOOT=yes</span><br /><span style="font-family:courier new;">DELAY=0</span><br /><span style="font-family:courier new;">STP=off</span></span> <span style="font-size:85%;"></span><br /><br />The files above only demonstrate the standard way to configure 802.1q VLAN's and bridges under modern Redhat-derivative distributions like RHEL, CentOS, and Fedora.  The nice part is, we're almost done.    Only a small change is necessary in Xen, so that it no longer brings up xenbr0.  I don't want to pay for the overhead of networking through a bridge for my iSCSI, even if it is a very small cost.<br /><br />Modify <span style="font-size:85%;"><span style="font-family:courier new;">/etc/xen/xend-config.sxp</span></span> and change "<span style="font-size:85%;"><span style="font-family:courier new;">(network-script ...)</span></span>" to "<span style="font-size:85%;"><span style="font-family:courier new;">(network-script /bin/true)</span></span>".    Comment the "<span style="font-size:85%;"><span style="font-family:courier new;">(vif-script ...)</span></span>" line(s) out completely.   You don't need them anymore.<br /><br />Reboot dom0.<br /><br />When the box comes back up, log in and look around at your networking configuration.  Use "<span style="font-size:85%;"><span style="font-family:courier new;">ifconfig</span></span>" or "<span style="font-size:85%;"><span style="font-family:courier new;">ip link show</span></span>", "<span style="font-size:85%;"><span style="font-family:courier new;">brctl</span></span>", and "<span style="font-size:85%;"><span style="font-family:courier new;">cat /proc/net/vlan/config</span></span>".<br /><br />Modify your VM configurations to point at the correct bridges.   Something like the following should work fine.<br /><span style="font-size:85%;"><span style="font-family:courier new;"><pre>    vif = [ 'mac=00:16:3e:01:fb:fe, bridge=br4' ]</pre></span></span>xend will still create the point-to-point (vif) interfaces and connect them to the bridge for you.   It doesn't need the helper scripts because the bridges are already all set up and ready to have interfaces bound to them.<br /><br />This is currently a bit outside the beaten path for Xen netw0rking, so you get to keep all the pieces if it breaks things, has an affair with your refrigerator, or any other such sideeffects.    If you have questions, leave comments on this post and I'll try to answer.<br /><span style="font-family:courier new;"><br /></span><span style="font-family:courier new;"><span style="font-family:courier new;"></span></span><blockquote></blockquote>
+</div>
+<div class="css-full-comments-content js-full-comments-content">
+<div class="css-full-comment js-full-comment">
+  <div class="css-comment-user-link js-comment-user-link">
+  <a href="undefined">
+  <div class="css-comment-name js-comment-name">
+    Niels Wijnja
   </div>
-</footer>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-46953804-1', 'tobert.github.io');
-  ga('send', 'pageview');
-
-</script>
-
-</body>
-</html>
+  </a>
+  <div class="css-comment-date js-comment-date">
+    2007-09-24T21:54:00.000Z
+  </div>
+  </div>
+  <div class="css-comment-content js-comment-content">
+    Very useful information, thanks for that :)
+  </div>
+  <br/>
+</div>
+</div>

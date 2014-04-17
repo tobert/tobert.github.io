@@ -17,24 +17,22 @@ tags: [
   "universe",
   "everything"
 ]
-pubdate: 1970-01-01T00:00:00Z
+pubdate: 2014-04-16T17:00:00Z
 draft: false
 ---
-{{ template "header" . }}
+{{ template "header.html" . }}
 
 <div class="container-fluid" id="index-body">
   <div class="col-md-8">
     <ul class="nav nav-sidebar">
-      {{ range $i, $page := .Pages }}
-          {{ $page.Abstract }}
-      {{ end }}
+      {{ range $i, $page := .Pages }}{{ if eq $page.Dir "post" }}
+      <li><a href="{{ $page.PubRel }}">{{ $page.Title }}</a></li>{{ end }}{{ end }}
     </ul>
   </div>
 
   <div class="col-md-4" id="timeline">
-{{ template "timeline" . }}
+{{ template "timeline.html" . }}
   </div>
 </div>
 
-<!-- end of header.html -->
-{{ template "footer" . }}
+{{ template "footer.html" . }}

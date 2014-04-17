@@ -11,21 +11,22 @@ draft: false
      xmlns:cc="http://creativecommons.org/ns#"
      xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
   <channel>
-    <title>{{ .Title }} on {{ .Site.Title }} </title>
-    <link>{{ .Permalink }}</link>
+    <title>@AlTobey Writes: {{ .Page.Title }}</title>
+	<link>{{ .Config.SiteURL }}{{ .Page.PubRel }}</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>{{ .Date }}</pubDate>
-	<lastBuildDate>{{ .Date }}</lastBuildDate>
+	{{ with index .Pages 0 }}<pubDate>{{ .Date.Format "2006-01-02" }}</pubDate>{{ end }}
+	<lastBuildDate>{{ .Now.Format "2006-01-02" }}</lastBuildDate>
 	<generator>Hugo</generator>
-    {{ range .Data.Pages }}
+	{{ $baseurl := .Config.SiteURL }}
+    {{ range $i, $page := .Pages }}
     <item>
-      <title>{{ .Title }}</title>
-      <link>{{ .Permalink }}</link>
-      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 MST" }}</pubDate>
+      <title>{{ $page.Title }}</title>
+	  <link>{{ $baseurl }}{{ $page.PubRel }}</link>
+      <pubDate>{{ $page.Date.Format "Mon, 02 Jan 2006 15:04:05 MST" }}</pubDate>
       <author>Albert P Tobey</author>
-      <guid>{{ .Permalink }}</guid>
-      <description>{{ .Content | html }}</description>
+      <guid>{{ $page.Id }}</guid>
+	  <description>{{ with $page.Abstract }}{{ . }}{{ else }}{{ $page.Title }}{{ end }}</description>
     </item>
     {{ end }}
   </channel>

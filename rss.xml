@@ -1,0 +1,358 @@
+<rss version="2.0"
+     xmlns:creativeCommons="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html"
+     xmlns:cc="http://creativecommons.org/ns#"
+     xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
+  <channel>
+    <title>@AlTobey Writes: @AlTobey Writes: RSS</title>
+	<link>http://tobert.github.io/rss.xml</link>
+    <language>en-us</language>
+    <author>Albert P Tobey</author>
+	<pubDate>2014-04-16</pubDate>
+	<lastBuildDate>2014-04-16</lastBuildDate>
+	<generator>Hugo</generator>
+	
+    
+    <item>
+      <title>@AlTobey Writes</title>
+	  <link>http://tobert.github.io/index.html</link>
+      <pubDate>Wed, 16 Apr 2014 17:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>index</guid>
+	  <description>The Blog of Al Tobey</description>
+    </item>
+    
+    <item>
+      <title>Fio Output Explained</title>
+	  <link>http://tobert.github.io/post/2014-04-09-fio-output-explained.html</link>
+      <pubDate>Wed, 09 Apr 2014 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-04-09-fio-output-explained</guid>
+	  <description>Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you.</description>
+    </item>
+    
+    <item>
+      <title>Lorem Ipsum</title>
+	  <link>http://tobert.github.io/post/lorem-ipsum.html</link>
+      <pubDate>Wed, 09 Apr 2014 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>lorem-ipsum</guid>
+	  <description>A fake post for testing purposes.</description>
+    </item>
+    
+    <item>
+      <title>New Blog</title>
+	  <link>http://tobert.github.io/post/2014-04-09-new-blog.html</link>
+      <pubDate>Wed, 09 Apr 2014 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-04-09-new-blog</guid>
+	  <description>Sometimes you need a sharper tool.</description>
+    </item>
+    
+    <item>
+      <title>Benchmarking Disk Latency: Setup</title>
+	  <link>http://tobert.github.io/post/2014-03-29-benchmarking-disk-latency-setup.html</link>
+      <pubDate>Sat, 29 Mar 2014 01:56:59 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-03-29-benchmarking-disk-latency-setup</guid>
+	  <description>Benchmarking Disk Latency: Setup</description>
+    </item>
+    
+    <item>
+      <title>Mirrored FAT32 EFI Boot Partitions</title>
+	  <link>http://tobert.github.io/post/2014-03-25-mirrored-fat32-efi-boot-partitions.html</link>
+      <pubDate>Tue, 25 Mar 2014 04:49:05 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-03-25-mirrored-fat32-efi-boot-partitions</guid>
+	  <description>Mirrored FAT32 EFI Boot Partitions</description>
+    </item>
+    
+    <item>
+      <title>Running at Night</title>
+	  <link>http://tobert.github.io/post/2014-03-22-running-at-night.html</link>
+      <pubDate>Sat, 22 Mar 2014 01:52:58 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-03-22-running-at-night</guid>
+	  <description>Running at Night</description>
+    </item>
+    
+    <item>
+      <title>Primitive Tooling</title>
+	  <link>http://tobert.github.io/post/2014-03-19-primitive-tooling.html</link>
+      <pubDate>Wed, 19 Mar 2014 20:54:14 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-03-19-primitive-tooling</guid>
+	  <description>Primitive Tooling</description>
+    </item>
+    
+    <item>
+      <title>Open Source Video Production</title>
+	  <link>http://tobert.github.io/post/2014-03-10-open-source-video-production.html</link>
+      <pubDate>Mon, 10 Mar 2014 19:52:59 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-03-10-open-source-video-production</guid>
+	  <description>Open Source Video Production</description>
+    </item>
+    
+    <item>
+      <title>Marriage Stuff</title>
+	  <link>http://tobert.github.io/post/2014-02-19-marriage-stuff.html</link>
+      <pubDate>Wed, 19 Feb 2014 05:50:52 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-02-19-marriage-stuff</guid>
+	  <description>Marriage Stuff</description>
+    </item>
+    
+    <item>
+      <title>Portacluster</title>
+	  <link>http://tobert.github.io/post/2014-02-07-portacluster.html</link>
+      <pubDate>Fri, 07 Feb 2014 21:08:21 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-02-07-portacluster</guid>
+	  <description>Portacluster</description>
+    </item>
+    
+    <item>
+      <title>Read this NAO</title>
+	  <link>http://tobert.github.io/post/2014-02-07-read-this-nao.html</link>
+      <pubDate>Fri, 07 Feb 2014 20:27:59 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-02-07-read-this-nao</guid>
+	  <description>Read this NAO</description>
+    </item>
+    
+    <item>
+      <title>日本2014訪問</title>
+	  <link>http://tobert.github.io/post/Japan-2014-02-07-2014.html</link>
+      <pubDate>Fri, 07 Feb 2014 00:37:29 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>Japan-2014-02-07-2014</guid>
+	  <description>日本2014訪問</description>
+    </item>
+    
+    <item>
+      <title>Thermocouples: safe & silent failures</title>
+	  <link>http://tobert.github.io/post/2013-12-12-thermocouples-safe-silent-failures.html</link>
+      <pubDate>Thu, 12 Dec 2013 23:34:30 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2013-12-12-thermocouples-safe-silent-failures</guid>
+	  <description>Learning about safety using appliances</description>
+    </item>
+    
+    <item>
+      <title>Arch Linux on ZFS</title>
+	  <link>http://tobert.github.io/post/2013-11-12-arch-linux-on-zfs.html</link>
+      <pubDate>Tue, 12 Nov 2013 22:12:48 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2013-11-12-arch-linux-on-zfs</guid>
+	  <description>Arch Linux on ZFS</description>
+    </item>
+    
+    <item>
+      <title>Foodfight!</title>
+	  <link>http://tobert.github.io/post/2013-11-06-foodfight.html</link>
+      <pubDate>Wed, 06 Nov 2013 05:41:41 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2013-11-06-foodfight</guid>
+	  <description>Foodfight!</description>
+    </item>
+    
+    <item>
+      <title>Endurance Predation</title>
+	  <link>http://tobert.github.io/post/2013-10-11-endurance-predation.html</link>
+      <pubDate>Fri, 11 Oct 2013 01:42:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2013-10-11-endurance-predation</guid>
+	  <description>Endurance Predation</description>
+    </item>
+    
+    <item>
+      <title>Hello (again) World</title>
+	  <link>http://tobert.github.io/post/2013-10-07-hello-again-world.html</link>
+      <pubDate>Mon, 07 Oct 2013 19:15:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2013-10-07-hello-again-world</guid>
+	  <description>Hello (again) World</description>
+    </item>
+    
+    <item>
+      <title>Test & Build Automation with btrfs</title>
+	  <link>http://tobert.github.io/post/2012-05-17-test-build-automation-with-btrfs.html</link>
+      <pubDate>Thu, 17 May 2012 19:08:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2012-05-17-test-build-automation-with-btrfs</guid>
+	  <description>fast testing with btrfs</description>
+    </item>
+    
+    <item>
+      <title>New Experiment Language Choices</title>
+	  <link>http://tobert.github.io/post/2011-07-21-new-experiment-language-choices.html</link>
+      <pubDate>Wed, 21 Sep 2011 06:13:25 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2011-07-21-new-experiment-language-choices</guid>
+	  <description>Language choices</description>
+    </item>
+    
+    <item>
+      <title>Over-breeding & Culling EC2 Instances for IO Performance</title>
+	  <link>http://tobert.github.io/post/2011-09-21-over-breeding-culling-ec2-instances-for.html</link>
+      <pubDate>Wed, 21 Sep 2011 06:06:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2011-09-21-over-breeding-culling-ec2-instances-for</guid>
+	  <description>Finding fast(er) instances in EC2</description>
+    </item>
+    
+    <item>
+      <title>My Christmas Wish</title>
+	  <link>http://tobert.github.io/post/2010-12-23-my-christmas-wish.html</link>
+      <pubDate>Thu, 23 Dec 2010 21:42:00 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2010-12-23-my-christmas-wish</guid>
+	  <description>Secure your browsing experience please</description>
+    </item>
+    
+    <item>
+      <title>Ride Report 2010-09-05</title>
+	  <link>http://tobert.github.io/post/2010-09-06-ride-report-2010-09-05.html</link>
+      <pubDate>Mon, 06 Sep 2010 04:49:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2010-09-06-ride-report-2010-09-05</guid>
+	  <description>Bicycle Commuting</description>
+    </item>
+    
+    <item>
+      <title>Blocking SSH Attacks</title>
+	  <link>http://tobert.github.io/post/2010-08-12-blocking-ssh-attacks.html</link>
+      <pubDate>Thu, 12 Aug 2010 19:12:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2010-08-12-blocking-ssh-attacks</guid>
+	  <description>Blocking SSH attacks with nothing but iptables</description>
+    </item>
+    
+    <item>
+      <title>Virtualization Madness</title>
+	  <link>http://tobert.github.io/post/2008-04-06-virtualization-madness.html</link>
+      <pubDate>Sun, 06 Apr 2008 18:50:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2008-04-06-virtualization-madness</guid>
+	  <description>Virtualization Madness</description>
+    </item>
+    
+    <item>
+      <title>Xen Networking</title>
+	  <link>http://tobert.github.io/post/2007-09-07-xen-networking.html</link>
+      <pubDate>Fri, 07 Sep 2007 15:18:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2007-09-07-xen-networking</guid>
+	  <description>Xen Networking</description>
+    </item>
+    
+    <item>
+      <title>Moving sucks.</title>
+	  <link>http://tobert.github.io/post/2007-05-20-moving-sucks-can-i-have-amen.html</link>
+      <pubDate>Sun, 20 May 2007 03:30:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2007-05-20-moving-sucks-can-i-have-amen</guid>
+	  <description>Moving sucks.</description>
+    </item>
+    
+    <item>
+      <title>New Job, New City</title>
+	  <link>http://tobert.github.io/post/2007-04-04-new-job-new-city.html</link>
+      <pubDate>Wed, 04 Apr 2007 14:18:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2007-04-04-new-job-new-city</guid>
+	  <description>Moving West</description>
+    </item>
+    
+    <item>
+      <title>First Post!</title>
+	  <link>http://tobert.github.io/post/2007-02-27-hi-my-name-is-al-tobey.html</link>
+      <pubDate>Tue, 27 Feb 2007 00:57:00 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2007-02-27-hi-my-name-is-al-tobey</guid>
+	  <description>Post from when I moved to Blogger</description>
+    </item>
+    
+    <item>
+      <title>64-bit perl on HP-UX (PARISC or Itanium)</title>
+	  <link>http://tobert.github.io/post/2005-10-13-64-bit-perl-on-hp-ux-parisc-or-itanium.html</link>
+      <pubDate>Thu, 13 Oct 2005 02:30:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2005-10-13-64-bit-perl-on-hp-ux-parisc-or-itanium</guid>
+	  <description>64-bit perl on HP-UX (PARISC or Itanium)</description>
+    </item>
+    
+    <item>
+      <title>Building pdksh on HP-UX/Itanium</title>
+	  <link>http://tobert.github.io/post/2005-09-20-pdksh-5.html</link>
+      <pubDate>Tue, 20 Sep 2005 23:00:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2005-09-20-pdksh-5</guid>
+	  <description>Building pdksh on HP-UX/Itanium</description>
+    </item>
+    
+    <item>
+      <title>root-tail on nautilus/kde/xfdesktop</title>
+	  <link>http://tobert.github.io/post/2004-07-01-i-hacked-root-tail-to-work-with.html</link>
+      <pubDate>Thu, 01 Jul 2004 01:00:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2004-07-01-i-hacked-root-tail-to-work-with</guid>
+	  <description>root-tail on nautilus/kde/xfdesktop</description>
+    </item>
+    
+    <item>
+      <title>SNMP plugins for Nagios</title>
+	  <link>http://tobert.github.io/post/2004-06-30-i-wrote-couple-snmp-plugins-for-nagios.html</link>
+      <pubDate>Wed, 30 Jun 2004 19:00:00 PDT</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2004-06-30-i-wrote-couple-snmp-plugins-for-nagios</guid>
+	  <description>SNMP plugins for Nagios</description>
+    </item>
+    
+    <item>
+      <title>A shell implementation of bootprofile</title>
+	  <link>http://tobert.github.io/post/2003-12-02-here-is-drop-in-replacement-for-rajeev.html</link>
+      <pubDate>Tue, 02 Dec 2003 17:00:00 -0700</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2003-12-02-here-is-drop-in-replacement-for-rajeev</guid>
+	  <description>A shell implementation of bootprofile</description>
+    </item>
+    
+    <item>
+      <title>About @AlTobey</title>
+	  <link>http://tobert.github.io/about.html</link>
+      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>about</guid>
+	  <description>A blurb about me.</description>
+    </item>
+    
+    <item>
+      <title>License and Credits</title>
+	  <link>http://tobert.github.io/attributes.html</link>
+      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>attributes</guid>
+	  <description>About tobert.github.io</description>
+    </item>
+    
+    <item>
+      <title>Contacting @AlTobey</title>
+	  <link>http://tobert.github.io/contact.html</link>
+      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>contact</guid>
+	  <description>How to get a hold of me.</description>
+    </item>
+    
+    <item>
+      <title>@AlTobey Writes: RSS</title>
+	  <link>http://tobert.github.io/rss.xml</link>
+      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>rss</guid>
+	  <description>RSS XML</description>
+    </item>
+    
+  </channel>
+</rss>
