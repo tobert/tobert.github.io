@@ -303,8 +303,6 @@ func findPages(c Config) (pages Pages) {
 
 		pages = append(pages, page)
 
-		// temp hack -- DO NOT COMMIT :P
-
 		return nil
 	}
 
