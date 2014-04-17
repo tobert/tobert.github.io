@@ -24,7 +24,7 @@ draft: false
   <div class="col-md-8">
     <ul class="nav nav-sidebar">
       {{ range $i, $page := .Pages }}{{ if eq $page.Dir "post" }}
-      <li><a href="{{ $page.PubRel }}">{{ $page.Title }}</a></li>{{ end }}{{ end }}
+      <li><a href="{{ $page.PubRel }}">{{ if $page.Date }}{{ $page.Date.Format "2006-01-02" }} - {{ end }}{{ $page.Title }}</a></li>{{ end }}{{ end }}
     </ul>
   </div>
 
