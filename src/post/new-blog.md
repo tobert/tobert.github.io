@@ -12,7 +12,7 @@ annoyed with the limitations of Blogger. It was a fine service for the years
 when I didn't write much. Now that I'm doing a lot more technical blogging,
 I need a more customizable platform to generate my content.
 
-I prefer to not have to manage servers to host a blog, so I'm going with
+I don't want to manage servers to host a blog, so I'm going with
 [Github Pages](https://pages.github.com/).
 After trying a couple content generation systems including Jekyll and Hugo, I decided to
 write my own. It's limited and small but works exactly the way I want it to. And the code is
