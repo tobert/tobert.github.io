@@ -1,3 +1,4 @@
+<div class="container">
 <rss version="2.0"
      xmlns:creativeCommons="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html"
      xmlns:cc="http://creativecommons.org/ns#"
@@ -356,3 +357,4 @@
     
   </channel>
 </rss>
+</div>

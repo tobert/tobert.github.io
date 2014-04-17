@@ -51,14 +51,14 @@
     </div><!--/.nav-collapse -->
   </div>
 </div>
-<div class="container">
 <!-- end of header.html -->
+<div class="container">
 
 <div class="css-full-post-content js-full-post-content">
 Hi, my name is Al Tobey.    For now, go to <a href="http://www.tobert.org">http://www.tobert.org</a> to learn the grossly-out-of-date details.<br /><br />I'm investigating whether or not I want to move <a href="http://www.tobert.org">http://www.tobert.org</a> to Blogger.    I'm doing it to save time/money and to take advantage of integration between the various Google tools, where it exists.   I've also often considered posting more often, which I avoid because my current setup is still a PITA.<br /><br />The main snag I'm working on right now is how to post code examples.   So far, it looks like nobody is really doing it well.    Most of the "solutions" I've found involve stuff like <span style="font-family: monospace;">sed 's/ /\&amp;nbsp;/g'</span>, which isn't very elegant when HTML has tags specifically for this kind of thing.<br /><br />Previously, I defaulted to using the &lt;pre&gt; tag for code examples.   So far, I've tried &lt;blockquote&gt; and &lt;p style="white-space: pre;"&gt; (which I learned about at <a href="http://www.htmldog.com/ptg/archives/000077.php">http://www.htmldog.com/ptg/archives/000077.php</a>)<br /><br />Anyways, I'm going to keep editing this post adding copies of the below code until it works.<br /><br />Using &lt;pre&gt;:<br/><br /><pre><br />#!/bin/ksh<br /><br />for file in *.html<br />do<br />    # this should be indented by 4 spaces<br />    sed 's/ /\&amp;nbsp;/g' < "$file" > "$file.new"<br />    mv "$file.new" "$file"<br />done<br /></pre><br /><br /><strong>Problem solved:</strong>:   It appears that &lt;pre&gt; is ignored in the preview you get in the edit posts view, but not on the published page.
 </div>
+</div>
 <!-- begin footer.html -->
-</div> <!-- end of container -->
 <footer class="footer">
   <div id="footer" class="container">
     <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
