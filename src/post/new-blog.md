@@ -17,7 +17,7 @@ I don't want to manage servers to host a blog, so I'm going with
 After trying a couple content generation systems including Jekyll and Hugo, I decided to
 write my own. It's limited and small but works exactly the way I want it to. And the code is
 small so it's easy to hack on. It is in the same repo as the content for
-(@AlTobey Writes)[http://tobert.github.io/] so there's nothing to install except for
+[http://tobert.github.io](http://tobert.github.io/) so there's nothing to install except for
 Go and a couple go gets. I don't keep a binary around, preferring 'go run' since it's
 fast enough for regular use. Presenting:
 [build-blog.go](https://github.com/tobert/tobert.github.io/blob/master/build-blog.go)
