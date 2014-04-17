@@ -111,7 +111,7 @@ func main() {
 		// BUG: markdown is escaping HTML automatically
 		// TODO: open the output file here and write header/footer there instead of
 		// buf so buf can be passed to blackfriday without any dinking about
-		fd, err := os.OpenFile(page.PubPath, os.O_CREATE|os.O_WRONLY, 0644)
+		fd, err := os.OpenFile(page.PubPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 		if err != nil {
 			log.Fatalf("Could not open '%s' for write: %s\n", page.PubPath, err)
 		}
@@ -276,6 +276,8 @@ func findPages(c Config) (pages Pages) {
 		}
 
 		pages = append(pages, page)
+
+		// temp hack -- DO NOT COMMIT :P
 
 		return nil
 	}
