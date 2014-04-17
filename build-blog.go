@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"github.com/russross/blackfriday"
 	"gopkg.in/yaml.v1"
@@ -116,8 +115,6 @@ func main() {
 		if err != nil {
 			log.Fatalf("Could not open '%s' for write: %s\n", page.PubPath, err)
 		}
-		out := bufio.NewWriter(fd)
-		defer out.Flush()
 		defer fd.Close()
 
 		// text/template supports referencing other templates, but that would be silly
@@ -141,19 +138,23 @@ func main() {
 		// process Markdown, write everything else directly to the file
 		if page.Type == "md" {
 			output := blackfriday.MarkdownCommon(buf.Bytes())
-			_, err = out.Write(output)
+			_, err = fd.Write(output)
 		} else {
-			_, err = out.Write(buf.Bytes())
+			_, err = fd.Write(buf.Bytes())
 		}
 		if err != nil {
 			log.Fatalf("Error writing content to file '%s': %s'\n", page.PubPath, err)
 		}
 
 		// add the footer to the file
-		err = snippets["footer"].tmpl.Execute(out, td)
-		if err != nil {
-			log.Fatalf("Failed to render footer template: %s\n", err)
+		if page.Type == "html" || page.Type == "md" {
+			err = snippets["footer"].tmpl.Execute(fd, td)
+			if err != nil {
+				log.Fatalf("Failed to render footer template: %s\n", err)
+			}
 		}
+
+		log.Printf("OK Wrote %s to %s\n", strings.TrimLeft(page.SrcRel, "/"), strings.TrimLeft(page.PubRel, "/"))
 	}
 }
 
