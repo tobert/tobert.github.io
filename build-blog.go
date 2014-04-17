@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
+	"github.com/russross/blackfriday"
 	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
@@ -13,7 +15,6 @@ import (
 	"strings"
 	"text/template"
 	"time"
-	"github.com/russross/blackfriday"
 )
 
 type Config struct {
@@ -92,7 +93,6 @@ func main() {
 
 	// render pages
 	for _, page := range pages {
-		var buf bytes.Buffer
 		td := TmplData{page, c, snippets, pages, tagIdx, time.Now()}
 
 		// parse the page template
@@ -112,30 +112,47 @@ func main() {
 		// BUG: markdown is escaping HTML automatically
 		// TODO: open the output file here and write header/footer there instead of
 		// buf so buf can be passed to blackfriday without any dinking about
-
-		err = snippets["header"].tmpl.Execute(&buf, td)
+		fd, err := os.OpenFile(page.PubPath, os.O_CREATE|os.O_WRONLY, 0644)
 		if err != nil {
-			log.Fatalf("Failed to render header template: %s\n", err)
+			log.Fatalf("Could not open '%s' for write: %s\n", page.PubPath, err)
+		}
+		out := bufio.NewWriter(fd)
+		defer out.Flush()
+		defer fd.Close()
+
+		// text/template supports referencing other templates, but that would be silly
+		// since I want this on every html page
+		if page.Type == "html" || page.Type == "md" {
+			err = snippets["header"].tmpl.Execute(fd, td)
+			if err != nil {
+				log.Fatalf("Failed to render header template: %s\n", err)
+			}
 		}
 
+		// everything in the source directory is treated as a template
+		// run the template into a buffer instead of the file so it can
+		// be processed with blackfriday or similar before output
+		var buf bytes.Buffer
 		err = tmpl.Execute(&buf, td)
 		if err != nil {
 			log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
 		}
 
-		err = snippets["footer"].tmpl.Execute(&buf, td)
+		// process Markdown, write everything else directly to the file
+		if page.Type == "md" {
+			output := blackfriday.MarkdownCommon(buf.Bytes())
+			_, err = out.Write(output)
+		} else {
+			_, err = out.Write(buf.Bytes())
+		}
 		if err != nil {
-			log.Fatalf("Failed to render footer template: %s\n", err)
+			log.Fatalf("Error writing content to file '%s': %s'\n", page.PubPath, err)
 		}
 
-		switch page.Type {
-		case "txt", "html", "xml":
-			ioutil.WriteFile(page.PubPath, buf.Bytes(), 0644)
-		case "md":
-			output := blackfriday.MarkdownCommon(buf.Bytes())
-			ioutil.WriteFile(page.PubPath, output, 0644)
-		default:
-			log.Fatalf("BUG: page from file '%s' has invalid type '%s'", page.SrcPath, page.Type)
+		// add the footer to the file
+		err = snippets["footer"].tmpl.Execute(out, td)
+		if err != nil {
+			log.Fatalf("Failed to render footer template: %s\n", err)
 		}
 	}
 }
