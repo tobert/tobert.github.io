@@ -51,13 +51,14 @@
     </div><!--/.nav-collapse -->
   </div>
 </div>
-
+<div class="container">
 <!-- end of header.html -->
 
 <div class="css-full-post-content js-full-post-content">
 pdksh 5.2.14 on HP-UX 11.23 Itanium: If you grab the source for pdksh and try to compile it on Itanium HP-UX, it will tend to dump core with SIGBUS. SIGBUS is a signal sent to processes when they access unaligned memory, usually in C unions or structs. pdksh has a union in it that ends up unaligned on Itanium, which is very particular about such things. HP-UX is also fussy.<br /><br />Go into the source tree and open up "alloc.c" in your favorite editor. Search for "union Cell", which is the union declaration that is causing the trouble. Change the last member "double djunk; /* alignement */" to "long double djunk; /* alignemnt */." On Itanic, long double is 128 bits and double is 64 bits. Pushing the union out to 128 bits makes it align right all the time, even though it does eat up a bit more memory now.<br /><br />I also have a patch at work that logs all commands run by root to syslog with the username of the owner of the terminal device.   It's a fancy way to avoid typing "sudo" in front of everything while still logging every command for auditing purposes.    Unfortunately, I probably can't post that patch.
 </div>
 <!-- begin footer.html -->
+</div> <!-- end of container -->
 <footer class="footer">
   <div id="footer" class="container">
     <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
@@ -80,11 +81,3 @@ pdksh 5.2.14 on HP-UX 11.23 Itanium: If you grab the source for pdksh and try to
 
 </body>
 </html>
--46953804-1', 'tobert.github.io');
-  ga('send', 'pageview');
-
-</script>
-
-</body>
-</html>
-
