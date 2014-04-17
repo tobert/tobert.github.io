@@ -108,9 +108,7 @@ func main() {
 			}
 		}
 
-		// BUG: markdown is escaping HTML automatically
-		// TODO: open the output file here and write header/footer there instead of
-		// buf so buf can be passed to blackfriday without any dinking about
+		// open file for write
 		fd, err := os.OpenFile(page.PubPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 		if err != nil {
 			log.Fatalf("Could not open '%s' for write: %s\n", page.PubPath, err)
@@ -126,9 +124,13 @@ func main() {
 			}
 		}
 
-		// front page is full width, everything else is has larger gutters
+		// index.html is the only special page, it has its own container
+		// everything else gets a standard container from a snippet
 		if path.Base(page.SrcRel) != "index.html" {
-			fd.Write([]byte("<div class=\"container\">\n"))
+			err = snippets["container-top"].tmpl.Execute(fd, td)
+			if err != nil {
+				log.Fatalf("Failed to render container-top snippet: %s\n", err)
+			}
 		}
 
 		// everything in the source directory is treated as a template
@@ -151,9 +153,12 @@ func main() {
 			log.Fatalf("Error writing content to file '%s': %s'\n", page.PubPath, err)
 		}
 
-		// close the container injected earlier
+		// close the container snippet
 		if path.Base(page.SrcRel) != "index.html" {
-			fd.Write([]byte("</div>\n"))
+			err = snippets["container-bottom"].tmpl.Execute(fd, td)
+			if err != nil {
+				log.Fatalf("Failed to render container-bottom snippet: %s\n", err)
+			}
 		}
 
 		// add the footer to the file
