@@ -64,18 +64,25 @@ annoyed with the limitations of Blogger. It was a fine service for the years
 when I didn&rsquo;t write much. Now that I&rsquo;m doing a lot more technical blogging,
 I need a more customizable platform to generate my content.</p>
 
-<p>To be honest, I didn&rsquo;t spend a lot of time researching. Before I switched to Blogger, I generated
-static pages with a perl script. It&rsquo;s 2014 so I took a look at Jekyll, but didn&rsquo;t find it to my
-liking for aesthetic reasons. After some light searching, I came across Hugo which does pretty much
-exactly what I want. It&rsquo;s Go + markdown with some extensions that seem to be similar to Jekyll&rsquo;s. It
-took me a couple hours to get used to how it works, but now that I have the hang of it I&rsquo;m pretty
-happy.</p>
+<p>I prefer to not have to manage servers to host a blog, so I&rsquo;m going with
+<a href="https://pages.github.com/">Github Pages</a>.
+After trying a couple content generation systems including Jekyll and Hugo, I decided to
+write my own. It&rsquo;s limited and small but works exactly the way I want it to. And the code is
+small so it&rsquo;s easy to hack on. It is in the same repo as the content for
+(@AlTobey Writes)[<a href="http://tobert.github.io/">http://tobert.github.io/</a>] so there&rsquo;s nothing to install except for
+Go and a couple go gets. I don&rsquo;t keep a binary around, preferring &lsquo;go run&rsquo; since it&rsquo;s
+fast enough for regular use. Presenting:
+<a href="https://github.com/tobert/tobert.github.io/blob/master/build-blog.go">build-blog.go</a></p>
 
-<p>As you probably noticed, I chose to go with Bootstrap 3 for the HTML. As an ops guy who has
-committed multiple atrocities against sensible web design, I think Bootstrap&rsquo;s contribution is
-immesurable. I plug it in and use maybe 5% of the functionality and I get a site that is responsive
-&ndash; try it! resize your browser down to cell phone size &ndash; and looks decent enough for the low cost
-of FREE. So, yeah, I like Bootstrap because I&rsquo;m lazy and totally uninterested in the madness of CSS.</p>
+<p>It&rsquo;s probably obvious that the base content is Bootstrap 3. I picked it because most
+things just work.</p>
+
+<p>My favorite feature of this new setup, and one that I&rsquo;d like to encourage my readers
+to use is the Edit button in the upper right-hand corner. It should automatically fork
+my blog so you can edit content. If you find something wrong or that needs additional
+clarity, I&rsquo;m happy to take pull requests. It&rsquo;s a bit weird for a blog, but since I write
+about technical topics most of the time, it makes it easier for me to push content without
+worrying about getting it perfect first.</p>
 </div><!-- container-bottom -->
 <!-- begin footer.html -->
 <footer class="footer">

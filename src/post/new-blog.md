@@ -12,16 +12,23 @@ annoyed with the limitations of Blogger. It was a fine service for the years
 when I didn't write much. Now that I'm doing a lot more technical blogging,
 I need a more customizable platform to generate my content.
 
-To be honest, I didn't spend a lot of time researching. Before I switched to Blogger, I generated
-static pages with a perl script. It's 2014 so I took a look at Jekyll, but didn't find it to my
-liking for aesthetic reasons. After some light searching, I came across Hugo which does pretty much
-exactly what I want. It's Go + markdown with some extensions that seem to be similar to Jekyll's. It
-took me a couple hours to get used to how it works, but now that I have the hang of it I'm pretty
-happy.
+I prefer to not have to manage servers to host a blog, so I'm going with
+[Github Pages](https://pages.github.com/).
+After trying a couple content generation systems including Jekyll and Hugo, I decided to
+write my own. It's limited and small but works exactly the way I want it to. And the code is
+small so it's easy to hack on. It is in the same repo as the content for
+(@AlTobey Writes)[http://tobert.github.io/] so there's nothing to install except for
+Go and a couple go gets. I don't keep a binary around, preferring 'go run' since it's
+fast enough for regular use. Presenting:
+[build-blog.go](https://github.com/tobert/tobert.github.io/blob/master/build-blog.go)
 
-As you probably noticed, I chose to go with Bootstrap 3 for the HTML. As an ops guy who has
-committed multiple atrocities against sensible web design, I think Bootstrap's contribution is
-immesurable. I plug it in and use maybe 5% of the functionality and I get a site that is responsive
--- try it! resize your browser down to cell phone size -- and looks decent enough for the low cost
-of FREE. So, yeah, I like Bootstrap because I'm lazy and totally uninterested in the madness of CSS.
+It's probably obvious that the base content is Bootstrap 3. I picked it because most
+things just work.
+
+My favorite feature of this new setup, and one that I'd like to encourage my readers
+to use is the Edit button in the upper right-hand corner. It should automatically fork
+my blog so you can edit content. If you find something wrong or that needs additional
+clarity, I'm happy to take pull requests. It's a bit weird for a blog, but since I write
+about technical topics most of the time, it makes it easier for me to push content without
+worrying about getting it perfect first.
 
