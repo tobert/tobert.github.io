@@ -7,7 +7,7 @@ pubdate: 2014-04-09T00:00:00Z
 draft: false
 ---
 
-Previously, I blogged about setting up my [benchmarking machine](/post/2014-03-29-benchmarking-disk-latency-setup/). Now
+Previously, I blogged about setting up my [benchmarking machine](/post/2014-03-29-benchmarking-disk-latency-setup.html). Now
 that it's up and running, I've started exploring the fio benchmarking tool. In doing so, I've had to learn all of the
 abbreviations and terms that fio uses for the kinds of latency it measures. I didn't find the documentation for the
 default output very helpful, so here's a line-by-line breakdown that I hope is useful to new users. Most of the data
