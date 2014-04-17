@@ -1,4 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    
+    
+    <meta property="article:published_time" content="2014-03-19"/>
+    <meta property="article:modified_time" content="2014-03-19"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Primitive Tooling : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Primitive Tooling</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-03-19-primitive-tooling.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/post/2014-03-19-primitive-tooling.html">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+<!-- end of header.html -->
 
 <div class="css-full-post-content js-full-post-content">
 I regularly see posts on Twitter about some new whiz-bang shell or vim plugin that automates some task, making it more pleasant. I almost never use any of them.<div><br /></div><div>The reasons why can be traced back to my first job as a systems administrator, where I had to learn Solaris on the fly. I learned most of my Unix-fu on Linux, where I learned on bash. The shop I was working at used the Bourne shell that shipped with Solaris 2.6 and 2.7. This was a frustrating time because many things that were easy in bash didn't work at all in /bin/sh, so I started 'downgrading' to the Bourne shell way of doing things.</div><div><br /></div><div>A couple years passed and I had gotten to the point where I pretty much used only basic /bin/sh and was mostly happy with that. Then along came HP-UX and its POSIX shell, which is just like Bourne shell only maddeningly different in a few places. Since the environment I was working in had both Linux and HP-UX in production, I usually wrote scripts to support both and it was tedious. I talked my team into switching to pdksh everywhere and things were mostly better. I got a stable environment across operating systems while the experienced HP-UX admins got an experience more like what they were used to on Linux. Win-win for the win.</div><div><br /></div><div>Eventually, AT&amp;T opened up the code to the original Korn shell and the pdksh project stagnated. As far as I know, it still compiles on Linux, but it did not work very well on HP-UX / Itanium without patches. I wrote the patches, but if you know anything about HP-UX shops, you know that they tend to be conservative so pdksh was out. And now I'm back to writing POSIX shell code.</div><div><br /></div><div>That's just one part of the story, but I think it demonstrates why I still stick to primitives a decade later. With every move between versions of shells, Linux distributions, FreeBSD, OpenSolaris, etc. I've simply found it easier to stick with primitives and avoid any heavily modified environments. These days, I do default to bash and use bash syntax regularly. I don't work on any operating systems that don't ship bash. I also start my shell scripts with #!/bin/bash instead of #!/bin/sh so the dash thing never bothered me a bit.</div><div><br /></div><div>My vim setup is similarly minimal. My ~/.vimrc is around 30 lines and has changed very little in the last decade. I added Pathogen a couple years ago, but I only really use it for filetype and syntax plugins. I also only use about 5% of vim's features, mostly things that work in vi. Just like with the shells, I can log into almost any Unix system around and get up and running with vi without installing anything.</div><div><br /></div><div>Over the years I have applied the approach to more things. I've always used the default clients for social media. I don't use browser plugins (except for <a href="https://code.google.com/p/rikaikun/" target="_blank">rikaikun</a>). I only install a half-dozen or so applications on my Mac. My Windows machines have no OS-level plugins. My preferred desktop on Linux is XCFE with a basically default config, no compositing, all shininess disabled. My phone has a stock ROM and I use the default UI settings most of the time.</div><div><br /></div><div><div>It's not for everybody, but it does have some advantages:</div><div><br /></div><div>1.) it takes me about 5 minutes to get set up on a new workstation</div><div>2.) I rarely have to install anything extra on machines I admin</div><div>3.) the few rcfiles I use are easy to move around with `cat &gt; ~/.rcfile` and ctrl-d</div><div>4.) the few aliases I use are noops when not present (e.g. ls --color)</div><div>5.) I don't have to remember or think about trivial details very often</div></div><div><br /></div><div>Like every decision, it's a tradeoff. I'm trading off small efficiencies every day to avoid having to memorize lots of things. My editor isn't as powerful as yours, but I always have my editor even when I'm not root. My shell is boring, but whether I'm root, atobey, or any other account it works the same.</div><div><br /></div><div>I also tend to apply similar thinking to code, which is probably one of the reasons I like Go so much. A small syntax is easy to remember and apply consistently. I also don't put as much emphasis on code reuse as I see others do. The backflips required to make code actually reusable is rarely worth the effort and increases testing burden, so why bother? It's another tradeoff obviously and one I default to with increasing frequency as I grow in experience.</div><div><br /></div><div><br /></div>
 </div>
+<!-- begin footer.html -->
+<footer class="footer">
+  <div id="footer" class="container">
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
+-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
+

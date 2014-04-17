@@ -1,4 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="Blocking SSH attacks with nothing but iptables">
+    <meta name="keywords" content="ssh, iptables, ">
+    <meta property="article:published_time" content="2010-08-12"/>
+    <meta property="article:modified_time" content="2010-08-12"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Blocking SSH Attacks : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="Blocking SSH attacks with nothing but iptables">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Blocking SSH Attacks</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2010-08-12-blocking-ssh-attacks.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/post/2010-08-12-blocking-ssh-attacks.html">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+<!-- end of header.html -->
 
 <div class="css-full-post-content js-full-post-content">
 I run this on almost any server that isn't behind another firewall blocking $SSH_PORT.   I got this from somewhere else, but it was a long time ago and I don't remember the source anymore.<br /><br /><pre><br />SSH_PORT=22  # I think ssh on !22 is silly, but to each their own<br />TRUSTED_SUBNET_OR_HOST=mybox.homeip.com # or a subnet you trust<br /><br />iptables -A ssh_drop -j DROP -m comment --comment "SSH attack drop"<br />iptables -A INPUT  -p tcp -m tcp -s $TRUSTED_SUBNET_OR_HOST --dport $SSH_PORT  -m state --state NEW -j ACCEPT<br />iptables -A INPUT -p tcp -m state --state NEW --dport $SSH_PORT -m recent --name sshattack --set<br />iptables -A INPUT -p tcp --dport $SSH_PORT -m state --state NEW -m recent --name sshattack --rcheck --seconds 60 --hitcount 3 -j LOG --log-prefix 'SSH Attack DROP: '<br />iptables -A INPUT -p tcp --dport $SSH_PORT -m state --state NEW -m recent --name sshattack --rcheck --seconds 60 --hitcount 3 -j ssh_drop<br /></pre><br /><br />Basically, this counts connection attempts on port 22 and starts dropping attempts after the third one (obviously adjust --hitcount to taste).   It times out after 60 seconds, so I don't accidentally lock myself out.    I see a few attacks a day start then go away after the drop.  I've never seen one come back after the window reopens (unless it was myself trying to "attack").  It's also 0 maintenance unlike the userspace solutions.   A lot of people like tcp wrappers, but that still lets attackers hammer the port.   Using both works nicely.<br /><br />This and DenyHosts don't help with distributed attacks, which is why I'm moving towards key-only logins and maybe picking up some YubiKeys. (yubico.com)
 </div>
+<!-- begin footer.html -->
+<footer class="footer">
+  <div id="footer" class="container">
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
+-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
+
