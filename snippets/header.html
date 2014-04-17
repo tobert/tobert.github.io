@@ -46,7 +46,8 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/about">About</a></li>
         <li><a href="/contact">Contact</a></li>
-        {{ with .Page.SrcRel }}<li><a href="https://github.com/tobert/tobert.github.io/edit/master{{ . }}">Edit</a></li>{{ end }}
+        <!-- TODO: make the edit link work! SrcRel doesn't include src/ or snippets/ -->
+        {{ with .Page.SrcRel }}<li><a href="https://github.com/tobert/tobert.github.io/edit/master/{{ . }}">Edit</a></li>{{ end }}
       </ul>
     </div><!--/.nav-collapse -->
   </div>

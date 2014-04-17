@@ -109,9 +109,23 @@ func main() {
 			}
 		}
 
+		// BUG: markdown is escaping HTML automatically
+		// TODO: open the output file here and write header/footer there instead of
+		// buf so buf can be passed to blackfriday without any dinking about
+
+		err = snippets["header"].tmpl.Execute(&buf, td)
+		if err != nil {
+			log.Fatalf("Failed to render header template: %s\n", err)
+		}
+
 		err = tmpl.Execute(&buf, td)
 		if err != nil {
 			log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
+		}
+
+		err = snippets["footer"].tmpl.Execute(&buf, td)
+		if err != nil {
+			log.Fatalf("Failed to render footer template: %s\n", err)
 		}
 
 		switch page.Type {
