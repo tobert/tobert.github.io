@@ -13,6 +13,7 @@ import (
 	"strings"
 	"text/template"
 	"time"
+	"github.com/russross/blackfriday"
 )
 
 type Config struct {
@@ -117,6 +118,8 @@ func main() {
 		case "txt", "html", "xml":
 			ioutil.WriteFile(page.PubPath, buf.Bytes(), 0644)
 		case "md":
+			output := blackfriday.MarkdownCommon(buf.Bytes())
+			ioutil.WriteFile(page.PubPath, output, 0644)
 		default:
 			log.Fatalf("BUG: page from file '%s' has invalid type '%s'", page.SrcPath, page.Type)
 		}
