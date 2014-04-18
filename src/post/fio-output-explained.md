@@ -22,8 +22,9 @@ that's exactly what I've been doing.
 Here's a section-by-section breakdown of the default output. I'll look at other output options in future posts. The data
 displayed is from a Samsung 840 Pro SSD.
 
-      read : io=10240MB, bw=63317KB/s, iops=15829, runt=165607msec
+The explanation for each section can be found below the output text.
 
+      read : io=10240MB, bw=63317KB/s, iops=15829, runt=165607msec
 
 The first line is pretty easy to read. fio did a total of 10GB of IO at 63.317MB/s for a total of 15829 IOPS (at the
 default 4k block size), and ran for 2 minutes and 45 seconds.
@@ -103,7 +104,7 @@ As this is a latency distribution, it's saying that 51.41% of requests took less
 
         lat (msec) : 4=1.07%, 10=27.04%, 20=65.43%, 50=6.46%, 100=0.01%
 
-In case you were thinking of parsing this madness with a quick script, you might want to know that this section will
+In case you were thinking of parsing this madness with a quick script, you might want to know that the lat section will
 omit entries and whole lines if there is no data. For example, the SAS drive I've been referencing didn't manage to do
 any IO faster than a millisecond, so this is the only line.
 

@@ -76,6 +76,8 @@ that&rsquo;s exactly what I&rsquo;ve been doing.</p>
 <p>Here&rsquo;s a section-by-section breakdown of the default output. I&rsquo;ll look at other output options in future posts. The data
 displayed is from a Samsung 840 Pro SSD.</p>
 
+<p>The explanation for each section can be found below the output text.</p>
+
 <pre><code>  read : io=10240MB, bw=63317KB/s, iops=15829, runt=165607msec
 </code></pre>
 
@@ -164,7 +166,7 @@ the last line as 2000, 4000, 10,000, and 20,000usec and it makes more sense.</p>
 <pre><code>    lat (msec) : 4=1.07%, 10=27.04%, 20=65.43%, 50=6.46%, 100=0.01%
 </code></pre>
 
-<p>In case you were thinking of parsing this madness with a quick script, you might want to know that this section will
+<p>In case you were thinking of parsing this madness with a quick script, you might want to know that the lat section will
 omit entries and whole lines if there is no data. For example, the SAS drive I&rsquo;ve been referencing didn&rsquo;t manage to do
 any IO faster than a millisecond, so this is the only line.</p>
 
