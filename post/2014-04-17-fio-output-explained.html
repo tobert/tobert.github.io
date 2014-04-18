@@ -1,0 +1,267 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you.">
+    <meta name="keywords" content="fio, benchmark, documentation, ">
+    <meta property="article:published_time" content="2014-04-18"/>
+    <meta property="article:modified_time" content="2014-04-18"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Fio Output Explained : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you.">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Fio Output Explained</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-04-17-fio-output-explained.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about">About</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/fio-output-explained.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>Fio Output Explained</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+<p>Previously, I blogged about setting up my <a href="/post/2014-03-29-benchmarking-disk-latency-setup.html">benchmarking machine</a>. Now
+that it&rsquo;s up and running, I&rsquo;ve started exploring the fio benchmarking tool.</p>
+
+<p><a href="https://github.com/axboe/fio">fio</a> - the Flexible IO Tester is an application written by
+<a href="http://en.wikipedia.org/wiki/Jens_Axboe">Jens Axboe</a>, who may be better known as the maintainer of the Linux kernel&rsquo;s
+block IO subsystem. It resembles the older ffsb tool in a few ways, but doesn&rsquo;t seem to have any relation to it. As
+power tools go, it&rsquo;s capable of generating pretty much arbitrary load. The tradeoff is that it&rsquo;s difficult to learn and
+that&rsquo;s exactly what I&rsquo;ve been doing.</p>
+
+<ul>
+<li><a href="https://gist.github.com/tobert/10685735">config</a></li>
+<li><a href="https://gist.github.com/tobert/11018522">raw output</a></li>
+</ul>
+
+<p>Here&rsquo;s a section-by-section breakdown of the default output. I&rsquo;ll look at other output options in future posts. The data
+displayed is from a Samsung 840 Pro SSD.</p>
+
+<pre><code>  read : io=10240MB, bw=63317KB/s, iops=15829, runt=165607msec
+</code></pre>
+
+<p>The first line is pretty easy to read. fio did a total of 10GB of IO at 63.317MB/s for a total of 15829 IOPS (at the
+default 4k block size), and ran for 2 minutes and 45 seconds.</p>
+
+<p>The first latency metric you&rsquo;ll see is the &lsquo;slat&rsquo; or submission latency. It is pretty much what it sounds like, meaning
+&ldquo;how long did it take to submit this IO to the kernel for processing?&rdquo;</p>
+
+<pre><code>    slat (usec): min=3, max=335, avg= 9.73, stdev= 5.76
+</code></pre>
+
+<p>I originally thought that submission latency would be useless for tuning, but the numbers below changed my mind. 269usec
+or <sup>1</sup>&frasl;<sub>4</sub> of a millisecond seems to be noise, but check it out. I haven&rsquo;t tuned anything yet, so I suspect that changing
+the scheduler and telling the kernel it&rsquo;s not a rotating device will help.</p>
+
+<p>Here are some more examples from the other devices:</p>
+
+<pre><code>    slat (usec): min=3, max=335, avg= 9.73, stdev= 5.76 (SATA SSD)
+    slat (usec): min=5, max=68,  avg=26.21, stdev= 5.97 (SAS 7200)
+    slat (usec): min=5, max=63,  avg=25.86, stdev= 6.12 (SATA 7200)
+    slat (usec): min=3, max=269, avg= 9.78, stdev= 2.85 (SATA SSD)
+    slat (usec): min=6, max=66,  avg=27.74, stdev= 6.12 (MDRAID0/SAS)
+
+    clat (usec): min=1, max=18600, avg=51.29, stdev=16.79
+</code></pre>
+
+<p>Next up is completion latency. This is the time that passes between submission to the kernel and when the IO is
+complete, not including submission latency. In older versions of fio, this was the best metric for approximating
+application-level latency.</p>
+
+<pre><code>     lat (usec): min=44, max=18627, avg=61.33, stdev=17.91
+</code></pre>
+
+<p>From what I can see, the &lsquo;lat&rsquo; metric is fairly new. It&rsquo;s not documented in the man page or docs. Looking at the C
+code, it seems that this metric starts the moment the IO struct is created in fio and is completed right after clat,
+making this the one that best represents what applications will experience.  This is the one that I will graph.</p>
+
+<pre><code>    clat percentiles (usec):
+     |  1.00th=[   42],  5.00th=[   45], 10.00th=[   45], 20.00th=[   46],
+     | 30.00th=[   47], 40.00th=[   47], 50.00th=[   49], 60.00th=[   51],
+     | 70.00th=[   53], 80.00th=[   56], 90.00th=[   60], 95.00th=[   67],
+     | 99.00th=[   78], 99.50th=[   81], 99.90th=[   94], 99.95th=[  101],
+     | 99.99th=[  112]
+</code></pre>
+
+<p>Completion latency percentiles are fairly self-explanatory and probably the most useful bit of info in the output. I
+looked at the source code and this is not slat + clat; it is tracked in its own struct.</p>
+
+<p>The buckets are configurable in the config file. In the terse output, this is 20 fields of %f=%d;%f=%d;&hellip; which makes
+parsing more fun than it should be.</p>
+
+<p>For comparison, here&rsquo;s the same section from a 7200 RPM SAS drive running the exact same load.</p>
+
+<pre><code>    clat percentiles (usec):
+     |  1.00th=[ 3952],  5.00th=[ 5792], 10.00th=[ 7200], 20.00th=[ 8896],
+     | 30.00th=[10304], 40.00th=[11456], 50.00th=[12608], 60.00th=[13760],
+     | 70.00th=[15168], 80.00th=[16768], 90.00th=[18816], 95.00th=[20608],
+     | 99.00th=[23424], 99.50th=[24192], 99.90th=[26752], 99.95th=[28032],
+     | 99.99th=[30080]
+
+    bw (KB  /s): min=52536, max=75504, per=67.14%, avg=63316.81, stdev=4057.09
+</code></pre>
+
+<p>Bandwidth is pretty self-explanatory except for the per= part. The docs say it&rsquo;s meant for testing a single device
+with multiple workloads, so you can see how much of the IO was consumed by each process. When fio is run against
+multiple devices, as I did for this output, it doesn&rsquo;t provide much meaning but is amusing when SSDs are mixed with
+spinning rust.</p>
+
+<p>And here&rsquo;s the SAS drive again with 0.36% of the total IO out of 4 devices being tested.</p>
+
+<pre><code>    bw (KB  /s): min=   71, max=  251, per=0.36%, avg=154.84, stdev=18.29
+
+    lat (usec) :   2= 0.01%,   4=0.01%,  10=0.01%,   20=0.01%, 50=51.41%
+    lat (usec) : 100=48.53%, 250=0.06%, 500=0.01%, 1000=0.01%
+    lat (msec) :   2= 0.01%,   4=0.01%,  10=0.01%,   20=0.01%
+</code></pre>
+
+<p>The latency distribution section took me a couple passes to understand. This is one series of metrics. Instead of using
+the same units for all three lines, the third line switches to milliseconds to keep the text width under control. Read
+the last line as 2000, 4000, 10,000, and 20,000usec and it makes more sense.</p>
+
+<p>As this is a latency distribution, it&rsquo;s saying that 51.41% of requests took less than 50usec, 48.53% took less than
+100usec and so on.</p>
+
+<pre><code>    lat (msec) : 4=1.07%, 10=27.04%, 20=65.43%, 50=6.46%, 100=0.01%
+</code></pre>
+
+<p>In case you were thinking of parsing this madness with a quick script, you might want to know that this section will
+omit entries and whole lines if there is no data. For example, the SAS drive I&rsquo;ve been referencing didn&rsquo;t manage to do
+any IO faster than a millisecond, so this is the only line.</p>
+
+<pre><code>  cpu          : usr=5.32%, sys=21.95%, ctx=2829095, majf=0, minf=21
+</code></pre>
+
+<p>Here&rsquo;s the user/system CPU percentages followed by context switches then major and minor <a href="http://en.wikipedia.org/wiki/Page_fault">page
+faults</a>.  Since the test is
+<a href="https://gist.github.com/tobert/10685735">configured</a> to use direct IO, there should be very few page faults.</p>
+
+<pre><code>  IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, &amp;gt;=64=0.0%
+</code></pre>
+
+<p>Fio has an iodepth setting that controls how many IOs it issues to the OS at any given time. This is entirely
+application-side, meaning it is not the same thing as the device&rsquo;s IO queue. In this case, iodepth was set to 1 so the
+IO depth was always 1 100% of the time.</p>
+
+<pre><code>     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &amp;gt;=64=0.0%
+     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, &amp;gt;=64=0.0%
+</code></pre>
+
+<p>submit and complete represent the number of submitted IOs at a time by fio and the number completed at a time. In the
+case of the thrashing test used to generate this output, the iodepth is at the default value of 1, so 100% of IOs were
+submitted 1 at a time placing the results in the 1-4 bucket. Basically these only matter if iodepth is greater than 1.</p>
+
+<p>These will get much more interesting when I get around to testing the various schedulers.</p>
+
+<pre><code>     issued    : total=r=2621440/w=0/d=0, short=r=0/w=0/d=0
+</code></pre>
+
+<p>The number of IOs issued.  Something is weird here since this was a <sup>50</sup>&frasl;<sub>50</sub> read/write load, so there should have been an
+equal number of writes. I suspect having
+<a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L380">unified_rw_reporting</a>
+enabled is making fio count all IOs as reads.</p>
+
+<p>If you see short IOs in a direct IO test something has probably gone wrong. The reference I found in the
+<a href="https://github.com/torvalds/linux/blob/v3.14/fs/direct-io.c#L1323">Linux kernel</a>
+indicates that this happens at EOF and likely end of device.</p>
+
+<pre><code>     latency   : target=0, window=0, percentile=100.00%, depth=1
+</code></pre>
+
+<p>Fio can be <a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L904">configured</a>
+ with a latency target, which will cause it to adjust throughput until it can consistently hit the
+configured latency target. I haven&rsquo;t messed with this much yet. In time or size-based tests, this line will always look
+the same. All four of these values represent the configuration settings
+<a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L904">latency_target</a>,
+<a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L909">latency_window</a>,
+<a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L913">latency_percentile</a>,
+and <a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L680">iodepth</a>.</p>
+
+<pre><code>Run status group 0 (all jobs):
+</code></pre>
+
+<p>fio supports grouping different tests for aggregation. For example, I can have one config for SSDs and HDDs mixed in the
+same file, but set up groups to report the IO separately. I&rsquo;m not doing this for now, but future configs will need this
+functionality.</p>
+
+<pre><code>  MIXED: io=12497MB, aggrb=42653KB/s, minb=277KB/s, maxb=41711KB/s, mint=300000msec, maxt=300012msec
+</code></pre>
+
+<p>And finally, the total throughput and time. io= indicates the amount of IO done in total. It will be variable for timed
+tests and should match the <a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L421">size</a>
+parameter for sized tests. aggrb is the aggregate bandwidth across all processes / devices. minb/maxb show
+minimum/maximum observed bandwidth. mint/maxt show the shortest &amp; longest times for tests.
+Similar to the io= parameter, these should match the
+<a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L973">runtime</a> parameter for
+time-based tests and will vary in size-based tests.</p>
+
+<p>Since I ran this test with
+<a href="https://github.com/axboe/fio/blob/046395d7ab181288d14737c1d0041e98328f473f/HOWTO#L380">unified_rw_reporting</a> enabled,
+we only see a line for MIXED. If it&rsquo;s disabled there will be separate lines for READ and WRITE.</p>
+
+<p>Simple, right? I&rsquo;ll be spending a lot more time with fio for the next few weeks and will post more examples of configs,
+output, and graphing code.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <div id="footer" class="container">
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io">Source Code</a>
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

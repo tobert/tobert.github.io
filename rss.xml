@@ -14,10 +14,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-04-17</pubDate>
+	<pubDate>2014-04-18</pubDate>
 	<lastBuildDate>2014-04-17</lastBuildDate>
 	<generator>Hugo</generator>
 	
+    
+    <item>
+      <title>Fio Output Explained</title>
+	  <link>http://tobert.github.io/post/2014-04-17-fio-output-explained.html</link>
+      <pubDate>Fri, 18 Apr 2014 00:20:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-04-17-fio-output-explained</guid>
+	  <description>Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you.</description>
+    </item>
     
     <item>
       <title>New Blog</title>
@@ -35,15 +44,6 @@
       <author>Albert P Tobey</author>
       <guid>index</guid>
 	  <description>The Blog of Al Tobey</description>
-    </item>
-    
-    <item>
-      <title>Fio Output Explained</title>
-	  <link>http://tobert.github.io/post/2014-04-09-fio-output-explained.html</link>
-      <pubDate>Wed, 09 Apr 2014 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>2014-04-09-fio-output-explained</guid>
-	  <description>Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you.</description>
     </item>
     
     <item>
