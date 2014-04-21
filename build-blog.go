@@ -137,7 +137,7 @@ func main() {
 
 		// index.html is the only special page, it has its own container
 		// everything else gets a standard container from a snippet
-		if path.Base(page.SrcRel) != "index.html" {
+		if path.Base(page.SrcRel) != "index.html" && (page.Type == "html" || page.Type == "md") {
 			err = snippets["container-top"].tmpl.Execute(fd, td)
 			if err != nil {
 				log.Fatalf("Failed to render container-top snippet: %s\n", err)
@@ -165,7 +165,7 @@ func main() {
 		}
 
 		// close the container snippet
-		if path.Base(page.SrcRel) != "index.html" {
+		if path.Base(page.SrcRel) != "index.html" && (page.Type == "html" || page.Type == "md") {
 			err = snippets["container-bottom"].tmpl.Execute(fd, td)
 			if err != nil {
 				log.Fatalf("Failed to render container-bottom snippet: %s\n", err)
