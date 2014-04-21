@@ -38,3 +38,9 @@ more features that we hope will be useful to future users of the image.
 This is all pretty easy to implement, but as we add features & functionality, it's getting more
 important that the process be repeatable and, ideally, not be something that's in my head alone.
 This is where [Packer](http://packer.io) comes in.
+
+To get started quickly, I did a quick search for "arch linux packer" and found that
+[Aaron Bull Schaefer](http://elasticdog.com/about/) has published his configs for building Arch
+images with Packer. I smashed the [fork](https://github.com/tobert/packer-arch) button and then
+started writing this post.
+
