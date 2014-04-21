@@ -2,7 +2,11 @@
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">
+    {{ if .Page.SrcRel }}
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src{{ .Page.SrcRel }}">ChangeLog</a>
+    {{ else }}
     <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io">Source Code</a>
+    {{ end }}
     <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
   </div>
 </footer>
