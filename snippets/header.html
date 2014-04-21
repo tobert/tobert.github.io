@@ -17,11 +17,11 @@
      {{ with .Page.Title }}<meta name="twitter:title" content="{{ . }} : @AlTobey Writes">{{ end }}
      <meta name="twitter:creator" content="@AlTobey">
      {{ with .Page.Abstract }}<meta name="twitter:description" content="{{ . }}">{{ end }}
-     <meta name="twitter:domain" content="{{ .Config.SiteURL }}">
+     <meta name="twitter:domain" content="{{ .Config.BaseURL }}">
 
     <title>{{ .Page.Title }}</title>
-    <link rel="canonical" href="{{ .Config.SiteURL }}{{ .Page.PubRel }}">
-    <link href="{{ .Config.SiteURL }}/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="canonical" href="{{ .Config.BaseURL }}{{ .Page.PubRel }}">
+    <link href="{{ .Config.BaseURL }}/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">

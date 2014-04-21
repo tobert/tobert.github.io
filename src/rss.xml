@@ -12,13 +12,13 @@ draft: false
      xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
   <channel>
     <title>@AlTobey Writes: {{ .Page.Title }}</title>
-	<link>{{ .Config.SiteURL }}{{ .Page.PubRel }}</link>
+	<link>{{ .Config.BaseURL }}{{ .Page.PubRel }}</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
 	{{ with index .Pages 0 }}<pubDate>{{ .Date.Format "2006-01-02" }}</pubDate>{{ end }}
 	<lastBuildDate>{{ .Now.Format "2006-01-02" }}</lastBuildDate>
 	<generator>Hugo</generator>
-	{{ $baseurl := .Config.SiteURL }}
+	{{ $baseurl := .Config.BaseURL }}
     {{ range $i, $page := .Pages }}
     <item>
       <title>{{ $page.Title }}</title>

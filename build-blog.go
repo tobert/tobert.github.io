@@ -13,6 +13,8 @@ package main
 
 import (
 	"bytes"
+	"flag"
+	"fmt"
 	"github.com/russross/blackfriday"
 	"gopkg.in/yaml.v1"
 	"html/template"
@@ -28,10 +30,11 @@ import (
 )
 
 type Config struct {
-	RepoRoot string   // /home/atobye/src/tobert.github.io
-	SiteURL  *url.URL // http://tobert.github.io
-	PageDir  string   // src
-	SnipDir  string   // snippets
+	SrcRoot string   // /home/atobey/src/tobert.github.io
+	PubRoot string   // /home/atobey/src/tobert.github.io, /srv/www, etc.
+	BaseURL *url.URL // http://tobert.github.io
+	PageDir string   // src
+	SnipDir string   // snippets
 }
 
 type Snippet struct {
@@ -73,20 +76,28 @@ type TmplData struct {
 	Now      time.Time
 }
 
+var (
+	defaultPath, srcFlag, pubFlag, domainFlag string
+	draftFlag                                 bool
+)
+
+func init() {
+	defaultPath = path.Join(os.Getenv("HOME"), "src/tobert.github.io")
+	flag.StringVar(&domainFlag, "url", "tobert.github.io", "The domain to use in generated links.")
+	flag.StringVar(&srcFlag, "src", defaultPath, "where to find the content source")
+	flag.StringVar(&pubFlag, "pub", defaultPath, "where to write generated content")
+	flag.BoolVar(&draftFlag, "draft", false, "enable to force publishing drafts")
+}
+
 func main() {
-	// I may or may not make this stuff configurable someday
-	root := path.Join(os.Getenv("HOME"), "src/tobert.github.io")
-	siteUrl, err := url.Parse("http://tobert.github.io")
+	flag.Parse()
+
+	baseUrl, err := url.Parse(fmt.Sprintf("http://%s", domainFlag))
 	if err != nil {
-		panic("could not parse domain")
+		log.Fatalf("Could not parse base URL 'http://%s': %s", domainFlag, err)
 	}
 
-	c := Config{
-		root,
-		siteUrl,
-		"src",
-		"snippets",
-	}
+	c := Config{srcFlag, pubFlag, baseUrl, "src", "snippets"}
 
 	snippets := loadSnippets(c)
 	pages := findPages(c)
@@ -117,6 +128,12 @@ func main() {
 			if err != nil {
 				log.Fatalf("Snippet parsing failed on '%s': %s\n", s.SrcPath, err)
 			}
+		}
+
+		// make sure the target directory exists
+		err = os.MkdirAll(path.Dir(page.PubPath), 0755)
+		if err != nil {
+			log.Fatalf("Could not create target directory '%s': %s\n", path.Dir(page.PubPath), err)
 		}
 
 		// open file for write
@@ -218,7 +235,7 @@ func loadSnippets(c Config) Snippets {
 		return nil
 	}
 
-	dir := path.Join(c.RepoRoot, c.SnipDir)
+	dir := path.Join(c.SrcRoot, c.SnipDir)
 	err := filepath.Walk(dir, visitor)
 	if err != nil {
 		log.Fatalf("Could not load snippets in '%s': %s", dir, err)
@@ -276,7 +293,7 @@ func findPages(c Config) (pages Pages) {
 
 		// these variables are used below to build paths in the Page struct
 		dname, fname := path.Split(fpath)
-		subpath := strings.TrimPrefix(dname, path.Join(c.RepoRoot, c.PageDir))
+		subpath := strings.TrimPrefix(dname, path.Join(c.SrcRoot, c.PageDir))
 		fparts := []string{page.Id}
 		// markdown will get rendered to HTML, everything goes as-is
 		if ext == ".md" {
@@ -288,7 +305,7 @@ func findPages(c Config) (pages Pages) {
 		page.SrcPath = fpath
 		page.SrcRel = path.Join(subpath, fname) // will include leading /
 		page.PubRel = path.Join(subpath, strings.Join(fparts, ""))
-		page.PubPath = path.Join(c.RepoRoot, subpath, strings.Join(fparts, ""))
+		page.PubPath = path.Join(c.PubRoot, subpath, strings.Join(fparts, ""))
 		page.Dir = strings.Trim(subpath, "/")
 		if page.Dir == "" {
 			page.Dir = "/"
@@ -300,15 +317,16 @@ func findPages(c Config) (pages Pages) {
 			log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\t%s\n", page.PubDate, fpath, err)
 		}
 
-		// leave drafts out of the list so they don't get rendered/published
-		if !page.Draft {
+		// leave drafts out of the list so they don't get rendered/published unless
+		// the -draft flag is true, in which case everything gets published
+		if !page.Draft || draftFlag {
 			pages = append(pages, page)
 		}
 
 		return nil
 	}
 
-	dir := path.Join(c.RepoRoot, c.PageDir)
+	dir := path.Join(c.SrcRoot, c.PageDir)
 	err := filepath.Walk(dir, visitor)
 	if err != nil {
 		log.Fatalf("Could not load page source in '%s': %s", dir, err)
