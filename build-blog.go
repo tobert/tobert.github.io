@@ -267,7 +267,6 @@ func findPages(c Config) (pages Pages) {
 		page := Page{
 			Type:  ext[1:len(ext)],
 			src:   string(tmplBytes),
-			Draft: false, // TODO: support draft skipping
 		}
 		err = yaml.Unmarshal(yamlBytes, &page)
 
@@ -301,7 +300,10 @@ func findPages(c Config) (pages Pages) {
 			log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\t%s\n", page.PubDate, fpath, err)
 		}
 
-		pages = append(pages, page)
+		// leave drafts out of the list so they don't get rendered/published
+		if !page.Draft {
+			pages = append(pages, page)
+		}
 
 		return nil
 	}
