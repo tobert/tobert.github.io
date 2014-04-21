@@ -1,10 +1,10 @@
-<!-- begin container-top -->
+
 <div class="container">
 <hr/>
 <h1>@AlTobey Writes: RSS</h1>
 <hr/>
 <br/>
-<!-- end container-top -->
+
 <rss version="2.0"
      xmlns:creativeCommons="http://cyber.law.harvard.edu/rss/creativeCommonsRssModule.html"
      xmlns:cc="http://creativecommons.org/ns#"
@@ -15,7 +15,7 @@
     <language>en-us</language>
     <author>Albert P Tobey</author>
 	<pubDate>2014-04-18</pubDate>
-	<lastBuildDate>2014-04-17</lastBuildDate>
+	<lastBuildDate>2014-04-21</lastBuildDate>
 	<generator>Hugo</generator>
 	
     
@@ -25,7 +25,7 @@
       <pubDate>Fri, 18 Apr 2014 00:20:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-04-17-fio-output-explained</guid>
-	  <description>Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you.</description>
+	  <description>Fio packs a lot of information into its output. This is a section-by-section breakdown of what it&#39;s telling you.</description>
     </item>
     
     <item>
@@ -128,7 +128,7 @@
     </item>
     
     <item>
-      <title>Thermocouples: safe & silent failures</title>
+      <title>Thermocouples: safe &amp; silent failures</title>
 	  <link>http://tobert.github.io/post/2013-12-12-thermocouples-safe-silent-failures.html</link>
       <pubDate>Thu, 12 Dec 2013 23:34:30 -0700</pubDate>
       <author>Albert P Tobey</author>
@@ -173,7 +173,7 @@
     </item>
     
     <item>
-      <title>Test & Build Automation with btrfs</title>
+      <title>Test &amp; Build Automation with btrfs</title>
 	  <link>http://tobert.github.io/post/2012-05-17-test-build-automation-with-btrfs.html</link>
       <pubDate>Thu, 17 May 2012 19:08:00 PDT</pubDate>
       <author>Albert P Tobey</author>
@@ -191,7 +191,7 @@
     </item>
     
     <item>
-      <title>Over-breeding & Culling EC2 Instances for IO Performance</title>
+      <title>Over-breeding &amp; Culling EC2 Instances for IO Performance</title>
 	  <link>http://tobert.github.io/post/2011-09-21-over-breeding-culling-ec2-instances-for.html</link>
       <pubDate>Wed, 21 Sep 2011 06:06:00 PDT</pubDate>
       <author>Albert P Tobey</author>
@@ -363,4 +363,4 @@
     
   </channel>
 </rss>
-</div><!-- container-bottom -->
+</div>

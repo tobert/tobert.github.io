@@ -15,6 +15,7 @@ import (
 	"bytes"
 	"github.com/russross/blackfriday"
 	"gopkg.in/yaml.v1"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/url"
@@ -23,7 +24,6 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-	"text/template"
 	"time"
 )
 
@@ -265,8 +265,8 @@ func findPages(c Config) (pages Pages) {
 		tmplBytes := src[end+7 : len(src)] // second --- is always followed by \n, so 3 + 4
 
 		page := Page{
-			Type:  ext[1:len(ext)],
-			src:   string(tmplBytes),
+			Type: ext[1:len(ext)],
+			src:  string(tmplBytes),
 		}
 		err = yaml.Unmarshal(yamlBytes, &page)
 

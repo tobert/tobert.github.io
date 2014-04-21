@@ -11,7 +11,7 @@
     <meta property="article:published_time" content="2013-11-12"/>
     <meta property="article:modified_time" content="2013-11-12"/>
 
-     <!-- twitter cards -->
+     
      <meta name="twitter:card" content="summary">
      <meta name="twitter:site" content="@AlTobey">
      <meta name="twitter:title" content="Arch Linux on ZFS : @AlTobey Writes">
@@ -48,23 +48,23 @@
         <li><a href="/contact">Contact</a></li>
         <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2013-11-12-arch-linux-on-zfs.html">Edit</a></li>
       </ul>
-    </div><!--/.nav-collapse -->
+    </div>
   </div>
 </div>
-<!-- end of header.html -->
-<!-- begin container-top -->
+
+
 <div class="container">
 <hr/>
 <h1>Arch Linux on ZFS</h1>
 <hr/>
 <br/>
-<!-- end container-top -->
+
 
 <div class="css-full-post-content js-full-post-content">
 I'm starting to work on a new talk about disk latency and decided it's time to finally get my Linux workstation up to date. I also have a nice monitor that my Mac refuses to drive properly, so I figure I'll bring the machine back as a graphical desktop.<br /><br />The last time I worked on this machine, I installed&nbsp;<a href="http://www.funtoo.org/" target="_blank">Funtoo</a>&nbsp;on&nbsp;<a href="http://open-zfs.org/wiki/Main_Page" target="_blank">ZFS</a>&nbsp;root using bits of the guide on the Funtoo Wiki here:&nbsp;<a href="http://open-zfs.org/wiki/Main_Page">http://open-zfs.org/wiki/Main_Page</a>. I changed a few things along the way. Overall, it works great. I have 4 500G drives in ZFS mirrors. I can take snapshots of the root filesystem before making changes. Creating filesystems for things like /srv/work or similar is a 'zfs create' away.<br /><br />Then I went to install XFCE and got to thinking about the incredible amount of time it was going to take to build the system and said, "screw it install Arch." I'll talk about why I love Arch another time, for now I want to talk about how ZFS made it easy to transition to another distribution with the ability to change back any time.<br /><br /><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">zfs create -o mountpoint=/mnt/arch tank/arch</span><br /><span style="font-family: 'Courier New', Courier, monospace;"><span style="font-size: x-small;">zfs create -o compression=lzjb tank/arch/root</span></span><br /><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">zfs create tank/arch/install</span><br /><div><span style="font-family: Courier New, Courier, monospace;"><br /></span></div>OK, big deal. We have an empty directory on ZFS. tank/arch is for organizational purposes and matches how I have Funtoo installed in tank/funtoo. tank/arch/root will contain the root filesystem. tank/arch/install will be used for the Arch install chroot.<br /><br />The Arch wiki has decent instructions. I won't rehash them here. I used the Arch chroot method.<br /><a href="https://wiki.archlinux.org/index.php/Install_from_Existing_Linux">https://wiki.archlinux.org/index.php/Install_from_Existing_Linux</a><br /><br />The first step is to mount the new root filesystem under the installer chroot. A bind mount would work fine, but I chose to use ZFS.<br /><br /><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">zfs set mountpoint=/mnt/arch/install/root.x86_64/mnt tank/arch/root</span><br /><br />Then continue with the install.<br /><br /><div><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">wget&nbsp;http://www.gtlib.gatech.edu/pub/archlinux/iso/2013.11.01/archlinux-bootstrap-2013.11.01-x86_64.tar.gz</span></div><div><span style="font-family: Courier New, Courier, monospace; font-size: x-small;"></span><br /><div><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">tar -C /mnt/arch/install -xzvf /tmp/archlinux-bootstrap-2013.11.01-x86_64.tar.gz</span></div><span style="font-family: Courier New, Courier, monospace; font-size: x-small;"></span></div><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">bash /mnt/arch/install/root.x86_64/bin/arch-chroot /mnt/arch/install/root.x86_64</span><br /><span style="font-family: Courier New, Courier, monospace; font-size: x-small;"><br /></span>Before the arch-chroot script would work, I had to edit it and comment out the "track_root shm ...". In my copy that is line 75. It looks like a bug, since it isn't really required at all for installations and it's already mounted on /dev which gets bind mounted before /dev/shm. Moving on ...<br /><div><br /></div><div><div><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">pacman-key --init</span></div><div><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">pacman-key --populate archlinux</span></div><div><br /></div><div>I had to edit the pacstrap script the same way as the chroot script (they share the same function) to disable the check for /dev/shm. After that, it's just a normal installation of the base system. I will add other packages after a snapshot and the first boot into the new install.</div><div><br /></div><div>&nbsp;<span style="font-family: Courier New, Courier, monospace; font-size: x-small;">pacstrap -d /mnt base</span></div><div><br /></div><div>Something weird happens here. Pacstrap works fine. The system installs and I can look inside /mnt and see all the files I expect to see. Once I exit the chroot created by arch-chroot, it becomes invisble. After unmounting /mnt, the files are back! I don't see anything in arch-chroot that might mask the mountpoint, so I suspect something in ZFS isn't interacting with chroot the way I expect. In any case, the quick solution is:<br /><br /><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">zfs umount /mnt/arch/install/root.x86_64/mnt</span><br /><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">zfs set mountpoint=/mnt/arch/root tank/arch/root</span><br /><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">mv&nbsp;/mnt/arch/install/root.x86_64/*&nbsp;/mnt/arch/root</span></div><div><br /></div><div>I'll chase down what's going on with the chroot for another post. I tried bind mounting and it had the same problem, which is weird when things like /dev are working fine.<br /><br /></div><div>The rest of this is pretty boring. Set up grub, etc.. It's all in the wiki so I won't cover it here unless I find something else weird.</div><br /><br /><br /><br /><br /><br /><br /></div>
 </div>
-</div><!-- container-bottom -->
-<!-- begin footer.html -->
+</div>
+
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">
