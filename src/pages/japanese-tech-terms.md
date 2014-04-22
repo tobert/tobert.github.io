@@ -9,9 +9,6 @@ script: >
     $( "table" ).addClass("table table-bordered table-striped");
 ---
 
-Japanese Tech Terms
--------------------
-
 I haven't seen many good tables of useful tech terms in Japanese. I follow a number of techies in
 Japan on Twitter for reading practice and get lots of good terms there.
 
