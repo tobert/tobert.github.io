@@ -15,11 +15,10 @@ Japan on Twitter for reading practice and get lots of good terms there.
 
 Pull requests welcome! Try the Edit button in the upper right-hand corner.
 
+日本語                | rōmaji                 | English
 ----------------------|------------------------|-----------------------------------------------------------------------
 かな                  | ka na                  | Japanese phonetic 'alphabet' [kana](http://en.wikipedia.org/wiki/Kana)
 ローマ字              | rō ma ji               | phonetic Japanese using the Roman alphabet
 日本語                | ni hon go              | Japanese language
 英語                  | ei go                  | English language
 ブログ                | bu ro gu               | blog
-
-
