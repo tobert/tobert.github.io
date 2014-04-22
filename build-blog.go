@@ -8,7 +8,9 @@ package main
  *
  * License: Creative Commons Attribution 4.0 International
  *
- * Usage: go run build-blog.go
+ * Usage: go run build-blog.go [-domain localhost] [-port 80] [-src path] [-pub path] [-draft]
+ *  note: all flags have defaults specific to my setup
+ *        I mostly use the flags with justrun & Apache for local previews.
  */
 
 import (
@@ -78,12 +80,14 @@ type TmplData struct {
 
 var (
 	defaultPath, srcFlag, pubFlag, domainFlag string
+	portFlag int
 	draftFlag                                 bool
 )
 
 func init() {
 	defaultPath = path.Join(os.Getenv("HOME"), "src/tobert.github.io")
-	flag.StringVar(&domainFlag, "url", "tobert.github.io", "The domain to use in generated links.")
+	flag.StringVar(&domainFlag, "domain", "tobert.github.io", "the domain to use in generated links")
+	flag.IntVar(&portFlag, "port", 80, "the HTTP port to put in the URL")
 	flag.StringVar(&srcFlag, "src", defaultPath, "where to find the content source")
 	flag.StringVar(&pubFlag, "pub", defaultPath, "where to write generated content")
 	flag.BoolVar(&draftFlag, "draft", false, "enable to force publishing drafts")
@@ -95,6 +99,10 @@ func main() {
 	baseUrl, err := url.Parse(fmt.Sprintf("http://%s", domainFlag))
 	if err != nil {
 		log.Fatalf("Could not parse base URL 'http://%s': %s", domainFlag, err)
+	}
+
+	if portFlag != 80 {
+		baseUrl.Host = fmt.Sprintf("%s:%d", baseUrl.Host, portFlag)
 	}
 
 	c := Config{srcFlag, pubFlag, baseUrl, "src", "snippets"}
