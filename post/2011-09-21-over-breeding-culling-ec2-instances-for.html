@@ -59,9 +59,66 @@
 <hr/>
 <br/>
 <!-- end container-top -->
-
 <div class="css-full-post-content js-full-post-content">
-I've heard other people talk about this on Twitter or at conferences, but as far as I can remember, nobody has described the nuts and bolts of finding tolerable-performance ephemeral disks in EC2.<br /><br />I recently spun up a 12-node Cassandra cluster in EC2 and, since it's a database, I decided to do some basic tire-kicking and learned a few things along the way.<br /><br />Rule: always zero your ephemerals if you care about performance.<br /><br />Why: Amazon is likely using <a href="http://en.wikipedia.org/wiki/Sparse_file">sparse files</a> to back ephemerals (and probably EBS, I have no experience there). This makes perfect sense, because: <ul><li>you get free thin provisioning, so unused disk doesn't go to waste</li><li>Xen supports it well</li><li>it's easy to manage lots & lots of them</li><li>it's trivial to export over all common network block protocols (e.g. AoE, iSCSI) </ul><br />Because there is an extra step of allocating a backing block for a sparse file for every block in your VM, performance will be all over the map while zeroing the disks.<br /><br />Script #1:&nbsp; <br /><script src="https://gist.github.com/1231302.js"></script><br /><br />I usually launch my zeroing script with <span style="font-family: monospace;">cl-run.pl --list burnin -s zero-drives.sh</span>. The "burnin" list is just all the ec2 hostnames, one per line, in ~/.dsh/machines.burnin. <br/><br/><b>Culling round 1</b>: Look at the raw throughput of all of the nodes and cull anything that looks abnormally low. For example, when building the aforementioned cluster, I kept getting really obviously bad instances in one of the us-east-1 AZ's.  This is what I saw when using my <a href="https://github.com/tobert/perl-ssh-tools/blob/master/cl-netstat.pl">cluster netstat</a> tool for a batch of m1.xlarge's in us-east-1c.<br/><br/> <script src="https://gist.github.com/1215444.js"> </script> I immediately culled off everything doing under 10k IOPS for more than a minute. If you examine the per-disk stats with <span style="font-family: monospace;">iostat -x 2</span>, you'll usually see one disk with insanely high (>1000ms) latency all the time. There are certainly false-negatives at this phase, but I don't really care since instances are cheap and time is not. I ended up starting around 30 instances in that one troublesome AZ to find 3 with sustainable IOPS in the most trivial of tests (dd). <br/><br/>When I think I have enough obviously tolerable nodes for a race, I kick off another zero round. Once the load levels out a  little, I take a snapshot I like of the cl-netstat.pl output and process it in a hacky way to sort by IOPS and add which EC2 zone the instance is in and its instance ID so I can kill the losers without digging around.  Here's an example from a round of testing I did for a recent MySQL cluster deployment: <br/><br/><script src="https://gist.github.com/1231333.js"> </script><br/>I picked the top few instances from each AZ and terminated the rest. Job done. <br/><br/>This is a pretty crude process in many ways. It's very manual, it requires a lot of human judgement, and most importantly, dd if=/dev/zero not a good measure of real-world performance. This process is just barely good enough to cull the worst offenders in EC2, which seem to be quite common in my recent experience. <br/><br/>In the future, I will likely automate most of this burn-in process and add some real-world I/O generation, probably using real data. 
+  I've heard other people talk about this on Twitter or at conferences, but as far as I can remember, nobody has
+  described the nuts and bolts of finding tolerable-performance ephemeral disks in EC2.<br />
+  <br />
+  I recently spun up a 12-node Cassandra cluster in EC2 and, since it's a database, I decided to do some basic
+  tire-kicking and learned a few things along the way.<br />
+  <br />
+  Rule: always zero your ephemerals if you care about performance.<br />
+  <br />
+  Why: Amazon is likely using <a href="http://en.wikipedia.org/wiki/Sparse_file">sparse files</a> to back ephemerals
+  (and probably EBS, I have no experience there). This makes perfect sense, because:
+
+  <ul>
+    <li>you get free thin provisioning, so unused disk doesn't go to waste</li>
+
+    <li>Xen supports it well</li>
+
+    <li>it's easy to manage lots &amp; lots of them</li>
+
+    <li>it's trivial to export over all common network block protocols (e.g. AoE, iSCSI)</li>
+  </ul><br />
+  Because there is an extra step of allocating a backing block for a sparse file for every block in your VM,
+  performance will be all over the map while zeroing the disks.<br />
+  <br />
+  Script #1:&nbsp;<br />
+  <script src="https://gist.github.com/1231302.js" type="text/javascript">
+</script><br />
+  <br />
+  I usually launch my zeroing script with <span style="font-family: monospace;">cl-run.pl --list burnin -s
+  zero-drives.sh</span>. The "burnin" list is just all the ec2 hostnames, one per line, in
+  ~/.dsh/machines.burnin.<br />
+  <br />
+  <b>Culling round 1</b>: Look at the raw throughput of all of the nodes and cull anything that looks abnormally low.
+  For example, when building the aforementioned cluster, I kept getting really obviously bad instances in one of the
+  us-east-1 AZ's. This is what I saw when using my <a href=
+  "https://github.com/tobert/perl-ssh-tools/blob/master/cl-netstat.pl">cluster netstat</a> tool for a batch of
+  m1.xlarge's in us-east-1c.<br />
+  <br />
+  <script src="https://gist.github.com/1215444.js" type="text/javascript">
+</script> I immediately culled off everything doing under 10k IOPS for more than a minute. If you examine the per-disk
+stats with <span style="font-family: monospace;">iostat -x 2</span>, you'll usually see one disk with insanely high
+(&gt;1000ms) latency all the time. There are certainly false-negatives at this phase, but I don't really care since
+instances are cheap and time is not. I ended up starting around 30 instances in that one troublesome AZ to find 3 with
+sustainable IOPS in the most trivial of tests (dd).<br />
+  <br />
+  When I think I have enough obviously tolerable nodes for a race, I kick off another zero round. Once the load levels
+  out a little, I take a snapshot I like of the cl-netstat.pl output and process it in a hacky way to sort by IOPS and
+  add which EC2 zone the instance is in and its instance ID so I can kill the losers without digging around. Here's an
+  example from a round of testing I did for a recent MySQL cluster deployment:<br />
+  <br />
+  <script src="https://gist.github.com/1231333.js" type="text/javascript">
+</script><br />
+  I picked the top few instances from each AZ and terminated the rest. Job done.<br />
+  <br />
+  This is a pretty crude process in many ways. It's very manual, it requires a lot of human judgement, and most
+  importantly, dd if=/dev/zero not a good measure of real-world performance. This process is just barely good enough to
+  cull the worst offenders in EC2, which seem to be quite common in my recent experience.<br />
+  <br />
+  In the future, I will likely automate most of this burn-in process and add some real-world I/O generation, probably
+  using real data.
 </div>
 </div><!-- container-bottom -->
 <!-- begin footer.html -->

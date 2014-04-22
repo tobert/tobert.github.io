@@ -59,9 +59,377 @@
 <hr/>
 <br/>
 <!-- end container-top -->
-
 <div class="css-full-post-content js-full-post-content">
-<div class="separator" style="clear: both; text-align: center;"></div><br />The parts are in the mail!<br /><br />I've been excited about this idea for a few years now, but haven't had a good reason and/or resources to go for it. Now that my work involves traveling around and showing off Cassandra, I need a suitable demo cluster. One good rule of presenting to audiences is to never rely on the internet connection if you can help it. Murphy's Law dictates that if you rely on the wifi for an important part of your talk, said wifi will almost certainly fail when you need it most.<br /><br />My original concept for the porta-cluster was to string a series of workstation motherboards together in a shipping case in such a way that they have just enough airflow and cabling to look decent but not hide anything.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://1.bp.blogspot.com/-gqdi6XTcwhc/UvVJK0xEXFI/AAAAAAAAgZk/Ch1XhmSsPY4/s1600/motherboard-stack.png" imageanchor="1" style="background: none; margin-left: 1em; margin-right: 1em;"><img border="0" src="http://1.bp.blogspot.com/-gqdi6XTcwhc/UvVJK0xEXFI/AAAAAAAAgZk/Ch1XhmSsPY4/s1600/motherboard-stack.png" height="284" width="320" /></a></div><br /><div class="separator" style="clear: both; text-align: center;"></div><div><div style="text-align: start;"></div><br />But that's still a bit unwieldy with lots of problems such as heatsink/fan size/flow, where to put the PSUs, etc.. Fortunately, there's a better solution on the market now in the form of the <a href="http://downloadmirror.intel.com/23089/eng/D54250WYB_D34010WYB_TechProdSpec03.pdf">Intel NUC</a>:</div><div class="separator" style="clear: both; text-align: center;"></div><div></div><div><div class="separator" style="clear: both; text-align: center;"><a href="http://3.bp.blogspot.com/-rjAXqU6U91w/UvVJP94JycI/AAAAAAAAgZs/L07hFC8jN2M/s1600/D54250WYK1.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://3.bp.blogspot.com/-rjAXqU6U91w/UvVJP94JycI/AAAAAAAAgZs/L07hFC8jN2M/s1600/D54250WYK1.png" height="240" width="320" /></a></div>This isn't a new development, since a pile of Mac Minis would do the same thing. I like these a little better than a mini though, because they're much smaller, about 1/4 of the size, and can support Linux out of the box. I'm impressed that these can hold 16GB of RAM and a 240GB mSATA drive, all wired up to an <a href="http://ark.intel.com/products/75028/">Intel i5 processor</a> and a gigabit ethernet port. <a href="https://www.youtube.com/watch?v=UzMppPgLW-s">For lack of a better word</a>, <a href="http://youtu.be/2FDeAqS_cmc?t=23s">perfect</a>.<br /><br />As people do, I was using Newegg's shopping cart for R&amp;D and came up with this loadout.<br /><span id="docs-internal-guid-106eab4e-0e19-e7c0-0b0d-01d603b5f34f"><br /><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;"></span></span><br /><div dir="ltr" style="margin-left: 0pt;"><table style="border-collapse: collapse; border: none; width: 624px;"><colgroup><col width="135"></col><col width="*"></col><col width="364"></col><col width="125"></col></colgroup><tbody><tr style="height: 33px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Server</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">7</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="margin-bottom: 6pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; line-height: 1; vertical-align: baseline; white-space: pre-wrap;">Intel NUC </span>D54250WYK1<span style="line-height: 1;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;"></span></span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">374.99</span></div></td></tr><tr style="height: 0px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Memory</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">7</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">2 x 8G 204-pin DDR3 1600 SO-DIMM</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">139.99</span></div></td></tr><tr style="height: 0px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Storage</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">7</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Intel 525 Series SSDMCEA240B301 240G mSATA</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">289.99</span></div></td></tr><tr style="height: 0px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Display</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">GeChic On-Lap 2501B 15.6” Portable LCD</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">249.00</span></div></td></tr><tr style="height: 0px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Input</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 6pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Logitech K400 (920-003070)</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">39.99</span></div></td></tr><tr style="height: 0px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Cables</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">8</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1m Cat</span><span style="font-family: 'Droid Sans'; font-size: 16px; font-weight: bold; vertical-align: baseline; white-space: pre-wrap;">6</span><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;"> RJ45</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">2.78</span></div></td></tr><tr style="height: 0px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Network Switch</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Netgear ProSafe M4100-D12G</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">193.99</span></div></td></tr><tr style="height: 0px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Power Strip</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Digital Loggers Web Power Switch 7</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">139.00</span></div></td></tr><tr style="height: 0px;"><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Case</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 6pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Pelican IM2950-X0001</span></div></td><td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;"><div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;"><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">219.00</span></div></td></tr></tbody></table></div><span id="docs-internal-guid-106eab4e-0e19-e7c0-0b0d-01d603b5f34f"><br /><span style="font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;"></span></span><br /><div dir="ltr" style="margin-left: 0pt;"><table style="border-collapse: collapse; border: none;"><colgroup><col width="135"></col><col width="364"></col><col width="125"></col></colgroup></table></div><span id="docs-internal-guid-106eab4e-0e19-e7c0-0b0d-01d603b5f34f"></span>The managed power supply will make scripting bare metal reinstallation easier since these machines don't have remote power control. The managed switch provides for two important use cases. The first is the ability to remotely enable/disable ports for partition simulations. The second is to do simple L3 routing between VLANs so I can split the cluster into two 3-node datacenters for demonstrations.<br /><br />Finally, the whole thing will live in a <a href="http://www.pelican.com/cases_detail_storm.php?Case=iM2950">Pelican case</a> that is (hopefully) easy to check at the airport so I can take it to shows.<br /><br />After going through IT purchasing, a couple things changed, but for the most part this is exactly what's coming. The power strip got upgraded to a small APC unit and the LCD got left out for now. I'll probably use my <a href="http://www.theverge.com/2012/6/21/3105822/motorola-lapdock-hacked-raspberry-pi-rikomagic">Droid Dock</a> for <a href="https://www.socallinuxexpo.org/scale12x/presentations/managing-cassandra">SCALE12x</a> and find something else later.<br /><br />If you find that the UPS package tracking service is a little slow, I'm sorry. I can't help myself. The refresh button is there for a reason...</div>
+  <div class="separator" style="clear: both; text-align: center;"></div><br />
+  The parts are in the mail!<br />
+  <br />
+  I've been excited about this idea for a few years now, but haven't had a good reason and/or resources to go for it.
+  Now that my work involves traveling around and showing off Cassandra, I need a suitable demo cluster. One good rule
+  of presenting to audiences is to never rely on the internet connection if you can help it. Murphy's Law dictates that
+  if you rely on the wifi for an important part of your talk, said wifi will almost certainly fail when you need it
+  most.<br />
+  <br />
+  My original concept for the porta-cluster was to string a series of workstation motherboards together in a shipping
+  case in such a way that they have just enough airflow and cabling to look decent but not hide anything.<br />
+  <br />
+
+  <div class="separator" style="clear: both; text-align: center;">
+    <a href="http://1.bp.blogspot.com/-gqdi6XTcwhc/UvVJK0xEXFI/AAAAAAAAgZk/Ch1XhmSsPY4/s1600/motherboard-stack.png"
+    imageanchor="1" style="background: none; margin-left: 1em; margin-right: 1em;"><img border="0" src=
+    "http://1.bp.blogspot.com/-gqdi6XTcwhc/UvVJK0xEXFI/AAAAAAAAgZk/Ch1XhmSsPY4/s1600/motherboard-stack.png" height=
+    "284" width="320" /></a>
+  </div><br />
+
+  <div class="separator" style="clear: both; text-align: center;"></div>
+
+  <div>
+    <div style="text-align: start;"></div><br />
+    But that's still a bit unwieldy with lots of problems such as heatsink/fan size/flow, where to put the PSUs, etc..
+    Fortunately, there's a better solution on the market now in the form of the <a href=
+    "http://downloadmirror.intel.com/23089/eng/D54250WYB_D34010WYB_TechProdSpec03.pdf">Intel NUC</a>:
+  </div>
+
+  <div class="separator" style="clear: both; text-align: center;"></div>
+
+  <div>
+    <div class="separator" style="clear: both; text-align: center;">
+      <a href="http://3.bp.blogspot.com/-rjAXqU6U91w/UvVJP94JycI/AAAAAAAAgZs/L07hFC8jN2M/s1600/D54250WYK1.png"
+      imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src=
+      "http://3.bp.blogspot.com/-rjAXqU6U91w/UvVJP94JycI/AAAAAAAAgZs/L07hFC8jN2M/s1600/D54250WYK1.png" height="240"
+      width="320" /></a>
+    </div>This isn't a new development, since a pile of Mac Minis would do the same thing. I like these a little better
+    than a mini though, because they're much smaller, about 1/4 of the size, and can support Linux out of the box. I'm
+    impressed that these can hold 16GB of RAM and a 240GB mSATA drive, all wired up to an <a href=
+    "http://ark.intel.com/products/75028/">Intel i5 processor</a> and a gigabit ethernet port. <a href=
+    "https://www.youtube.com/watch?v=UzMppPgLW-s">For lack of a better word</a>, <a href=
+    "http://youtu.be/2FDeAqS_cmc?t=23s">perfect</a>.<br />
+    <br />
+    As people do, I was using Newegg's shopping cart for R&amp;D and came up with this loadout.<br />
+    <span id="docs-internal-guid-106eab4e-0e19-e7c0-0b0d-01d603b5f34f"><br /></span><br />
+
+    <div dir="ltr" style="margin-left: 0pt;">
+      <table style="border-collapse: collapse; border: none; width: 624px;">
+        <colgroup>
+          <col width="135" />
+          <col width="*" />
+          <col width="364" />
+          <col width="125" />
+        </colgroup>
+
+        <tbody>
+          <tr style="height: 33px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Server</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">7</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="margin-bottom: 6pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; line-height: 1; vertical-align: baseline; white-space: pre-wrap;">
+                Intel NUC</span> D54250WYK1
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">374.99</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr style="height: 0px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Memory</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">7</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">2 x 8G
+                204-pin DDR3 1600 SO-DIMM</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">139.99</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr style="height: 0px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Storage</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">7</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Intel
+                525 Series SSDMCEA240B301 240G mSATA</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">289.99</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr style="height: 0px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Display</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">GeChic
+                On-Lap 2501B 15.6” Portable LCD</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">249.00</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr style="height: 0px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Input</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 6pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Logitech
+                K400 (920-003070)</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">39.99</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr style="height: 0px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Cables</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">8</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1m
+                Cat</span><span style=
+                "font-family: 'Droid Sans'; font-size: 16px; font-weight: bold; vertical-align: baseline; white-space: pre-wrap;">6</span>
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">RJ45</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">2.78</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr style="height: 0px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Network
+                Switch</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Netgear
+                ProSafe M4100-D12G</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">193.99</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr style="height: 0px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Power
+                Strip</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Digital
+                Loggers Web Power Switch 7</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">139.00</span>
+              </div>
+            </td>
+          </tr>
+
+          <tr style="height: 0px;">
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Case</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">1</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 6pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">Pelican
+                IM2950-X0001</span>
+              </div>
+            </td>
+
+            <td style="border: 1px solid #000000; padding: 7px 7px 7px 7px; vertical-align: top;">
+              <div dir="ltr" style="line-height: 1; margin-bottom: 0pt; margin-top: 0pt;">
+                <span style=
+                "font-family: 'Droid Sans'; font-size: 16px; vertical-align: baseline; white-space: pre-wrap;">219.00</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div><span id="docs-internal-guid-106eab4e-0e19-e7c0-0b0d-01d603b5f34f"><br /></span><br />
+
+    <div dir="ltr" style="margin-left: 0pt;">
+      <table style="border-collapse: collapse; border: none;">
+        <colgroup>
+          <col width="135" />
+          <col width="364" />
+          <col width="125" />
+        </colgroup>
+      </table>
+    </div><span id="docs-internal-guid-106eab4e-0e19-e7c0-0b0d-01d603b5f34f"></span>The managed power supply will make
+    scripting bare metal reinstallation easier since these machines don't have remote power control. The managed switch
+    provides for two important use cases. The first is the ability to remotely enable/disable ports for partition
+    simulations. The second is to do simple L3 routing between VLANs so I can split the cluster into two 3-node
+    datacenters for demonstrations.<br />
+    <br />
+    Finally, the whole thing will live in a <a href="http://www.pelican.com/cases_detail_storm.php?Case=iM2950">Pelican
+    case</a> that is (hopefully) easy to check at the airport so I can take it to shows.<br />
+    <br />
+    After going through IT purchasing, a couple things changed, but for the most part this is exactly what's coming.
+    The power strip got upgraded to a small APC unit and the LCD got left out for now. I'll probably use my <a href=
+    "http://www.theverge.com/2012/6/21/3105822/motorola-lapdock-hacked-raspberry-pi-rikomagic">Droid Dock</a> for
+    <a href="https://www.socallinuxexpo.org/scale12x/presentations/managing-cassandra">SCALE12x</a> and find something
+    else later.<br />
+    <br />
+    If you find that the UPS package tracking service is a little slow, I'm sorry. I can't help myself. The refresh
+    button is there for a reason...
+  </div>
 </div>
 </div><!-- container-bottom -->
 <!-- begin footer.html -->
