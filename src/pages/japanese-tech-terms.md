@@ -6,7 +6,7 @@ tags: ["japanese", "technical", "translation"]
 pubdate: 2014-04-22T00:30:00Z
 autoidx: false
 script: >
-    $( "table" ).addClass("table table-bordered table-striped");
+    $("table").wrap("<div class='table-responsive'></div>").addClass("table table-bordered table-striped");
 ---
 
 I haven't seen many good tables of useful tech terms in Japanese. I follow a number of techies in
