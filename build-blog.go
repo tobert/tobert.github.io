@@ -8,7 +8,7 @@ package main
  *
  * License: Creative Commons Attribution 4.0 International
  *
- * Usage: go run build-blog.go [-domain localhost] [-port 80] [-src path] [-pub path] [-draft]
+ * Usage: go run build-blog.go [-domain localhost] [-port 80] [-src path] [-pub path] [-force-idx]
  *  note: all flags have defaults specific to my setup
  *        I mostly use the flags with justrun & Apache for local previews.
  */
@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"github.com/russross/blackfriday"
 	"gopkg.in/yaml.v1"
-	"html/template"
 	"io/ioutil"
 	"log"
 	"net/url"
@@ -28,6 +27,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"text/template"
 	"time"
 )
 
@@ -56,7 +56,7 @@ type Page struct {
 	Tags     []string  // ["slobber", "golang"]
 	PubDate  string    // the string value, will be converted to Date after
 	Date     time.Time // 9999-12-31
-	Draft    bool      // don't render pages with draft: true
+	AutoIdx  bool      // default true, when false omit page from automatic page index
 	SrcPath  string    // the relative path of the source file
 	SrcRel   string    // relative path of the source doc
 	PubPath  string    // the path the file will be written to
@@ -81,7 +81,7 @@ type TmplData struct {
 var (
 	defaultPath, srcFlag, pubFlag, domainFlag string
 	portFlag                                  int
-	draftFlag                                 bool
+	forceIdxFlag                              bool
 )
 
 func init() {
@@ -90,7 +90,7 @@ func init() {
 	flag.IntVar(&portFlag, "port", 80, "the HTTP port to put in the URL")
 	flag.StringVar(&srcFlag, "src", defaultPath, "where to find the content source")
 	flag.StringVar(&pubFlag, "pub", defaultPath, "where to write generated content")
-	flag.BoolVar(&draftFlag, "draft", false, "enable to force publishing drafts")
+	flag.BoolVar(&forceIdxFlag, "force-idx", false, "forces all pages into the automatic index")
 }
 
 func main() {
@@ -111,18 +111,26 @@ func main() {
 	pages := findPages(c)
 	sort.Sort(pages)
 
+	// create another list that only contains pages for the automatic index
+	pageAutoIdx := Pages{}
+	for _, page := range pages {
+		if page.AutoIdx {
+			pageAutoIdx = append(pageAutoIdx, page)
+		}
+	}
+
 	// an index of tag => [ page page page ]
 	tagIdx := make(TagPagesIdx)
-
 	for _, page := range pages {
 		for _, tag := range page.Tags {
 			tagIdx[tag] = append(tagIdx[tag], page)
 		}
 	}
 
-	// render pages
+	// render all pages
 	for _, page := range pages {
-		td := TmplData{page, c, snippets, pages, tagIdx, time.Now()}
+		// only pages with autoidx: true are available in the templates' .Pages pipeline
+		td := TmplData{page, c, snippets, pageAutoIdx, tagIdx, time.Now()}
 
 		// parse the page template
 		tmpl, err := template.New(page.Id).Parse(page.src)
@@ -169,22 +177,17 @@ func main() {
 			}
 		}
 
-		// due to the text/template html/template madness, it isn't really possible
-		// to do template preprocessing on markdown before rendering
+		// everything in the source directory is considered a template
+		var buf bytes.Buffer
+		err = tmpl.Execute(&buf, td)
+		if err != nil {
+			log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
+		}
+
 		if page.Type == "md" {
-			//output := blackfriday.MarkdownCommon([]byte(page.src))
 			output := markdown([]byte(page.src))
 			_, err = fd.Write(output)
 		} else {
-			// everything in the source directory that is not Markdown is a template
-			// run the template into a buffer instead of the file so it can
-			// be processed with blackfriday or similar before output
-			var buf bytes.Buffer
-			err = tmpl.Execute(&buf, td)
-			if err != nil {
-				log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
-			}
-
 			_, err = fd.Write(buf.Bytes())
 		}
 		if err != nil {
@@ -292,8 +295,9 @@ func findPages(c Config) (pages Pages) {
 		tmplBytes := src[end+7 : len(src)] // second --- is always followed by \n, so 3 + 4
 
 		page := Page{
-			Type: ext[1:len(ext)],
-			src:  string(tmplBytes),
+			Type:    ext[1:len(ext)],
+			AutoIdx: true,
+			src:     string(tmplBytes),
 		}
 		err = yaml.Unmarshal(yamlBytes, &page)
 
@@ -327,11 +331,7 @@ func findPages(c Config) (pages Pages) {
 			log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\t%s\n", page.PubDate, fpath, err)
 		}
 
-		// leave drafts out of the list so they don't get rendered/published unless
-		// the -draft flag is true, in which case everything gets published
-		if !page.Draft || draftFlag {
-			pages = append(pages, page)
-		}
+		pages = append(pages, page)
 
 		return nil
 	}
@@ -345,22 +345,19 @@ func findPages(c Config) (pages Pages) {
 	return pages
 }
 
-// MarkdownCommon from blackfriday without the dash wtf's
+// pass custom flags to the blackfriday md->html renderer
 func markdown(input []byte) []byte {
 	flags := 0
 	flags |= blackfriday.HTML_USE_XHTML
 	r := blackfriday.HtmlRenderer(flags, "", "")
 
-    ext := 0
-    ext |= blackfriday.EXTENSION_NO_INTRA_EMPHASIS
-    ext |= blackfriday.EXTENSION_TABLES
-    ext |= blackfriday.EXTENSION_FENCED_CODE
-    ext |= blackfriday.EXTENSION_AUTOLINK
-    ext |= blackfriday.EXTENSION_STRIKETHROUGH
-    ext |= blackfriday.EXTENSION_SPACE_HEADERS
-    ext |= blackfriday.EXTENSION_HEADER_IDS
+	ext := 0
+	ext |= blackfriday.EXTENSION_NO_INTRA_EMPHASIS
+	ext |= blackfriday.EXTENSION_TABLES
+	ext |= blackfriday.EXTENSION_SPACE_HEADERS
+	ext |= blackfriday.EXTENSION_FOOTNOTES
 
-    return blackfriday.Markdown(input, r, ext)
+	return blackfriday.Markdown(input, r, ext)
 }
 
 // implement the sort interface for Pages
