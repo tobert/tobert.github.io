@@ -24,6 +24,6 @@
   ga('send', 'pageview');
 
 </script>
-
+{{ with .Page.Script }}<script>{{ . }}</script>{{ end }}
 </body>
 </html>

@@ -5,6 +5,8 @@ abstract: "A simple lookup table of Japanese/English technical terms."
 tags: ["japanese", "technical", "translation"]
 pubdate: 2014-04-22T00:30:00Z
 autoidx: false
+script: >
+    $( "table" ).addClass("table table-bordered table-striped");
 ---
 
 Japanese Tech Terms

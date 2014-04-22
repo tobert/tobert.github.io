@@ -57,6 +57,7 @@ type Page struct {
 	PubDate  string    // the string value, will be converted to Date after
 	Date     time.Time // 9999-12-31
 	AutoIdx  bool      // default true, when false omit page from automatic page index
+	Script   string    // script code to be placed in a <script></script> after the content
 	SrcPath  string    // the relative path of the source file
 	SrcRel   string    // relative path of the source doc
 	PubPath  string    // the path the file will be written to
