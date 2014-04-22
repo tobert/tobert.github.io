@@ -3,13 +3,13 @@
      xmlns:cc="http://creativecommons.org/ns#"
      xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
   <channel>
-    <title>@AlTobey Writes: @AlTobey Writes: RSS</title>
+    <title>@AlTobey Writes</title>
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
 	<pubDate>2014-04-18</pubDate>
 	<lastBuildDate>2014-04-22</lastBuildDate>
-	<generator>Hugo</generator>
+	<generator>build-blog.go</generator>
 	
     
     <item>
@@ -28,15 +28,6 @@
       <author>Albert P Tobey</author>
       <guid>2014-04-17-new-blog</guid>
 	  <description>Sometimes you need a sharper tool.</description>
-    </item>
-    
-    <item>
-      <title>@AlTobey Writes</title>
-	  <link>http://tobert.github.io/index.html</link>
-      <pubDate>Wed, 16 Apr 2014 17:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>index</guid>
-	  <description>The Blog of Al Tobey</description>
     </item>
     
     <item>
@@ -307,51 +298,6 @@
       <author>Albert P Tobey</author>
       <guid>2003-12-02-here-is-drop-in-replacement-for-rajeev</guid>
 	  <description>A shell implementation of bootprofile</description>
-    </item>
-    
-    <item>
-      <title>About @AlTobey</title>
-	  <link>http://tobert.github.io/about.html</link>
-      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>about</guid>
-	  <description>A blurb about me.</description>
-    </item>
-    
-    <item>
-      <title>License and Credits</title>
-	  <link>http://tobert.github.io/attributes.html</link>
-      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>attributes</guid>
-	  <description>About tobert.github.io</description>
-    </item>
-    
-    <item>
-      <title>Contacting @AlTobey</title>
-	  <link>http://tobert.github.io/contact.html</link>
-      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>contact</guid>
-	  <description>How to get a hold of me.</description>
-    </item>
-    
-    <item>
-      <title>Lorem Ipsum</title>
-	  <link>http://tobert.github.io/post/lorem-ipsum.html</link>
-      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>lorem-ipsum</guid>
-	  <description>A fake post for testing purposes.</description>
-    </item>
-    
-    <item>
-      <title>@AlTobey Writes: RSS</title>
-	  <link>http://tobert.github.io/rss.xml</link>
-      <pubDate>Thu, 01 Jan 1970 00:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>rss</guid>
-	  <description>RSS XML</description>
     </item>
     
   </channel>

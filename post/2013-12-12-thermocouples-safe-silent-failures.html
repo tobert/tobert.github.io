@@ -11,7 +11,7 @@
     <meta property="article:published_time" content="2013-12-12"/>
     <meta property="article:modified_time" content="2013-12-12"/>
 
-     
+     <!-- twitter cards -->
      <meta name="twitter:card" content="summary">
      <meta name="twitter:site" content="@AlTobey">
      <meta name="twitter:title" content="Thermocouples: safe &amp; silent failures : @AlTobey Writes">
@@ -48,23 +48,23 @@
         <li><a href="/contact">Contact</a></li>
         <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2013-12-12-thermocouples-safe-silent-failures.html">Edit</a></li>
       </ul>
-    </div>
+    </div><!--/.nav-collapse -->
   </div>
 </div>
-
-
+<!-- end of header.html -->
+<!-- begin container-top -->
 <div class="container">
 <hr/>
 <h1>Thermocouples: safe &amp; silent failures</h1>
 <hr/>
 <br/>
-
+<!-- end container-top -->
 
 <div class="css-full-post-content js-full-post-content">
 Captain! The thermocouple is failing, the engines are down and we can’t start them until it’s fixed!<br /><br />Sounds cool, right? This humble safety device isn’t that far-fetched. If you have a gas-powered hot water heater, you have one of your very own. It solves a dangerous problem with pilot lights. A pilot light is a small flame that is kept burning indefinitely inside your gas furnace or hot water heater. It gets a tiny trickle of gas from the main supply using barely enough volume to show up on your bill.<br /><br /><div>The engineers in the audience will ask, what happens when the pilot light goes out? Without a thermocouple, it will seep tiny bits of gas into the combustion chamber of the device. In a few hours, it can leak enough gas for a small explosion, probably just enough to shorten your eyebrows. If you were on vacation in Tahiti for a month and there is no circulation, enough gas could build up to some serious damage to homes and humans.</div><div><br />The engineering requirements are interesting:<br /><br /><ul><li>no external electricity is available</li><li>has to be reliable</li><li>has to work in a multitude of physical environments, from indoor closets to filthy barns</li><li>must behave consistently across a large temperature range</li><li>cannot require regular maintenance</li><li>HUMAN SAFETY IS AT RISK&nbsp;</li></ul>When you need something reliable, you need something simple. Enter the thermocouple.<br /><br />The science of how a thermocouple works is described on <a href="http://en.wikipedia.org/wiki/Thermocouple">Wikipedia</a>. I wanted to send that to people, but it requires a lot of background in physics to even parse what the article says. While the physics in play are fascinating, at the end of the day it’s a simple device. The trick is in the first sentence on Wikipedia,<br /><br />“In 1821, the <a href="http://en.wikipedia.org/wiki/Germany">German</a>–<a href="http://en.wikipedia.org/wiki/Estonia">Estonian</a> physicist <a href="http://en.wikipedia.org/wiki/Thomas_Johann_Seebeck">Thomas Johann Seebeck</a> discovered that when any conductor is subjected to a thermal gradient, it will generate a voltage.”<br /><br />What does this have to do with hot water heaters? We need a way to detect when the pilot light has gone out. No electronics, or even electricity is available. Natural gas burns at 900-1,500° Celsius. You don’t even have to convert that to Fahrenheit to see that we have a considerable temperature delta at our disposal, so there’s an opportunity to use the Seebeck effect to create a safe and reliable device.<br /><br />In layman terms, the thermocouple found in household hot water heaters is a probe that is placed inside a flame with two wires made of different metal. This creates a temperature gradient, since the metals disperse heat at different rates. This generates a few microwatts of current, which is boosted by a transformer connected to a solenoid. When current is present, the solenoid holds the gas valve open. When there is not enough current, the valve is pushed closed by a spring, so most failures will lead to the gas being turned off, including the thermocouple itself failing. The device itself is intended to act like a fuse or breaker, giving up before any other component resulting in a known-safe condition.<br /><br /><span style="font-family: Arial; font-size: 15px; vertical-align: baseline; white-space: pre-wrap;"></span></div>
 </div>
-</div>
-
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">

@@ -4,6 +4,7 @@ title: "Lorem Ipsum"
 abstract: "A fake post for testing purposes."
 tags: ["lorem ipsum", "testing"]
 pubdate: 1970-01-01T00:00:00Z
+autoidx: false
 ---
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis mattis ante eget porttitor dignissim. Suspendisse commodo leo at erat tincidunt ullamcorper. Etiam sagittis sem nisl, nec tincidunt magna mollis sed. Integer elementum viverra est, nec imperdiet lacus gravida non. Sed eget neque et augue lacinia ultrices eget sed odio. Praesent feugiat, velit sed fringilla malesuada, mauris dolor congue odio, vel mollis dolor ipsum condimentum sapien. Morbi in velit ut odio cursus tempus id sit amet nulla. Praesent laoreet eros eget iaculis fringilla. Aenean quis massa ligula. Maecenas pulvinar mauris eget sapien fermentum accumsan. Ut venenatis leo at elit facilisis pellentesque. Praesent volutpat est et lorem gravida, in ultrices lorem tincidunt. Ut at massa mollis, fermentum dolor sit amet, gravida nulla. Praesent condimentum tincidunt est a consequat. Aenean vehicula nisi id enim iaculis faucibus.

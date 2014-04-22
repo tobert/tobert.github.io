@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="description" content="">
     <meta name="HandheldFriendly" content="True">
-    {{ with .Page.Abstract }}<meta name="description" content="{{ . }}">{{ end }}
+    {{ with .Page.Abstract }}<meta name="description" content="{{ . |html }}">{{ end }}
     {{ with .Page.Tags }}<meta name="keywords" content="{{ range . }}{{ . }}, {{ end }}">{{ end }}
     {{ with .Page.Date }}<meta property="article:published_time" content="{{ .Format "2006-01-02" }}"/>{{ end }}
     {{ with .Page.Date }}<meta property="article:modified_time" content="{{ .Format "2006-01-02" }}"/>{{ end }}
@@ -14,12 +14,12 @@
      <!-- twitter cards -->
      <meta name="twitter:card" content="summary">
      <meta name="twitter:site" content="@AlTobey">
-     {{ with .Page.Title }}<meta name="twitter:title" content="{{ . }} : @AlTobey Writes">{{ end }}
+     {{ with .Page.Title }}<meta name="twitter:title" content="{{ . |html }} : @AlTobey Writes">{{ end }}
      <meta name="twitter:creator" content="@AlTobey">
-     {{ with .Page.Abstract }}<meta name="twitter:description" content="{{ . }}">{{ end }}
+     {{ with .Page.Abstract }}<meta name="twitter:description" content="{{ . |html }}">{{ end }}
      <meta name="twitter:domain" content="{{ .Config.BaseURL }}">
 
-    <title>{{ .Page.Title }}</title>
+    <title>{{ .Page.Title |html }}</title>
     <link rel="canonical" href="{{ .Config.BaseURL }}{{ .Page.PubRel }}">
     <link href="{{ .Config.BaseURL }}/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
     <link rel="shortcut icon" href="/favicon.ico">

@@ -11,7 +11,7 @@
     <meta property="article:published_time" content="2014-03-25"/>
     <meta property="article:modified_time" content="2014-03-25"/>
 
-     
+     <!-- twitter cards -->
      <meta name="twitter:card" content="summary">
      <meta name="twitter:site" content="@AlTobey">
      <meta name="twitter:title" content="Mirrored FAT32 EFI Boot Partitions : @AlTobey Writes">
@@ -48,23 +48,23 @@
         <li><a href="/contact">Contact</a></li>
         <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2014-03-25-mirrored-fat32-efi-boot-partitions.html">Edit</a></li>
       </ul>
-    </div>
+    </div><!--/.nav-collapse -->
   </div>
 </div>
-
-
+<!-- end of header.html -->
+<!-- begin container-top -->
 <div class="container">
 <hr/>
 <h1>Mirrored FAT32 EFI Boot Partitions</h1>
 <hr/>
 <br/>
-
+<!-- end container-top -->
 
 <div class="css-full-post-content js-full-post-content">
 Most modern hardware ships with <a href="http://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface" target="_blank">UEFI</a> firmware and can be booted in EFI mode automatically when a disk is found with EFI setup. When I recently put <a href="https://wiki.archlinux.org/" target="_blank">Arch Linux</a> on my desktop machine, I went with <a href="http://freedesktop.org/wiki/Software/gummiboot/" target="_blank">gummiboot</a> to try something new and I really like the results.<br /><br />Now that I'm bringing my Xeon machine back online for some benchmarking, I want to use gummiboot there too. The twist is that while my desktop has a single SSD for root+data, this machine has a few more drives installed.<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://2.bp.blogspot.com/-b7VpThnoo9U/UzDYcLLRIuI/AAAAAAAA3lk/_9S6vuJmIQw/s1600/20140324_133643_Willowmont+Ave.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" src="http://2.bp.blogspot.com/-b7VpThnoo9U/UzDYcLLRIuI/AAAAAAAA3lk/_9S6vuJmIQw/s1600/20140324_133643_Willowmont+Ave.jpg" height="240" width="320" /></a></div><br />The root drives actually aren't visible in the photo. They're 2.5" SATA drives behind the side panel on the left side, directly behind the red and black SAS tray.<br /><br />Since I'm installing a mirrored root on btrfs and using EFI, I want to have /boot mirrored to both drives so the system will still boot if one of them fails. The easy way would be to format both and rsync with a cron job. While that would catch 99% of updates, I figure since I'm using this machine for crazy disk stuff I might as well try mirroring the EFI filesystem.<br /><br />Because of the way EFI works, FAT32 is pretty much the only decent choice for a filesystem on the EFI partition (code ef02). Since /boot only needs to hold initramfs, kernels, and the EFI configuration, I'll simply mount it on /boot as vfat.<br /><br /><script src="https://gist.github.com/tobert/9754425.js"></script> This is how it's set up on my desktop. But now I want mirroring. I tried mdraid, but even with metadata 1.0 the fat filesystem can't be direct mounted. No big deal. The Linux LVM is actually a frontend to a kernel disk abstraction called device mapper. It includes a mirror target, so all I had to do was spin up a quick mirrored LV then dump the device mapper table.<br /><br /><script src="https://gist.github.com/tobert/9754543.js"></script> Here's the breakdown of what the device mapper table says in English:<br /><br /><span style="font-family: Courier New, Courier, monospace; font-size: x-small;">0 8192 mirror core 1 1024 2 253:0 0 253:1 0 1 handle_errors</span><br /><br />Present blocks 0 to 8192 as a mirror with in-core replication log of the size 1024 with 2 devices, 253:0 and 253:1 both starting at offset 0 with one argument of 'handle_errors'. &nbsp;The syntax is terse and the documentation is incomplete, so that's as far as I can tell. Device mapper can do a lot more than this, but this is all I need for now.<br /><br />With the knowledge of what an LVM-created device mapper table looks like, writing a script that sets up the mirror is pretty easy. I'll throw this into a systemd unit file when I'm done with the setup.<br /><br /><script src="https://gist.github.com/tobert/9755039.js"></script> With that script written the rest is mostly by the book (<a href="https://wiki.archlinux.org/index.php/Gummiboot" target="_blank">wiki</a>), but I'll go ahead and test that the partitions are usable alone.<br /><br /><script src="https://gist.github.com/tobert/9755107.js"></script> And with that, my workstation has redundant boot drives and can be set up to boot with gummitboot per the wiki instructions.<br /><br />Edit: I may have spoke too soon. Will update again when I figure out why gummiboot won't run.
 </div>
-</div>
-
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">

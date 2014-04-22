@@ -4,7 +4,7 @@ title: "License and Credits"
 abstract: "About tobert.github.io"
 tags: [ "altobey", "license" ]
 pubdate: 1970-01-01T00:00:00Z
-draft: false
+autoidx: false
 ---
 
 Made by <a href="https://twitter.com/AlTobey"

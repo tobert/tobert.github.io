@@ -4,7 +4,7 @@ title: "Packer Hacking"
 abstract: "Rebuilding the PlanetCassandra VM image with Packer"
 tags: ["packer", "cassandra", "virtual machine", "golden image", "arch linux"]
 pubdate: 2014-04-21T20:00:00Z
-draft: true
+autoidx: false
 ---
 
 My first technical project for Datastax was to build a virtual machine that runs

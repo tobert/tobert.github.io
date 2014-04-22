@@ -11,7 +11,7 @@
     <meta property="article:published_time" content="2005-09-20"/>
     <meta property="article:modified_time" content="2005-09-20"/>
 
-     
+     <!-- twitter cards -->
      <meta name="twitter:card" content="summary">
      <meta name="twitter:site" content="@AlTobey">
      <meta name="twitter:title" content="Building pdksh on HP-UX/Itanium : @AlTobey Writes">
@@ -48,23 +48,23 @@
         <li><a href="/contact">Contact</a></li>
         <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2005-09-20-pdksh-5.html">Edit</a></li>
       </ul>
-    </div>
+    </div><!--/.nav-collapse -->
   </div>
 </div>
-
-
+<!-- end of header.html -->
+<!-- begin container-top -->
 <div class="container">
 <hr/>
 <h1>Building pdksh on HP-UX/Itanium</h1>
 <hr/>
 <br/>
-
+<!-- end container-top -->
 
 <div class="css-full-post-content js-full-post-content">
 pdksh 5.2.14 on HP-UX 11.23 Itanium: If you grab the source for pdksh and try to compile it on Itanium HP-UX, it will tend to dump core with SIGBUS. SIGBUS is a signal sent to processes when they access unaligned memory, usually in C unions or structs. pdksh has a union in it that ends up unaligned on Itanium, which is very particular about such things. HP-UX is also fussy.<br /><br />Go into the source tree and open up "alloc.c" in your favorite editor. Search for "union Cell", which is the union declaration that is causing the trouble. Change the last member "double djunk; /* alignement */" to "long double djunk; /* alignemnt */." On Itanic, long double is 128 bits and double is 64 bits. Pushing the union out to 128 bits makes it align right all the time, even though it does eat up a bit more memory now.<br /><br />I also have a patch at work that logs all commands run by root to syslog with the username of the owner of the terminal device.   It's a fancy way to avoid typing "sudo" in front of everything while still logging every command for auditing purposes.    Unfortunately, I probably can't post that patch.
 </div>
-</div>
-
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">

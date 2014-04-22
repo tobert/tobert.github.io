@@ -1,7 +1,7 @@
 <!-- begin container-top -->
 <div class="container">
 <hr/>
-{{ with .Page.Title }}<h1>{{ . }}</h1>{{ end }}
+{{ with .Page.Title }}<h1>{{ . |html }}</h1>{{ end }}
 <hr/>
 <br/>
 <!-- end container-top -->

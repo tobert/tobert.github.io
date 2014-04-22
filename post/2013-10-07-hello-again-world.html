@@ -11,7 +11,7 @@
     <meta property="article:published_time" content="2013-10-07"/>
     <meta property="article:modified_time" content="2013-10-07"/>
 
-     
+     <!-- twitter cards -->
      <meta name="twitter:card" content="summary">
      <meta name="twitter:site" content="@AlTobey">
      <meta name="twitter:title" content="Hello (again) World : @AlTobey Writes">
@@ -48,23 +48,23 @@
         <li><a href="/contact">Contact</a></li>
         <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2013-10-07-hello-again-world.html">Edit</a></li>
       </ul>
-    </div>
+    </div><!--/.nav-collapse -->
   </div>
 </div>
-
-
+<!-- end of header.html -->
+<!-- begin container-top -->
 <div class="container">
 <hr/>
 <h1>Hello (again) World</h1>
 <hr/>
 <br/>
-
+<!-- end container-top -->
 
 <div class="css-full-post-content js-full-post-content">
 One of the things that has bothered me over the last few years is that I have a strong desire to hack on open source projects and share what I've learned. But I didn't, at least nowhere near as much as I wanted. I had plenty of excuses. It usually boiled down to family or work. I was on call all the time for years and told myself I didn't have time to write. When I wasn't working, I was trying to be a good dad and spent time with the family. Then there were the hours after bedtime when I had no excuse, but nobody can be "on" all the time, so while I'd get the occasional burst of motivation, little progress was made.<br /><br />Now that I'm working at Datastax as Open Source Mechanic, there are no excuses. It's literally my job to do all those things. This is my first entry of what I intend to be regular installments. My technical articles will land on Planet Cassandra while personal / rambling / "behind the scenes" posts will remain here for now.<br /><br />You might ask, what is an Open Source Mechanic? My official title is actually Open Source Advocate, but it sounds too much like some kind of lawyer to my ears so I asked if I could use mechanic. A mechanic fixes things, fabricates parts when needed, and applies grease where grease is needed. That's me in a nutshell. It's in my paternal legacy going back many generations. This title makes me happy and gives me purpose when I'm sitting around thinking "what should I be doing right now?"<br /><br />This week, I'm working on VM images that contain Apache Cassandra. These images will be on USB drives we give away at conferences. They will be downloadable. When you boot the image, Cassandra will start up and allow you to interact with it immediately. My goal is to eventually have these images built &amp; QA'd by a righteous union of Jenkins and Packer. For now I'm hand-rolling them so I can have something for Cassandra Summit EU. I have another post in progress documenting all the steps required to make a hand-rolled image. I'll do the same for the continuous integration setup.<br /><br />The build is going smoothly. I'm primarily working in VMware Fusion on OSX and will test in VirtualBox and Qemu/KVM. I hope to have an image that works for all three. I chose to go with Arch Linux just because it's what I like right now and I get to make the call.&nbsp;I'm not sure what the long-term distro will be yet. I'm thinking about Arch or Fedora so I can put together nice systemd integration, but there's something to be said for the popularity of certain Debian derivatives.<br /><br />No more excuses.
 </div>
-</div>
-
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">

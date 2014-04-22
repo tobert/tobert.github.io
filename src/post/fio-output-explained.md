@@ -4,7 +4,6 @@ title: "Fio Output Explained"
 abstract: "Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you."
 tags: ["fio", "benchmark", "documentation"]
 pubdate: 2014-04-18T00:20:00Z
-draft: false
 ---
 
 Previously, I blogged about setting up my [benchmarking machine](/post/2014-03-29-benchmarking-disk-latency-setup.html). Now
