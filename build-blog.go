@@ -80,7 +80,7 @@ type TmplData struct {
 
 var (
 	defaultPath, srcFlag, pubFlag, domainFlag string
-	portFlag int
+	portFlag                                  int
 	draftFlag                                 bool
 )
 
@@ -169,20 +169,22 @@ func main() {
 			}
 		}
 
-		// everything in the source directory is treated as a template
-		// run the template into a buffer instead of the file so it can
-		// be processed with blackfriday or similar before output
-		var buf bytes.Buffer
-		err = tmpl.Execute(&buf, td)
-		if err != nil {
-			log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
-		}
-
-		// process Markdown, write everything else directly to the file
+		// due to the text/template html/template madness, it isn't really possible
+		// to do template preprocessing on markdown before rendering
 		if page.Type == "md" {
-			output := blackfriday.MarkdownCommon(buf.Bytes())
+			//output := blackfriday.MarkdownCommon([]byte(page.src))
+			output := markdown([]byte(page.src))
 			_, err = fd.Write(output)
 		} else {
+			// everything in the source directory that is not Markdown is a template
+			// run the template into a buffer instead of the file so it can
+			// be processed with blackfriday or similar before output
+			var buf bytes.Buffer
+			err = tmpl.Execute(&buf, td)
+			if err != nil {
+				log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
+			}
+
 			_, err = fd.Write(buf.Bytes())
 		}
 		if err != nil {
@@ -343,6 +345,25 @@ func findPages(c Config) (pages Pages) {
 	return pages
 }
 
+// MarkdownCommon from blackfriday without the dash wtf's
+func markdown(input []byte) []byte {
+	flags := 0
+	flags |= blackfriday.HTML_USE_XHTML
+	r := blackfriday.HtmlRenderer(flags, "", "")
+
+    ext := 0
+    ext |= blackfriday.EXTENSION_NO_INTRA_EMPHASIS
+    ext |= blackfriday.EXTENSION_TABLES
+    ext |= blackfriday.EXTENSION_FENCED_CODE
+    ext |= blackfriday.EXTENSION_AUTOLINK
+    ext |= blackfriday.EXTENSION_STRIKETHROUGH
+    ext |= blackfriday.EXTENSION_SPACE_HEADERS
+    ext |= blackfriday.EXTENSION_HEADER_IDS
+
+    return blackfriday.Markdown(input, r, ext)
+}
+
+// implement the sort interface for Pages
 func (pl Pages) Len() int {
 	return len(pl)
 }
