@@ -23,6 +23,7 @@ Pull requests welcome! Try the Edit button in the upper right-hand corner.
 日本語 (にほんご)             | Ni hon go              | Japanese language
 英語 (えいご)                 | Eig o                  | English language
 ブログ                        | Burogu                 | Blog
+クラスタ                      | ku ra su ta            | cluster
 情報工学 (じょうほうこうがく) | Jōhō kōgaku            | Information Engineering/Technology (IT)
 コンピュータサイエンス        | Konpyūtasaiensu        | Computer Science
 えんざんてじゅん              | Enzante jun            | Algorithm
