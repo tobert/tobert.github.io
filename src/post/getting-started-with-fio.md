@@ -79,8 +79,6 @@ thread=1
 And that's it. For comparison, I've uploaded the the output from some of my machines. A couple were
 run in mmap mode before I switched to posixaio to keep closer to the Windows config.
 
-* [2013 Retina Macbook Pro / Windows 8.1 Pro / NTFS](https://gist.github.com/tobert/11386257#file-trivial-2013-mbp-win81pro-txt)
-* [2013 Retina Macbook Pro / OSX Mavericks / HFS+](https://gist.github.com/tobert/11386257#file-2013-macbook-pro-osx-mavericks-txt)
 * [Core i7-2600 / Samsung 840 EVO 240G SSD / Linux / btrfs](https://gist.github.com/tobert/11386257#file-brak-samsung840evo-linux-txt)
 * [Xeon E31270 / Linux](/post/2014-03-29-benchmarking-disk-latency-setup.html)
     * SATA HBA
@@ -99,6 +97,9 @@ run in mmap mode before I switched to posixaio to keep closer to the Windows con
         * [Seagate ST500LM000 SSHD 5400RPM Laptop Hybrid / ext4](https://gist.github.com/tobert/11386257#file-zorak-usb3-sshd-5400rpm-ext4-txt)
     * USB2
         * [Generic 4GB Flash](https://gist.github.com/tobert/11386257#file-zorak-usb2-flash-4g-txt)
+* 2013 Retina Macbook Pro (SSD)
+    * [Windows 8.1 Pro / NTFS](https://gist.github.com/tobert/11386257#file-trivial-2013-mbp-win81pro-txt)
+    * [OSX Mavericks / HFS+](https://gist.github.com/tobert/11386257#file-2013-macbook-pro-osx-mavericks-txt)
 
 Now you've run your first benchmark with fio. Head over to
 [Fio Output Explained](/post/2014-04-17-fio-output-explained.html) to find out what all those numbers
