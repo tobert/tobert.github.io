@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="A short story about hacking a prototype that is turning into an end-user tool.">
+    <meta name="keywords" content="fio, effio, golang, prototyping, ">
+    <meta property="article:published_time" content="2014-04-29"/>
+    <meta property="article:modified_time" content="2014-04-29"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="A Quick Prototype : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="A short story about hacking a prototype that is turning into an end-user tool.">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>A Quick Prototype</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-04-29-a-quick-prototype.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/a-quick-prototype.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>A Quick Prototype</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+<p>I've been spending a lot of time with <a href="/post/2014-04-28-getting-started-with-fio.html">fio</a>
+<a href="/post/2014-04-17-fio-output-explained.html">lately</a>. I've also been tweeting about it and the
+inevitable, correct question people ask is, &quot;where are the graphs?&quot;</p>
+
+<p>Fio ships with some example graphing code, but it's not what I need for some of the
+stuff I want to do with the latency logs. I looked around and didn't find anything easy to use for
+parsing either the terse output or the JSON. So I hacked together a JSON loader first.</p>
+
+<p>The loader took me a couple hours because I didn't really grasp fio's <a href="/post/2014-04-17-fio-output-explained.html">output
+format</a> or Go's JSON parser when I started.  I'd used it
+a couple times but only on small, flat structures. This is a whole different beast. Now that I'm
+used to it, I really like how strict it is. This would have been much faster to develop in a dynamic
+language - one line of code - but then I wouldn't have the compiler checking types and field names
+for me.</p>
+
+<p>This is the prototype I wrote, only slightly touched up. Since I was thinking about writing some
+tools around it, I designed it as an API and got it going. I tend to take notes directly into code
+comments as I go, mostly focusing on things that I found odd or annoying - in other words, things
+I will need to recall later on when I'm wondering why the hell I did X or Z stupid thing.</p>
+
+<p>This is the time to sprinkle your code with TODOs! Get it working first then go back and fix them. I
+always use something that will match <code>grep -R TODO</code> so I can find them easily.</p>
+
+<script src="https://gist.github.com/tobert/b8dbada13238cf95b467.js"></script>
+
+<p>Now that I can read the data and have it in some nice datastructures, I want to graph it. So instead
+of fleshing out main() I moved this file to src/fiotools/loadjson.go, removed main, and changed the
+package to fiotools. I didn't take any time to come up with a clever name; at this point I don't
+know yet if I'm going to use this code so a boring name I can think of in 1 second works best.
+Now I want to try <a href="https://code.google.com/p/plotinum/">Plotinum</a> to see if it can do what I need it to.</p>
+
+<script src="https://gist.github.com/tobert/f052c3db7d72e081c234.js"></script>
+
+<p>This is the code I used to generate the graph below. There are a bunch of TODOs and hard-coded
+values. But it works. I need to figure out the right way to show those lines, but I'm convinced that
+Plotinum can do what I need it to.</p>
+
+<p><img src="/images/fio-thrash-graph-prototype.png" alt="graph" />
+</p>
+
+<p>This is what I consider a successful prototype. I used to keep all these little snippets in ~/junk
+in case I decided to pick one up again, but these days I just rm the file. Worst case, I'll write it
+again and these rewrites are typically better. In this particular case I took the time to be careful
+to keep the JSON handling code clean because I had confidence from the start. Most of the time it's
+better to throw the code away.</p>
+
+<p>So, go out there and write some prototypes. Don't worry about getting everything right on the first
+pass. We all want to write great code, but you have to start somewhere. Go for it!</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/a-quick-prototype.md">ChangeLog</a>
+    
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

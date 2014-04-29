@@ -7,10 +7,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-04-28</pubDate>
+	<pubDate>2014-04-29</pubDate>
 	<lastBuildDate>2014-04-29</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>A Quick Prototype</title>
+	  <link>http://tobert.github.io/post/2014-04-29-a-quick-prototype.html</link>
+      <pubDate>Tue, 29 Apr 2014 22:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-04-29-a-quick-prototype</guid>
+	  <description>A short story about hacking a prototype that is turning into an end-user tool.</description>
+    </item>
     
     <item>
       <title>Getting Started With Fio</title>
