@@ -101,7 +101,7 @@ run in mmap mode before I switched to posixaio to keep closer to the Windows con
         * [Generic 4GB Flash](https://gist.github.com/tobert/11386257#file-zorak-usb2-flash-4g-txt)
 
 Now you've run your first benchmark with fio. Head over to
-[Fio Output Explained](post/2014-04-17-fio-output-explained.html) to find out what all those numbers
+[Fio Output Explained](/post/2014-04-17-fio-output-explained.html) to find out what all those numbers
 mean.
 
 In my next post, I will be showing how to parse and plot the JSON output of fio.
