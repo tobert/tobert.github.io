@@ -59,7 +59,7 @@ EOF
 fio trivial.fio
 ```
 
-As always, Windows is a bit different. I created the file using Notepad then fired up fio from
+On Windows, I created the file using Notepad then fired up fio from
 PowerShell. The ioengine needs to change to windowsaio or another engine supported on Windows
 and the colon in the path must be escaped since fio uses it as a separator. Finally, tell fio to
 use threads instead of processes since that's how Things Are Done on Windows. The Unix test was
