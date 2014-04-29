@@ -7,10 +7,10 @@ package main
 
 import (
 	"bytes"
-	"os/exec"
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 )
