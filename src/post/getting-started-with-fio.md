@@ -6,7 +6,7 @@ tags: ["fio", "benchmark", "documentation"]
 pubdate: 2014-04-28T22:00:00Z
 ---
 
-Fio is easily the most powerful benchmarking tools available today. Because of its flexibility, it
+Fio is easily the most powerful benchmarking tool available today. Because of its flexibility, it
 has a reputation for being difficult to use. Actually, using it is pretty easy and reading the
 output is hard, so I started with [explaining the output](/post/2014-04-17-fio-output-explained.html).
 
