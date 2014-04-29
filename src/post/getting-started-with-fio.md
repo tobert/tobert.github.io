@@ -104,5 +104,8 @@ Now you've run your first benchmark with fio. Head over to
 [Fio Output Explained](/post/2014-04-17-fio-output-explained.html) to find out what all those numbers
 mean.
 
+Keep in mind that this trivial test only does 1 gigabyte of IO. The numbers in the gist quoted above
+should not be used to make any real-world decisions.
+
 In my next post, I will be showing how to parse and plot the JSON output of fio.
 
