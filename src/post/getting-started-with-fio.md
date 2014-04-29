@@ -18,6 +18,7 @@ In order to run fio, you have to get fio. This is trivial on most Linux distribu
     sudo emerge -av fio
 
 It's also fairly easy on OSX if you use Homebrew, but does not appear to be available in Macports.
+Installing from source is covered below.
 
     brew install fio
 
@@ -75,7 +76,8 @@ thread=1
 [trivial-readwrite-1g]
 ```
 
-And that's it. For comparison, I've uploaded the the output from some of my machines.
+And that's it. For comparison, I've uploaded the the output from some of my machines. A couple were
+run in mmap mode before I switched to posixaio to keep closer to the Windows config.
 
 * [2013 Retina Macbook Pro / Windows 8.1 Pro / NTFS](https://gist.github.com/tobert/11386257#file-trivial-2013-mbp-win81pro-txt)
 * [2013 Retina Macbook Pro / OSX Mavericks / HFS+](https://gist.github.com/tobert/11386257#file-2013-macbook-pro-osx-mavericks-txt)
@@ -83,19 +85,24 @@ And that's it. For comparison, I've uploaded the the output from some of my mach
 * [Xeon E31270 / Linux](/post/2014-03-29-benchmarking-disk-latency-setup.html)
     * SATA HBA
         * [2x Seagate ST9500530NS 500GB / btrfs RAID 1](https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-raid1-txt)
-        * [Seagate ST31000340NS Enterprise 1TB / ext4]()
-    * USB3
-        * [Seagate ST500LM000 SSHD 5400RPM Laptop Hybrid / ext4]()
+        * [Seagate ST31000340NS Enterprise 1TB / fuse / ntfs-3g](https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-1tb-ntfs-3g-txt)
+        * [Seagate ST31000340NS Enterprise 1TB / ext4](https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-1tb-ext4-txt)
     * LSI SAS3004
-        * [Seagate ST9500430SS 7200RPM 500GB / ext4]()
-        * [Samsung 840 Pro SSD 120GB / ext4]()
-        * [Western Digital WD3000BLFS-0 10000RPM 300GB / ext4]()
-        * [PNY XLR8 SSD2SC240G1LC709 240GB / ext4]()
+        * [Seagate ST9500430SS 7200RPM 500GB / ext4](https://gist.github.com/tobert/11386257#file-zorak-7200rpm-sas2-txt)
+        * [Samsung 840 Pro SSD 120GB / ext4](https://gist.github.com/tobert/11386257#file-brak-samsung840evo-linux-txt)
+        * [Western Digital WD3000BLFS-0 10000RPM 300GB / ext4](https://gist.github.com/tobert/11386257#file-zorak-10krpm-sata-on-sas-hba-txt)
+        * [PNY XLR8 SSD2SC240G1LC709 240GB / ext4](https://gist.github.com/tobert/11386257#file-zorak-pny-sata-ssd-on-sas-hba-txt)
     * PCI Express
-        * [Fusion IO ioDrive2 1TB]()
-        * [Raijin-256GB-MT]()
+        * [Fusion IO ioDrive2 1TB](https://gist.github.com/tobert/11386257#file-zorak-fusionio-iodriveii-txt)
+        * [Raijin-256GB-MT](https://gist.github.com/tobert/11386257#file-zorak-raijin-pcie-256g-txt)
+    * USB3
+        * [Seagate ST500LM000 SSHD 5400RPM Laptop Hybrid / ext4](https://gist.github.com/tobert/11386257#file-zorak-usb3-sshd-5400rpm-ext4-txt)
+    * USB2
+        * [Generic 4GB Flash](https://gist.github.com/tobert/11386257#file-zorak-usb2-flash-4g-txt)
 
 Now you've run your first benchmark with fio. Head over to
 [Fio Output Explained](post/2014-04-17-fio-output-explained.html) to find out what all those numbers
 mean.
+
+In my next post, I will be showing how to parse and plot the JSON output of fio.
 

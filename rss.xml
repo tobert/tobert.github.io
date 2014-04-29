@@ -7,10 +7,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-04-18</pubDate>
-	<lastBuildDate>2014-04-22</lastBuildDate>
+	<pubDate>2014-04-28</pubDate>
+	<lastBuildDate>2014-04-28</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>Getting Started With Fio</title>
+	  <link>http://tobert.github.io/post/2014-04-28-getting-started-with-fio.html</link>
+      <pubDate>Mon, 28 Apr 2014 22:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-04-28-getting-started-with-fio</guid>
+	  <description>How to benchmark your storage with fio, the Flexible IO Tester</description>
+    </item>
     
     <item>
       <title>Fio Output Explained</title>

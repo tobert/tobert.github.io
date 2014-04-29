@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="How to benchmark your storage with fio, the Flexible IO Tester">
+    <meta name="keywords" content="fio, benchmark, documentation, ">
+    <meta property="article:published_time" content="2014-04-28"/>
+    <meta property="article:modified_time" content="2014-04-28"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Getting Started With Fio : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="How to benchmark your storage with fio, the Flexible IO Tester">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Getting Started With Fio</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-04-28-getting-started-with-fio.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/getting-started-with-fio.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>Getting Started With Fio</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+<p>Fio is easily the most powerful benchmarking tools available today. Because of its flexibility, it
+has a reputation for being difficult to use. Actually, using it is pretty easy and reading the
+output is hard, so I started with <a href="/post/2014-04-17-fio-output-explained.html">explaining the output</a>.</p>
+
+<p>In order to run fio, you have to get fio. This is trivial on most Linux distributions.</p>
+
+<pre><code>sudo pacman -S fio
+sudo apt-get install fio
+sudo yum install fio
+sudo emerge -av fio
+</code></pre>
+
+<p>It's also fairly easy on OSX if you use Homebrew, but does not appear to be available in Macports.
+Installing from source is covered below.</p>
+
+<pre><code>brew install fio
+</code></pre>
+
+<p>I did a quick search for Windows binaries of fio and found MSI installers offered at
+<a href="http://www.bluestop.org/fio/">http://www.bluestop.org/fio/</a>.
+<a href="/images/fio-windows8.jpg">So far, so good</a></p>
+
+<p>And as always, you can build from source. You will need build tools installed, of course. If your
+current distro has old fio packages, this might be the best way to go.</p>
+
+<pre><code>git clone --branch fio-2.1.8 http://git.kernel.dk/fio.git fio-2.1.8
+# or
+wget http://brick.kernel.dk/snaps/fio-2.1.8.tar.bz2 &amp;&amp; \
+tar -xjvf fio-2.1.8.tar.bz2
+
+cd fio-2.1.8
+./configure
+make
+make install
+</code></pre>
+
+<p>Now that you have fio installed, it's time to run a benchmark. The first test runs 1 gigabyte of IO on a
+subdirectory in $HOME. Unix users can run the following to get going.</p>
+
+<pre><code class="sh">mkdir $HOME/fio # this directory will written to by fio
+
+cat &gt; trivial.fio &lt;&lt;EOF
+[global]
+ioengine=posixaio
+rw=readwrite
+size=1g
+directory=\${HOME}/fio # environment variable
+thread=1
+
+[trivial-readwrite-1g]
+EOF
+
+fio trivial.fio
+</code></pre>
+
+<p>As always, Windows is a bit different. I created the file using Notepad then fired up fio from
+PowerShell. The ioengine needs to change to windowsaio or another engine supported on Windows
+and the colon in the path must be escaped since fio uses it as a separator. Finally, tell fio to
+use threads instead of processes since that's how Things Are Done on Windows. The Unix test was
+switched to use threads on all platforms since it's needed on OSX as well.</p>
+
+<pre><code>[global]
+ioengine=windowsaio
+rw=readwrite
+size=1g
+directory=C\:\fio
+thread=1
+
+[trivial-readwrite-1g]
+</code></pre>
+
+<p>And that's it. For comparison, I've uploaded the the output from some of my machines. A couple were
+run in mmap mode before I switched to posixaio to keep closer to the Windows config.</p>
+
+<ul>
+<li><a href="https://gist.github.com/tobert/11386257#file-trivial-2013-mbp-win81pro-txt">2013 Retina Macbook Pro / Windows 8.1 Pro / NTFS</a></li>
+<li><a href="https://gist.github.com/tobert/11386257#file-2013-macbook-pro-osx-mavericks-txt">2013 Retina Macbook Pro / OSX Mavericks / HFS+</a></li>
+<li><a href="https://gist.github.com/tobert/11386257#file-brak-samsung840evo-linux-txt">Core i7-2600 / Samsung 840 EVO 240G SSD / Linux / btrfs</a></li>
+<li><a href="/post/2014-03-29-benchmarking-disk-latency-setup.html">Xeon E31270 / Linux</a>
+
+<ul>
+<li>SATA HBA
+
+<ul>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-raid1-txt">2x Seagate ST9500530NS 500GB / btrfs RAID 1</a></li>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-1tb-ntfs-3g-txt">Seagate ST31000340NS Enterprise 1TB / fuse / ntfs-3g</a></li>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-1tb-ext4-txt">Seagate ST31000340NS Enterprise 1TB / ext4</a></li>
+</ul></li>
+<li>LSI SAS3004
+
+<ul>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-7200rpm-sas2-txt">Seagate ST9500430SS 7200RPM 500GB / ext4</a></li>
+<li><a href="https://gist.github.com/tobert/11386257#file-brak-samsung840evo-linux-txt">Samsung 840 Pro SSD 120GB / ext4</a></li>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-10krpm-sata-on-sas-hba-txt">Western Digital WD3000BLFS-0 10000RPM 300GB / ext4</a></li>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-pny-sata-ssd-on-sas-hba-txt">PNY XLR8 SSD2SC240G1LC709 240GB / ext4</a></li>
+</ul></li>
+<li>PCI Express
+
+<ul>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-fusionio-iodriveii-txt">Fusion IO ioDrive2 1TB</a></li>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-raijin-pcie-256g-txt">Raijin-256GB-MT</a></li>
+</ul></li>
+<li>USB3
+
+<ul>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-usb3-sshd-5400rpm-ext4-txt">Seagate ST500LM000 SSHD 5400RPM Laptop Hybrid / ext4</a></li>
+</ul></li>
+<li>USB2
+
+<ul>
+<li><a href="https://gist.github.com/tobert/11386257#file-zorak-usb2-flash-4g-txt">Generic 4GB Flash</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+<p>Now you've run your first benchmark with fio. Head over to
+<a href="post/2014-04-17-fio-output-explained.html">Fio Output Explained</a> to find out what all those numbers
+mean.</p>
+
+<p>In my next post, I will be showing how to parse and plot the JSON output of fio.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/getting-started-with-fio.md">ChangeLog</a>
+    
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
