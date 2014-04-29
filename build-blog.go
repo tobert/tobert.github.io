@@ -357,6 +357,7 @@ func markdown(input []byte) []byte {
 	ext |= blackfriday.EXTENSION_TABLES
 	ext |= blackfriday.EXTENSION_SPACE_HEADERS
 	ext |= blackfriday.EXTENSION_FOOTNOTES
+	ext |= blackfriday.EXTENSION_FENCED_CODE
 
 	return blackfriday.Markdown(input, r, ext)
 }
