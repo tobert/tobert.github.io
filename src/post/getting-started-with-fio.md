@@ -40,27 +40,28 @@ current distro has old fio packages, this might be the best way to go.
     make install
 
 Now that you have fio installed, it's time to run a benchmark. The first test runs 1 gigabyte of IO on a
-subdirectory in $HOME. Unix users can run the following to get going.
+subdirectory in $HOME. First create the test directory. Fio will create some files in this directory
+and will perform all IO on files under it.
 
-``` sh
-mkdir $HOME/fio # this directory will written to by fio
+    mkdir $HOME/fio # Unix: this directory will written to by fio
+    mkdir C:\fio    # Windows PowerShell
 
-cat > trivial.fio <<EOF
+Next, create your configuration file. I've been calling this file simply 'trivial.fio'. In the Unix
+example, I'm using the HOME environment variable to specify the IO path as ~/fio.
+
+```
 [global]
 ioengine=posixaio
 rw=readwrite
 size=1g
-directory=\${HOME}/fio # environment variable
+directory=${HOME}/fio
 thread=1
 
 [trivial-readwrite-1g]
-EOF
-
-fio trivial.fio
 ```
 
-On Windows, I created the file using Notepad then fired up fio from
-PowerShell. The ioengine needs to change to windowsaio or another engine supported on Windows
+On Windows, I created the file using Notepad.
+The ioengine needs to change to windowsaio or another engine supported on Windows
 and the colon in the path must be escaped since fio uses it as a separator. Finally, tell fio to
 use threads instead of processes since that's how Things Are Done on Windows. The Unix test was
 switched to use threads on all platforms since it's needed on OSX as well.
@@ -75,6 +76,15 @@ thread=1
 
 [trivial-readwrite-1g]
 ```
+
+Finally, it's time to run the test. The command is the same on all platforms. You will need your
+shell to be in the same directory as the trivial.fio file for this to work. All three of these
+commands run the same benchmark, but differ in how output is delivered. You only need the first
+one most of the time. The next two are useful if you want to save data for later comparison.
+
+    fio trivial.fio
+    fio trivial.fio --output=trivial.txt # write output to a file
+    fio trivial.fio --output-format=json --output=trivial.json
 
 And that's it. For comparison, I've uploaded the the output from some of my machines. A couple were
 run in mmap mode before I switched to posixaio to keep closer to the Windows config.
