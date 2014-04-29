@@ -31,6 +31,10 @@ always use something that will match `grep -R TODO` so I can find them easily.
 
 <script src="https://gist.github.com/tobert/b8dbada13238cf95b467.js"></script>
 
+Here's what it looks like now:
+[types.go](https://github.com/tobert/effio/blob/master/src/effio/types.go)
+[fio_json.go](https://github.com/tobert/effio/blob/master/src/effio/fio_json.go)
+
 Now that I can read the data and have it in some nice datastructures, I want to graph it. So instead
 of fleshing out main() I moved this file to src/fiotools/loadjson.go, removed main, and changed the
 package to fiotools. I didn't take any time to come up with a clever name; at this point I don't
