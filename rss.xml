@@ -7,10 +7,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-04-29</pubDate>
-	<lastBuildDate>2014-04-29</lastBuildDate>
+	<pubDate>2014-05-06</pubDate>
+	<lastBuildDate>2014-05-06</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>Publishing pcstat Binaries on Github</title>
+	  <link>http://tobert.github.io/post/2014-05-06-publishing-pcstat-binaries-on-github.html</link>
+      <pubDate>Tue, 06 May 2014 23:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-05-06-publishing-pcstat-binaries-on-github</guid>
+	  <description>How I publish pcstat binaries on Github without littering git&#39;s history with large binary objects.</description>
+    </item>
     
     <item>
       <title>A Quick Prototype</title>
@@ -19,6 +28,15 @@
       <author>Albert P Tobey</author>
       <guid>2014-04-29-a-quick-prototype</guid>
 	  <description>A short story about hacking a prototype that is turning into an end-user tool.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started With Fio</title>
+	  <link>http://tobert.github.io/post/2014-04-28-getting-started-with-fio.html</link>
+      <pubDate>Mon, 28 Apr 2014 22:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-04-28-getting-started-with-fio</guid>
+	  <description>How to benchmark your storage with fio, the Flexible IO Tester</description>
     </item>
     
     <item>

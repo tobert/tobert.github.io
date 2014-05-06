@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="How I publish pcstat binaries on Github without littering git&#39;s history with large binary objects.">
+    <meta name="keywords" content="golang, github, git, linux, pcstat, ">
+    <meta property="article:published_time" content="2014-05-06"/>
+    <meta property="article:modified_time" content="2014-05-06"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Publishing pcstat Binaries on Github : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="How I publish pcstat binaries on Github without littering git&#39;s history with large binary objects.">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Publishing pcstat Binaries on Github</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-05-06-publishing-pcstat-binaries-on-github.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/publishing-pcstat-binaries-on-github.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>Publishing pcstat Binaries on Github</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+<p>I wrote a little tool for inspecting which pages of a file are cached by the Linux kernel
+called <a href="https://github.com/tobert/pcstat">pcstat</a>.</p>
+
+<p>I wrote it in Go so that it would compile down to a static binary so it can be trivially
+pulled down to a system and run without worrying about the site environment or having
+root permissions. It needs to be easy for <a href="http://datastax.com">Datastax</a> solutions
+architects and <a href="http://planetcassandra.com">Cassandra users</a> to use quickly when evaluating
+problems on production systems. Go is perfect for this, because it doesn't even use
+a libc; it has its own ASM for <a href="http://man7.org/linux/man-pages/man2/syscall.2.html">syscall(2)</a>
+so the binary works on any Linux kernel that supports
+<a href="http://man7.org/linux/man-pages/man2/mincore.2.html">mincore(2)</a>, which is pretty much
+everything these days.</p>
+
+<p>Great, so now I have a binary. It is static and completely lacks the ELF headers for
+used for loading shared libraries.</p>
+
+<pre><code>atobey@brak ~/src/pcstat $ go build
+atobey@brak ~/src/pcstat $ ls -l pcstat
+-rwxr-xr-x 1 atobey wheel 3049296 May  6 16:10 pcstat
+atobey@brak ~/src/pcstat $ ldd pcstat
+    not a dynamic executable
+atobey@brak ~/src/pcstat $ eu-readelf -d /bin/bash |grep NEEDED |wc -l
+4
+atobey@brak ~/src/pcstat $ eu-readelf -d pcstat |wc -l
+0
+</code></pre>
+
+<p>Initially, I pushed binaries out to my Linode, but I'm not comfortable with that since
+it's just one little VM with a bandwidth cap. One option would be to push the binaries
+to the PlanetCassandra S3 bucket on Datastax's tab, but that's a pain in the butt even
+with scripts and ultimately inappropriate. What I really want is to push the binaries
+through Github.</p>
+
+<p>Checking binaries into git repos is a Bad Idea. Basically once the object is in your
+history graph and public, you're stuck with it forever. A second repo might work, but
+that's ugly and requires me to copy stuff around. I've been kicking around this idea
+that abuses git branches for a while and it seems to work.</p>
+
+<p>The easy way to do this is with <code>git checkout --orphan</code>, which creates a new branch
+that has no parent so it has its own history. This means that if the branch is deleted,
+<code>git gc</code> can remove all of the data since there are no downstream commits connected to
+its history.</p>
+
+<p>I asked teh Twitters if Github does regular <code>git gc</code> and got a couple affirmative answers.</p>
+
+<p><blockquote class="twitter-tweet" lang="en"><p>Does anybody know if Github does <code>git gc</code> on any kind
+of schedule? Playing with a hack that would rely on gc ...</p>&mdash; アルトビー (@AlTobey) <a
+href="https://twitter.com/AlTobey/statuses/463805260838891520">May 6, 2014</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p><blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a
+href="https://twitter.com/AlTobey">@altobey</a> You can disable the automatic GC and schedule it
+yourself if you want. (Schedule via cron etc)</p>&mdash; Andrew Gross (@awgross) <a
+href="https://twitter.com/awgross/statuses/463806079294402560">May 6, 2014</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p><blockquote class="twitter-tweet" data-conversation="none" lang="en"><p><a
+href="https://twitter.com/AlTobey">@AlTobey</a> I heard they do it on every push. Not sure if that
+were or still is the case, though.</p>&mdash; Chris Vest (@chvest) <a
+href="https://twitter.com/chvest/statuses/463808095831855104">May 6, 2014</a></blockquote>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script></p>
+
+<p>Good enough for now. Let's do it.</p>
+
+<pre><code>atobey@brak ~/src/pcstat $ go build &amp;&amp; mv pcstat pcstat.x86_64
+atobey@brak ~/src/pcstat $ GOARCH=386 go build &amp;&amp; mv pcstat pcstat.x86_32
+atobey@brak ~/src/pcstat $ git checkout --orphan 2014-05-02-01
+atobey@brak ~/src/pcstat $ git add pcstat.x86_64
+atobey@brak ~/src/pcstat $ git commit -m &quot;Check in x86_64 binary.&quot;
+atobey@brak ~/src/pcstat $ git add pcstat.x86_32
+atobey@brak ~/src/pcstat $ git commit -m &quot;Check in x86_32 binary.&quot;
+atobey@brak ~/src/pcstat $ git push --set-upstream origin 2014-05-02-01
+</code></pre>
+
+<p>What's happening above:</p>
+
+<ol>
+<li>build an x86_64 binary (brak is running 64-bit Arch Linux)</li>
+<li>build a 32-bit binary using GOARCH=386</li>
+<li>create an orphaned branch for the release date + a counter</li>
+<li>check in the binaries</li>
+<li>push to Github</li>
+</ol>
+
+<p>Now, I can access the binaries on Github's servers instead of my own and get
+SSL as a bonus. Note: use <code>curl -L</code> with Github's raw URLs because they are
+often redirects you want curl to follow. Here's an example of how this is
+useful. Note that I'm running as a regular user using commands that are almost
+universally available on production Linux systems.</p>
+
+<pre><code>atobey@brak ~/src/pcstat $ curl -L -o pcstat64 https://github.com/tobert/pcstat/raw/2014-05-02-01/pcstat.x86_64
+atobey@brak ~/src/pcstat $ curl -L -o pcstat32 https://github.com/tobert/pcstat/raw/2014-05-02-01/pcstat.x86_64
+atobey@brak ~/src/pcstat $ chmod 755 pcstat64 pcstat32
+atobey@brak ~/src/pcstat $ ./pcstat32 pcstat64
+|----------+----------------+------------+-----------+---------|
+| Name     | Size           | Pages      | Cached    | Percent |
+|----------+----------------+------------+-----------+---------|
+| pcstat   | 3049296        | 745        | 745       | 100.000 |
+|----------+----------------+------------+-----------+---------|
+atobey@brak ~/src/pcstat $ echo 1 |sudo tee /proc/sys/vm/drop_caches
+1
+atobey@brak ~/src/pcstat $ ./pcstat64 pcstat32 pcstat64
+|----------+----------------+------------+-----------+---------|
+| Name     | Size           | Pages      | Cached    | Percent |
+|----------+----------------+------------+-----------+---------|
+| pcstat32 | 3049296        | 745        | 0         | 000.000 |
+| pcstat64 | 3049296        | 745        | 745       | 100.000 |
+|----------+----------------+------------+-----------+---------|
+</code></pre>
+
+<p>In the above example, I download both the 32 and 64-bit builds of pcstat to my
+Linux workstation, &quot;brak&quot;. The <code>chmod 755</code> makes the binaries executable. Then
+I use the 32-bit binary to find out if Linux cached the 64-bit binary in a kind
+of silly oroborus test. Since the files were recently written, 100% of pages
+are cached. After instructing the Linux kernel to drop all caches I can see
+that the pcstat32 binary is no longer cached while the pcstat64 binary is (because
+it must be read to excute it).</p>
+
+<p>I need to verify if my theory about cleanup actually works, but at the end of
+the day I'm more interested in getting this tool in users' hands than whether
+or not I'll run up against the repo size limit. If you happen to know for sure
+please tweet at <a href="https://twitter.com/AlTobey">@AlTobey</a> or file a an
+<a href="https://github.com/tobert/pcstat/issues/new">issue on pcstat</a>.</p>
+
+<p>Enjoy!<br/>
+-Al</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/publishing-pcstat-binaries-on-github.md">ChangeLog</a>
+    
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>

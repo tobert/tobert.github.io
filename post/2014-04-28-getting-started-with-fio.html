@@ -55,7 +55,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/about.html">About</a></li>
         <li><a href="/contact.html">Contact</a></li>
-        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/getting-started-with-fio.md">Edit</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/introducing-pcstat.md">Edit</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div>
@@ -68,152 +68,13 @@
 <hr/>
 <br/>
 <!-- end container-top -->
-<p>Fio is easily the most powerful benchmarking tool available today. Because of its flexibility, it
-has a reputation for being difficult to use. Actually, using it is pretty easy and reading the
-output is hard, so I started with <a href="/post/2014-04-17-fio-output-explained.html">explaining the output</a>.</p>
-
-<p>In order to run fio, you have to get fio. This is trivial on most Linux distributions.</p>
-
-<pre><code>sudo pacman -S fio
-sudo apt-get install fio
-sudo yum install fio
-sudo emerge -av fio
-</code></pre>
-
-<p>It's also fairly easy on OSX if you use Homebrew, but does not appear to be available in Macports.
-Installing from source is covered below.</p>
-
-<pre><code>brew install fio
-</code></pre>
-
-<p>I did a quick search for Windows binaries of fio and found MSI installers offered at
-<a href="http://www.bluestop.org/fio/">http://www.bluestop.org/fio/</a>.
-<a href="/images/fio-windows8.jpg">So far, so good</a></p>
-
-<p>And as always, you can build from source. You will need build tools installed, of course. If your
-current distro has old fio packages, this might be the best way to go.</p>
-
-<pre><code>git clone --branch fio-2.1.8 http://git.kernel.dk/fio.git fio-2.1.8
-# or
-wget http://brick.kernel.dk/snaps/fio-2.1.8.tar.bz2 &amp;&amp; \
-tar -xjvf fio-2.1.8.tar.bz2
-
-cd fio-2.1.8
-./configure
-make
-make install
-</code></pre>
-
-<p>Now that you have fio installed, it's time to run a benchmark. The first test runs 1 gigabyte of IO on a
-subdirectory in $HOME. First create the test directory. Fio will create some files in this directory
-and will perform all IO on files under it.</p>
-
-<pre><code>mkdir $HOME/fio # Unix: this directory will written to by fio
-mkdir C:\fio    # Windows PowerShell
-</code></pre>
-
-<p>Next, create your configuration file. I've been calling this file simply 'trivial.fio'. In the Unix
-example, I'm using the HOME environment variable to specify the IO path as ~/fio.</p>
-
-<pre><code>[global]
-ioengine=posixaio
-rw=readwrite
-size=1g
-directory=${HOME}/fio
-thread=1
-
-[trivial-readwrite-1g]
-</code></pre>
-
-<p>On Windows, I created the file using Notepad.
-The ioengine needs to change to windowsaio or another engine supported on Windows
-and the colon in the path must be escaped since fio uses it as a separator. Finally, tell fio to
-use threads instead of processes since that's how Things Are Done on Windows. The Unix test was
-switched to use threads on all platforms since it's needed on OSX as well.</p>
-
-<pre><code>[global]
-ioengine=windowsaio
-rw=readwrite
-size=1g
-directory=C\:\fio
-thread=1
-
-[trivial-readwrite-1g]
-</code></pre>
-
-<p>Finally, it's time to run the test. The command is the same on all platforms. You will need your
-shell to be in the same directory as the trivial.fio file for this to work. All three of these
-commands run the same benchmark, but differ in how output is delivered. You only need the first
-one most of the time. The next two are useful if you want to save data for later comparison.</p>
-
-<pre><code>fio trivial.fio
-fio trivial.fio --output=trivial.txt # write output to a file
-fio trivial.fio --output-format=json --output=trivial.json
-</code></pre>
-
-<p>And that's it. For comparison, I've uploaded the the output from some of my machines. A couple were
-run in mmap mode before I switched to posixaio to keep closer to the Windows config.</p>
-
-<ul>
-<li><a href="https://gist.github.com/tobert/11386257#file-brak-samsung840evo-linux-txt">Core i7-2600 / Samsung 840 EVO 240G SSD / Linux / btrfs</a></li>
-<li><a href="/post/2014-03-29-benchmarking-disk-latency-setup.html">Xeon E31270 / Linux</a>
-
-<ul>
-<li>SATA HBA
-
-<ul>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-raid1-txt">2x Seagate ST9500530NS 500GB / btrfs RAID 1</a></li>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-1tb-ntfs-3g-txt">Seagate ST31000340NS Enterprise 1TB / fuse / ntfs-3g</a></li>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-enterprise-sata-1tb-ext4-txt">Seagate ST31000340NS Enterprise 1TB / ext4</a></li>
-</ul></li>
-<li>LSI SAS3004
-
-<ul>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-7200rpm-sas2-txt">Seagate ST9500430SS 7200RPM 500GB / ext4</a></li>
-<li><a href="https://gist.github.com/tobert/11386257#file-brak-samsung840evo-linux-txt">Samsung 840 Pro SSD 120GB / ext4</a></li>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-10krpm-sata-on-sas-hba-txt">Western Digital WD3000BLFS-0 10000RPM 300GB / ext4</a></li>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-pny-sata-ssd-on-sas-hba-txt">PNY XLR8 SSD2SC240G1LC709 240GB / ext4</a></li>
-</ul></li>
-<li>PCI Express
-
-<ul>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-fusionio-iodriveii-txt">Fusion IO ioDrive2 1TB</a></li>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-raijin-pcie-256g-txt">Raijin-256GB-MT</a></li>
-</ul></li>
-<li>USB3
-
-<ul>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-usb3-sshd-5400rpm-ext4-txt">Seagate ST500LM000 SSHD 5400RPM Laptop Hybrid / ext4</a></li>
-</ul></li>
-<li>USB2
-
-<ul>
-<li><a href="https://gist.github.com/tobert/11386257#file-zorak-usb2-flash-4g-txt">Generic 4GB Flash</a></li>
-</ul></li>
-</ul></li>
-<li>2013 Retina Macbook Pro (SSD)
-
-<ul>
-<li><a href="https://gist.github.com/tobert/11386257#file-trivial-2013-mbp-win81pro-txt">Windows 8.1 Pro / NTFS</a></li>
-<li><a href="https://gist.github.com/tobert/11386257#file-2013-macbook-pro-osx-mavericks-txt">OSX Mavericks / HFS+</a></li>
-</ul></li>
-</ul>
-
-<p>Now you've run your first benchmark with fio. Head over to
-<a href="/post/2014-04-17-fio-output-explained.html">Fio Output Explained</a> to find out what all those numbers
-mean.</p>
-
-<p>Keep in mind that this trivial test only does 1 gigabyte of IO. The numbers in the gist quoted above
-should not be used to make any real-world decisions.</p>
-
-<p>In my next post, I will be showing how to parse and plot the JSON output of fio.</p>
 </div><!-- container-bottom -->
 <!-- begin footer.html -->
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">
     
-    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/getting-started-with-fio.md">ChangeLog</a>
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/introducing-pcstat.md">ChangeLog</a>
     
     <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
   </div>
