@@ -55,6 +55,7 @@ type Page struct {
 	Abstract string    // A quick overview of the post for RSS
 	Tags     []string  // ["slobber", "golang"]
 	PubDate  string    // the string value, will be converted to Date after
+	Head     string    // additional <head> info (e.g. CSS)
 	Date     time.Time // 9999-12-31
 	AutoIdx  bool      // default true, when false omit page from automatic page index
 	Script   string    // script code to be placed in a <script></script> after the content
