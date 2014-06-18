@@ -1,0 +1,238 @@
+---
+id: "2014-06-17-jbod-vs-raid"
+title: "JBOD vs RAID"
+abstract: "While waiting for a slow download, I decided to benchmark some JBOD and RAID configs."
+tags: ["fio", "storage", "ssd", "benchmark"]
+pubdate: 2014-06-17T22:00:00Z
+head: <link type="text/css" rel="stylesheet" href="/css/tobert-rickshaw.css"><link type="text/css" rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+---
+
+<div class="css-full-post-content js-full-post-content">
+
+<p>TL;DR JBOD is 30% faster than RAID0</p>
+
+<p>While sitting around waiting for a cobbler sync of Fedora for portacluster, I decided
+to dig into an issue I've been curious about for a while. Which is faster? RAID0 or JBOD.
+My guess was that JBOD would win since each drive would operate independently, with separate
+queues, separate filesystems, etc.. It just so happens that my friend Dimitar came by with a
+4x 256GB I/O Switch Raijin PCIe SSD, which is basically perfect for this test. Each 256GB
+SSD on the card shows up as its own AHCI controller and subsequent drive letter.</p>
+
+<p>The test for all of these configurations is a max IOPS test with one process per drive or
+4 processes on the single mdraid. I'm working on automating these tests so I can run all the
+interesting permutations. For now it's an fio config based on
+<a href="https://github.com/tobert/effio/blob/master/conf/fio_disk_latency/random_rw5050_peak_bw_1m.fio">this one</a>
+adjusted for each scenario.</p>
+
+<p>The graphs are fairly self-explanatory. The mdraid 0 numbers for xfs are noticeably lower than any JBOD config
+I ran on the same drives. It shows in the IOPS, throughput, and latency.</p>
+
+<div style="clear: both;"><hr/></div>
+
+<h3>IOPS</h3>
+
+<div style="float: left; position: relative; width: 820px;">
+  <div id="iops_y_axis" style="position: absolute; top: 0; bottom: 0; width: 60px;"></div>
+	<div id="iops_chart"  style="position: relative; top: 0; bottom: 60px; left: 60px; right: 0; display: inline-block;"></div>
+  <div id="iops_legend_container" style="position: absolute; right: 0; bottom: 60px; width: 0;">
+		<div id="iops_smoother" title="Smoothing"></div>
+		<div id="iops_legend" style="display: inline-block; position: relative; left: 60px;"></div>
+	</div>
+</div>
+
+<div style="clear: both;"><hr/></div>
+
+<h3>Bandwidth (MB/s)</h3>
+
+<div style="float: left; position: relative; width: 820px;">
+  <div id="bw_y_axis" style="position: absolute; top: 0; bottom: 0; width: 60px;"></div>
+	<div id="bw_chart"  style="position: relative; top: 0; bottom: 60px; left: 60px; right: 0; display: inline-block;"></div>
+  <div id="bw_legend_container" style="position: absolute; right: 0; bottom: 60px; width: 0;">
+		<div id="bw_smoother" title="Smoothing"></div>
+		<div id="bw_legend" style="display: inline-block; position: relative; left: 60px;"></div>
+	</div>
+</div>
+
+<div style="clear: both;"><hr/></div>
+
+<h3>Latency Percentiles</h3>
+
+<div style="float: left; position: relative; width: 820px;">
+  <div id="latency_y_axis" style="position: absolute; top: 0; bottom: 0; width: 60px;"></div>
+	<div id="latency_chart"  style="position: relative; top: 0; bottom: 60px; left: 60px; right: 0; display: inline-block;"></div>
+  <div id="latency_x_axis" style="margin-left: 60px;"></div>
+  <div id="latency_legend_container" style="position: absolute; right: 0; bottom: 60px; width: 0;">
+		<div id="latency_smoother" title="Smoothing"></div>
+		<div id="latency_legend" style="display: inline-block; position: relative; left: 60px;"></div>
+	</div>
+</div>
+
+<div style="clear: both;"><hr/></div>
+
+<h3>Raw Data</h3>
+<ul>
+        <li><a href="https://gist.github.com/tobert/686db202c0f3265f83d4">xfs/JBOD/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/86bbdd7980ee8d900307">ext4/JBOD/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/00fc17467e37510f353a">xfs/mdraid0/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/58a87c07cd2d2ec352a2">ext2/JBOD/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/87ec406950713f913346">xfs/JBOD/7200RPM</a></li>
+</ul>
+
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+<script src="/js/d3.v3.min.js"></script>
+<script src="/js/rickshaw.min.js"></script>
+
+<script>
+var palette_name = "classic9"
+var palette = new Rickshaw.Color.Palette( { scheme: palette_name } );
+
+// extracted from fio output in gists linked above
+// j72 = jbod 7200 RPM, the rest are PCIe SSD
+// fio scales automatically to msec on sata drives, so numbers here are x1000
+var tdo = {
+  percentiles:      [    1,     5,    10,    20,    30,    40,     50,     60,     70,     80,     90,     95,     99,   99.5,  99.9,  99.95,  99.99],
+  mdraid_xfs_read:  [  137,   191,   251,   374,   502,   668,    884,   1176,   1608,   2224,   2992,   3728,   5536,   7968, 17280,  20352,  25728],
+  mdraid_xfs_write: [   87,   153,   197,   302,   430,   580,    772,   1048,   1432,   2024,   2832,   3632,   5408,   7776, 17280,  20352,  25728],
+  jbod_xfs_read:    [  179,   266,   326,   402,   462,   516,    588,    676,    828,   1128,   2704,   2928,   3216,   3376,  4960,   5280,   6880],
+  jbod_xfs_write:   [   73,   167,   243,   346,   422,   482,    540,    620,    732,    972,   2480,   2832,   3088,   3216,  4448,   4960,   6752],
+  jbod_ext4_read:   [  179,   262,   322,   398,   454,   510,    580,    668,    836,   1128,   2704,   2928,   3216,   3408,  5088,   5664,   9024],
+  jbod_ext4_write:  [   73,   171,   245,   346,   414,   474,    532,    612,    732,    972,   2480,   2800,   3088,   3248,  4640,   5472,   9024],
+  jbod_ext2_read:   [  177,   262,   322,   394,   450,   506,    572,    668,    828,   1128,   2672,   2896,   3216,   3376,  4832,   5216,   5920],
+  jbod_ext2_write:  [   72,   163,   237,   338,   410,   470,    532,    604,    732,    972,   2480,   2800,   3088,   3216,  4384,   4832,   5856],
+  j72x_xfs_read:    [46000, 49000, 50000, 54000, 60000, 87000, 110000, 143000, 161000, 210000, 285000, 371000, 619000, 742000, 1045000, 1188000, 1532000],
+  j72x_xfs_write:   [46000, 49000, 50000, 55000, 60000, 68000,  77000,  95000, 112000, 149000, 180000, 260000, 437000, 519000, 709000, 791000, 996000],
+  series: function (stg, fs, ddir) {
+    var key = stg + "_" + fs + "_" + ddir;
+    var name = ddir + "/" + stg + "/" + fs;
+    var series = [];
+    tdo.percentiles.forEach(function (val, i) {
+      // leave the >= 99.5 off for now, they make the graph hard to read
+      if (val < 99.5) {
+        series[i] = { x: tdo.percentiles[i], y: tdo[key][i] };
+      }
+    });
+    return {
+			color: palette.color(),
+			data: series,
+			name: name
+    };
+  }
+};
+
+console.log("Latency data:", tdo);
+
+function addStuff(graph, legendid, xaxisid, yaxisid) {
+  var hoverDetail = new Rickshaw.Graph.HoverDetail({ graph: graph });
+
+  var legend = new Rickshaw.Graph.Legend({
+	  graph: graph,
+	  element: document.getElementById(legendid)
+  });
+
+  var ordering = new Rickshaw.Graph.Behavior.Series.Order({
+	  graph: graph,
+	  legend: legend
+  });
+
+  var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
+	  graph: graph,
+	  legend: legend
+  });
+
+  var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+	  graph: graph,
+	  legend: legend
+  });
+
+  var x_ticks;
+
+  if (xaxisid != null) {
+    x_ticks = new Rickshaw.Graph.Axis.X({
+      graph: graph,
+      orientation: "bottom",
+      element: document.getElementById(xaxisid),
+      tickValues: tdo.percentiles
+    });
+  }
+
+  var y_ticks = new Rickshaw.Graph.Axis.Y({
+    graph: graph,
+    orientation: "left",
+    element: document.getElementById(yaxisid)
+  });
+
+  graph.render();
+}
+
+// Latency
+palette = new Rickshaw.Color.Palette( { scheme: palette_name } ); // reset the palette
+var latency_graph = new Rickshaw.Graph( {
+	element: document.getElementById("latency_chart"),
+	width: 800,
+	height: 400,
+	renderer: 'line',
+	series: [
+    tdo.series("mdraid", "xfs", "read"),
+    tdo.series("mdraid", "xfs", "write"),
+    tdo.series("jbod", "xfs", "read"),
+    tdo.series("jbod", "xfs", "write"),
+    tdo.series("jbod", "ext4", "read"),
+    tdo.series("jbod", "ext4", "write"),
+    tdo.series("jbod", "ext2", "read"),
+    tdo.series("jbod", "ext2", "write")
+    //tdo.series("j72x", "xfs", "read"),
+    //tdo.series("j72x", "xfs", "write")
+	]
+} );
+addStuff(latency_graph, "latency_legend", "latency_x_axis", "latency_y_axis");
+
+// Bandwidth
+palette = new Rickshaw.Color.Palette( { scheme: palette_name } ); // reset the palette
+var bw_graph = new Rickshaw.Graph( {
+	element: document.getElementById("bw_chart"),
+	width: 800,
+	height: 400,
+	renderer: 'bar',
+  stack: false,
+	series: [
+    { name: "xfs/mdraid0/read",  data: [ {x: 0, y: 185847} ], color: palette.color() },
+    { name: "xfs/mdraid0/write", data: [ {x: 0, y: 185928} ], color: palette.color() },
+    { name: "xfs/jbod/read",     data: [ {x: 0, y: 265483} ], color: palette.color() },
+    { name: "xfs/jbod/write",    data: [ {x: 0, y: 265465} ], color: palette.color() },
+    { name: "ext4/jbod/read",    data: [ {x: 0, y: 264163} ], color: palette.color() },
+    { name: "ext4/jbod/write",   data: [ {x: 0, y: 264289} ], color: palette.color() },
+    { name: "ext2/jbod/read",    data: [ {x: 0, y: 267729} ], color: palette.color() },
+    { name: "ext2/jbod/write",   data: [ {x: 0, y: 267750} ], color: palette.color() }
+    //{ name: "xfs/7200rpm/read",  data: [ {x: 0, y: 2044} ], color: palette.color() },
+    //{ name: "xfs/7200rpm/write", data: [ {x: 0, y: 2047} ], color: palette.color() },
+	]
+} );
+addStuff(bw_graph, "bw_legend", null, "bw_y_axis");
+
+// IOPS
+palette = new Rickshaw.Color.Palette( { scheme: palette_name } ); // reset the palette
+var iops_graph = new Rickshaw.Graph( {
+	element: document.getElementById("iops_chart"),
+	width: 800,
+	height: 400,
+	renderer: 'bar',
+  stack: false,
+	series: [
+    { name: "xfs/mdraid0/read",  data: [ {x: 0, y: 46461} ], color: palette.color() },
+    { name: "xfs/mdraid0/write", data: [ {x: 0, y: 46481} ], color: palette.color() },
+    { name: "xfs/jbod/read",     data: [ {x: 0, y: 66370} ], color: palette.color() },
+    { name: "xfs/jbod/write",    data: [ {x: 0, y: 66366} ], color: palette.color() },
+    { name: "ext4/jbod/read",    data: [ {x: 0, y: 66040} ], color: palette.color() },
+    { name: "ext4/jbod/write",   data: [ {x: 0, y: 66072} ], color: palette.color() },
+    { name: "ext2/jbod/read",    data: [ {x: 0, y: 66932} ], color: palette.color() },
+    { name: "ext2/jbod/write",   data: [ {x: 0, y: 66937} ], color: palette.color() }
+    //{ name: "xfs/7200rpm/read",  data: [ {x: 0, y: 510} ], color: palette.color() },
+    //{ name: "xfs/7200rpm/write", data: [ {x: 0, y: 511} ], color: palette.color() },
+	]
+} );
+
+addStuff(iops_graph, "iops_legend", null, "iops_y_axis");
+</script>
+
+</div>
