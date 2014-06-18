@@ -37,10 +37,10 @@ get more than 4 lanes of PCIe 2.0.</p>
 
 <p>All tests were run with one of these 3 variants, which are roughly equivalent. The RAID test
 runs 4 processes against a single filesystem, while JBOD runs one process per filesystem for a
-total of 4. Finally the ZFS variant uses mmap since ZFS does not support AIO on Linux.</p>
+total of 4. Finally the ZFS variant uses mmap since ZFS does not support direct or AIO on Linux.</p>
 
 <p>The configuration is designed primarily to test peak IOPS on a device given a random-access
-workload of 50% reads and 50% writes.</p>
+workload of 50% reads and 50% writes using Linux AIO and O_DIRECT (to avoid VFS).</p>
 
 <ul>
     <li><a href="https://gist.github.com/tobert/3a89f947b7b5c6327328">RAID/AIO randrw 50:50</a></li>
