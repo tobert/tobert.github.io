@@ -128,6 +128,8 @@ it for high-performance use on Linux (<em>Solaris and FreeBSD variants may be an
 <div style="clear: both;"><hr/></div>
 
 <h3>Raw <a href="/post/2014-04-17-fio-output-explained.html">fio</a> Output</h3>
+<p>Links to the <a href="/post/2014-04-17-fio-output-explained.html">fio output</a> in gists. Sorry about the file
+naming. It evolved over the course of the day.</p>
 <ul>
         <li><a href="https://gist.github.com/tobert/00fc17467e37510f353a">xfs/mdraid0/SSD</a></li>
         <li><a href="https://gist.github.com/tobert/0b7f5d4c0c5550cb68b3">ext4/mdraid0/SSD</a></li>
@@ -146,12 +148,27 @@ it for high-performance use on Linux (<em>Solaris and FreeBSD variants may be an
 <div style="clear: both;"><hr/></div>
 
 <h3>Latency Numbers</h3>
+
+<p>This table shows all of the raw latency numbers reported by fio. The high-end percentiles' variance is
+sometimes interesting. The terrible performance of the 7200RPM drives should be easy to spot.</p>
+<br/>
+
 <table id="latency-table" class="table table-striped table-bordered table-hover table-condensed table-responsive">
   <thead id="latency-table-head">
   </thead>
   <tbody id="latency-table-body">
   </tbody>
 </table>
+
+<div style="clear: both;"><hr/></div>
+
+<h3>Conclusion</h3>
+
+<p>I've been using raid0 for years, only occasionally venturing off to try JBOD configurations in the past. I've even
+argued against JBOD. Clearly I was wrong. RAID 0 will still be easier to manage in many ways, since it ends up with
+a single filesystem with all the capacity available. JBOD systems will have to be careful to watch for individual disks
+filling up, which complicates monitoring &amp; alerting as well as fstabs. For a 30% performance boost, it's going
+to be worth it as databases grow more robust support for JBOD.</p>
 
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 <script src="/js/d3.v3.min.js"></script>
