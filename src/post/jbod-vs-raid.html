@@ -4,36 +4,73 @@ title: "JBOD vs RAID"
 abstract: "While waiting for a slow download, I decided to benchmark some JBOD and RAID configs."
 tags: ["fio", "storage", "ssd", "benchmark"]
 pubdate: 2014-06-17T22:00:00Z
-head: <link type="text/css" rel="stylesheet" href="/css/tobert-rickshaw.css"><link type="text/css" rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+head: <link type="text/css" rel="stylesheet" href="/css/tobert-rickshaw.css">
 ---
 
 <div class="css-full-post-content js-full-post-content">
 
-<p>TL;DR JBOD is 30% faster than RAID0</p>
+<div style="clear: both;"><hr/></div>
+<p><strong>TL;DR</strong>: JBOD is ~30% faster than MD RAID0. ext2/xfs/ext4 perform similarly.</p>
+<div style="clear: both;"><hr/></div>
 
 <p>While sitting around waiting for a cobbler sync of Fedora for portacluster, I decided
 to dig into an issue I've been curious about for a while. Which is faster? RAID0 or JBOD.
 My guess was that JBOD would win since each drive would operate independently, with separate
-queues, separate filesystems, etc.. It just so happens that my friend Dimitar came by with a
-4x 256GB I/O Switch Raijin PCIe SSD, which is basically perfect for this test. Each 256GB
-SSD on the card shows up as its own AHCI controller and subsequent drive letter.</p>
+queues, separate filesystems, etc.. A friend who works at IO Switch came by with a loaner
+<a href="http://io-switch.com/store/product/raijin/">4x 256GB I/O Switch Raijin PCIe SSD</a>,
+which is basically perfect for this test. Each 256GB
+SSD on the card shows up as its own AHCI controller and subsequent drive letter. Every test
+is being run on the exact same drives, in the same machine, no hw changes between tests.</p>
 
-<p>The test for all of these configurations is a max IOPS test with one process per drive or
-4 processes on the single mdraid. I'm working on automating these tests so I can run all the
-interesting permutations. For now it's an fio config based on
-<a href="https://github.com/tobert/effio/blob/master/conf/fio_disk_latency/random_rw5050_peak_bw_1m.fio">this one</a>
-adjusted for each scenario.</p>
+<div style="clear: both;"><hr/></div>
 
-<p>The graphs are fairly self-explanatory. The mdraid 0 numbers for xfs are noticeably lower than any JBOD config
-I ran on the same drives. It shows in the IOPS, throughput, and latency.</p>
+<h3>fio Configs</h3>
+
+<p>All tests were run with one of these 3 variants, which are roughly equivalent. The RAID test
+runs 4 processes against a single filesystem, while JBOD runs one process per filesystem for a
+total of 4. Finally the ZFS variant uses mmap since ZFS does not support AIO on Linux.</p>
+
+<p>The configuration is designed primarily to test peak IOPS on a device given a random-access
+workload of 50% reads and 50% writes.</p>
+
+<ul>
+    <li><a href="https://gist.github.com/tobert/3a89f947b7b5c6327328">RAID/AIO randrw 50:50</a></li>
+    <li><a href="https://gist.github.com/tobert/7c30a876bd38850e04d2">JBOD/AIO randrw 50:50</a></li>
+    <li><a href="https://gist.github.com/tobert/5d4ef72021f6d4273464">ZFS/mmap randrw 50:50</a></li>
+</ul>
+
+<div style="clear: both;"><hr/></div>
+
+<h3>Filesystem Configs</h3>
+
+<p>Unless otherwise noted, all the default settings for filesystems, mdraid, etc. are used.</p>
+
+<ul>
+        <li>ZFS raid0: <span style="font-family: monospace;">zpool create -f -m /mnt/sdi -o ashift=12 tank sdi1 sdj1 sdk1 sdl1</span></li>
+        <li>ZFS raid10: <span style="font-family: monospace;">zpool create -f -m /mnt/sdi -o ashift=12 tank mirror sdi1 sdj1 mirror sdk1 sdl1</span></li>
+        <li>btrfs single: <span style="font-family: monospace;">mkfs.btrfs --data single --metadata raid10 --force /dev/sd[ijkl]1</span></li>
+        <li>btrfs raid10: <span style="font-family: monospace;">mkfs.btrfs --data raid10 --metadata raid10 --force /dev/sd[ijkl]1</span></li>
+        <li>j72x: 4 7200RPM drive JBOD / xfs</li>
+</ul>
 
 <div style="clear: both;"><hr/></div>
 
 <h3>IOPS</h3>
 
+<p>The fastest test was the ext2 filesystem in a JBOD configuration, but not by much. xfs and ext4 are only
+slightly slower. I still consider ext4 and xfs to be the safe choices for production work. JBOD clearly
+outperforms any of the raid0 configs.</p>
+
+<p>If you're looking for the best possible performance in Cassandra,
+JBOD is where it's at, but raid0 remains a safe/solid choice. Note that STCS compaction requires lots of
+free disk space and is probably not a good choice for JBOD. LCS gets more interesting given the
+additional IO capacity JBOD provides.</p>
+<br/>
+
 <div style="float: left; position: relative; width: 820px;">
   <div id="iops_y_axis" style="position: absolute; top: 0; bottom: 0; width: 60px;"></div>
 	<div id="iops_chart"  style="position: relative; top: 0; bottom: 60px; left: 60px; right: 0; display: inline-block;"></div>
+  <div id="iops_x_axis" style="margin-left: 60px;"></div>
   <div id="iops_legend_container" style="position: absolute; right: 0; bottom: 60px; width: 0;">
 		<div id="iops_smoother" title="Smoothing"></div>
 		<div id="iops_legend" style="display: inline-block; position: relative; left: 60px;"></div>
@@ -44,9 +81,13 @@ I ran on the same drives. It shows in the IOPS, throughput, and latency.</p>
 
 <h3>Bandwidth (MB/s)</h3>
 
+<p>Not much interesting here. Exactly the same profile as IOPS, which makes sense given the fixed IO size in the test config.</p>
+<br/>
+
 <div style="float: left; position: relative; width: 820px;">
   <div id="bw_y_axis" style="position: absolute; top: 0; bottom: 0; width: 60px;"></div>
 	<div id="bw_chart"  style="position: relative; top: 0; bottom: 60px; left: 60px; right: 0; display: inline-block;"></div>
+  <div id="bw_x_axis" style="margin-left: 60px;"></div>
   <div id="bw_legend_container" style="position: absolute; right: 0; bottom: 60px; width: 0;">
 		<div id="bw_smoother" title="Smoothing"></div>
 		<div id="bw_legend" style="display: inline-block; position: relative; left: 60px;"></div>
@@ -56,6 +97,16 @@ I ran on the same drives. It shows in the IOPS, throughput, and latency.</p>
 <div style="clear: both;"><hr/></div>
 
 <h3>Latency Percentiles</h3>
+
+<p>Mouse over the lines and legend to get more details. The Y axis unit is microseconds. The 7200RPM drive JBOD was left off
+this graph because it throws
+the y scale off and is basically useless. The &gt;p99 columns are also omitted but visible in the table at the end of this
+page.</p>
+<p>btrfs faired poorly on latency measurements. It used a lot of CPU, probably for checksumming and these latency numbers show it.</p>
+<p>ZFS used 2 full cores for the duration of both test configurations. Its latency line on the bottom looks suspect. Given the
+throughput numbers and generally odd IO patterns I observed, it will be a while before I test it again and I do not recommend
+it for high-performance use on Linux (<em>Solaris and FreeBSD variants may be an entirely different matter!</em>).
+<br/>
 
 <div style="float: left; position: relative; width: 820px;">
   <div id="latency_y_axis" style="position: absolute; top: 0; bottom: 0; width: 60px;"></div>
@@ -71,19 +122,35 @@ I ran on the same drives. It shows in the IOPS, throughput, and latency.</p>
 
 <h3>Raw Data</h3>
 <ul>
+        <li><a href="https://gist.github.com/tobert/00fc17467e37510f353a">xfs/mdraid0/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/0b7f5d4c0c5550cb68b3">ext4/mdraid0/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/e758714680641fe8e6fb">xfs/mdraid10/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/9f6609ec711944131e9e">ext4/mdraid10/SSD</a></li>
         <li><a href="https://gist.github.com/tobert/686db202c0f3265f83d4">xfs/JBOD/SSD</a></li>
         <li><a href="https://gist.github.com/tobert/86bbdd7980ee8d900307">ext4/JBOD/SSD</a></li>
-        <li><a href="https://gist.github.com/tobert/00fc17467e37510f353a">xfs/mdraid0/SSD</a></li>
         <li><a href="https://gist.github.com/tobert/58a87c07cd2d2ec352a2">ext2/JBOD/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/5867949d8793c255ff69">zfs/raid0/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/af2ee48d8bdf7157af5f">zfs/raid10/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/ab0b961dfe79c9c7c0d8">btrfs/single/SSD</a></li>
+        <li><a href="https://gist.github.com/tobert/09787ba951652f698967">btrfs/raid10/SSD</a></li>
         <li><a href="https://gist.github.com/tobert/87ec406950713f913346">xfs/JBOD/7200RPM</a></li>
 </ul>
 
+<div style="clear: both;"><hr/></div>
+
+<h3>Latency Numbers</h3>
+<table id="latency-table" class="table table-striped table-bordered table-hover table-condensed table-responsive">
+  <thead id="latency-table-head">
+  </thead>
+  <tbody id="latency-table-body">
+  </tbody>
+</table>
+
 <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="//code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 <script src="/js/d3.v3.min.js"></script>
 <script src="/js/rickshaw.min.js"></script>
 
-<script>
+<script>$(document).ready(function() {
 var palette_name = "classic9"
 var palette = new Rickshaw.Color.Palette( { scheme: palette_name } );
 
@@ -91,25 +158,41 @@ var palette = new Rickshaw.Color.Palette( { scheme: palette_name } );
 // j72 = jbod 7200 RPM, the rest are PCIe SSD
 // fio scales automatically to msec on sata drives, so numbers here are x1000
 var tdo = {
-  percentiles:      [    1,     5,    10,    20,    30,    40,     50,     60,     70,     80,     90,     95,     99,   99.5,  99.9,  99.95,  99.99],
-  mdraid_xfs_read:  [  137,   191,   251,   374,   502,   668,    884,   1176,   1608,   2224,   2992,   3728,   5536,   7968, 17280,  20352,  25728],
-  mdraid_xfs_write: [   87,   153,   197,   302,   430,   580,    772,   1048,   1432,   2024,   2832,   3632,   5408,   7776, 17280,  20352,  25728],
-  jbod_xfs_read:    [  179,   266,   326,   402,   462,   516,    588,    676,    828,   1128,   2704,   2928,   3216,   3376,  4960,   5280,   6880],
-  jbod_xfs_write:   [   73,   167,   243,   346,   422,   482,    540,    620,    732,    972,   2480,   2832,   3088,   3216,  4448,   4960,   6752],
-  jbod_ext4_read:   [  179,   262,   322,   398,   454,   510,    580,    668,    836,   1128,   2704,   2928,   3216,   3408,  5088,   5664,   9024],
-  jbod_ext4_write:  [   73,   171,   245,   346,   414,   474,    532,    612,    732,    972,   2480,   2800,   3088,   3248,  4640,   5472,   9024],
-  jbod_ext2_read:   [  177,   262,   322,   394,   450,   506,    572,    668,    828,   1128,   2672,   2896,   3216,   3376,  4832,   5216,   5920],
-  jbod_ext2_write:  [   72,   163,   237,   338,   410,   470,    532,    604,    732,    972,   2480,   2800,   3088,   3216,  4384,   4832,   5856],
-  j72x_xfs_read:    [46000, 49000, 50000, 54000, 60000, 87000, 110000, 143000, 161000, 210000, 285000, 371000, 619000, 742000, 1045000, 1188000, 1532000],
-  j72x_xfs_write:   [46000, 49000, 50000, 55000, 60000, 68000,  77000,  95000, 112000, 149000, 180000, 260000, 437000, 519000, 709000, 791000, 996000],
+  percentiles:         [    1,     5,    10,    20,    30,    40,     50,     60,     70,     80,     90,     95,     99,   99.5,    99.9,   99.95,   99.99],
+  mdraid0_xfs_read:    [  137,   191,   251,   374,   502,   668,    884,   1176,   1608,   2224,   2992,   3728,   5536,   7968,   17280,   20352,   25728],
+  mdraid0_xfs_write:   [   87,   153,   197,   302,   430,   580,    772,   1048,   1432,   2024,   2832,   3632,   5408,   7776,   17280,   20352,   25728],
+  mdraid0_ext4_read:   [    0,   191,   253,   378,   510,   676,    892,   1192,   1624,   2224,   3024,   3760,   5728,   8160,   17024,   20096,   25216],
+  mdraid0_ext4_write:  [   87,   153,   199,   306,   434,   588,    788,   1064,   1448,   2040,   2864,   3632,   5536,   8032,   16768,   20096,   25216],
+  jbod_xfs_read:       [  179,   266,   326,   402,   462,   516,    588,    676,    828,   1128,   2704,   2928,   3216,   3376,    4960,    5280,    6880],
+  jbod_xfs_write:      [   73,   167,   243,   346,   422,   482,    540,    620,    732,    972,   2480,   2832,   3088,   3216,    4448,    4960,    6752],
+  jbod_ext4_read:      [  179,   262,   322,   398,   454,   510,    580,    668,    836,   1128,   2704,   2928,   3216,   3408,    5088,    5664,    9024],
+  jbod_ext4_write:     [   73,   171,   245,   346,   414,   474,    532,    612,    732,    972,   2480,   2800,   3088,   3248,    4640,    5472,    9024],
+  jbod_ext2_read:      [  177,   262,   322,   394,   450,   506,    572,    668,    828,   1128,   2672,   2896,   3216,   3376,    4832,    5216,    5920],
+  jbod_ext2_write:     [   72,   163,   237,   338,   410,   470,    532,    604,    732,    972,   2480,   2800,   3088,   3216,    4384,    4832,    5856],
+  raid0_zfs_read:      [    9,    13,   350,   394,   442,   506,    564,    612,    676,    796,   1656,   2672,   4192,  13248,   15168,   15424,   16768],
+  raid0_zfs_write:     [    9,    16,   354,   394,   446,   510,    564,    612,    684,    804,   1656,   2672,   4192,  13120,   15168,   15424,   17024],
+  single_btrfs_read:   [   94,   163,   229,   390,   564,   756,   1064,   1752,   2320,   2704,   3344,   4960,   8768,  13248,   30080,   39168,  104960],
+  single_btrfs_write:  [  127,   418,   596,   876,  1144,  1480,   1992,   2608,   2960,   3312,   4128,   5536,   8768,  12608,   27264,   37120,  103936],
+  mdraid10_xfs_read:   [  161,   233,   322,   498,   700,   972,   1320,   1768,   2288,   2832,   3792,   4704,   7840,  11456,   19584,   21888,   42752],
+  mdraid10_xfs_write:  [  159,   278,   414,   676,   996,  1384,   1832,   2288,   2736,   3344,   4320,   5216,   9408,  14016,   21120,   23936,   48896],
+  mdraid10_ext4_read:  [  161,   233,   322,   502,   708,   980,   1336,   1784,   2320,   2864,   3824,   4768,   8032,  11712,   19328,   21632,   39680],
+  mdraid10_ext4_write: [  157,   278,   418,   676,  1004,  1400,   1848,   2320,   2768,   3376,   4384,   5280,   9664,  14144,   20864,   23168,   47872],
+  raid10_zfs_read:     [    9,    16,   370,   414,   450,   506,    556,    604,    668,    860,   2160,   2864,   3408,   5280,   15040,   15168,   15552],
+  raid10_zfs_write:    [   10,    18,   374,   418,   454,   510,    564,    604,    668,    900,   2256,   2896,   4768,  15296,   73216,   95744,  199680],
+  raid10_btrfs_read:   [  137,   231,   326,   510,   676,   852,   1080,   1448,   2024,   2544,   3024,   3504,   5984,   8640,   24448,   29568,   60160],
+  raid10_btrfs_write:  [  124,   266,   414,   636,   836,  1080,   1432,   1944,   2416,   2768,   3216,   3664,   6368,  10176,   27008,   31616,   76288],
+  j72x_xfs_read:       [46000, 49000, 50000, 54000, 60000, 87000, 110000, 143000, 161000, 210000, 285000, 371000, 619000, 742000, 1045000, 1188000, 1532000],
+  j72x_xfs_write:      [46000, 49000, 50000, 55000, 60000, 68000,  77000,  95000, 112000, 149000, 180000, 260000, 437000, 519000,  709000,  791000,  996000],
   series: function (stg, fs, ddir) {
     var key = stg + "_" + fs + "_" + ddir;
     var name = ddir + "/" + stg + "/" + fs;
     var series = [];
+    tdo["xticks"] = [];
     tdo.percentiles.forEach(function (val, i) {
-      // leave the >= 99.5 off for now, they make the graph hard to read
-      if (val < 99.5) {
+      // leave the > 99.0 off for now, they make the graph hard to read
+      if (val < 99.1) {
         series[i] = { x: tdo.percentiles[i], y: tdo[key][i] };
+        tdo.xticks[i] = tdo.percentiles[i];
       }
     });
     return {
@@ -122,7 +205,8 @@ var tdo = {
 
 console.log("Latency data:", tdo);
 
-function addStuff(graph, legendid, xaxisid, yaxisid) {
+function addStuff(graph, legendid, xaxisid, yaxisid, bling) {
+  var x_ticks, shelving, highlighter;
   var hoverDetail = new Rickshaw.Graph.HoverDetail({ graph: graph });
 
   var legend = new Rickshaw.Graph.Legend({
@@ -130,29 +214,23 @@ function addStuff(graph, legendid, xaxisid, yaxisid) {
 	  element: document.getElementById(legendid)
   });
 
-  var ordering = new Rickshaw.Graph.Behavior.Series.Order({
-	  graph: graph,
-	  legend: legend
-  });
+  if (bling) {
+    // ordering requires jquery-ui, but still doesn't seem to work :/
+    shelving = new Rickshaw.Graph.Behavior.Series.Toggle({ graph: graph, legend: legend });
+    highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({ graph: graph, legend: legend });
 
-  var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
-	  graph: graph,
-	  legend: legend
-  });
-
-  var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
-	  graph: graph,
-	  legend: legend
-  });
-
-  var x_ticks;
-
-  if (xaxisid != null) {
     x_ticks = new Rickshaw.Graph.Axis.X({
       graph: graph,
       orientation: "bottom",
       element: document.getElementById(xaxisid),
-      tickValues: tdo.percentiles
+      tickValues: tdo.ticks
+    });
+  } else {
+    x_ticks = new Rickshaw.Graph.Axis.X( {
+	    graph: graph,
+	    orientation: 'bottom',
+	    element: document.getElementById(xaxisid),
+      tickFormat: function (n) { if (n == 0) { return "read"; } else if (n == 1) { return "write"; } else { return null; } }
     });
   }
 
@@ -173,19 +251,33 @@ var latency_graph = new Rickshaw.Graph( {
 	height: 400,
 	renderer: 'line',
 	series: [
-    tdo.series("mdraid", "xfs", "read"),
-    tdo.series("mdraid", "xfs", "write"),
-    tdo.series("jbod", "xfs", "read"),
-    tdo.series("jbod", "xfs", "write"),
-    tdo.series("jbod", "ext4", "read"),
-    tdo.series("jbod", "ext4", "write"),
-    tdo.series("jbod", "ext2", "read"),
-    tdo.series("jbod", "ext2", "write")
+    tdo.series("mdraid0",  "xfs",    "read"),
+    tdo.series("mdraid0",  "xfs",    "write"),
+    tdo.series("mdraid0",  "ext4",   "read"),
+    tdo.series("mdraid0",  "ext4",   "write"),
+    tdo.series("jbod",     "xfs",    "read"),
+    tdo.series("jbod",     "xfs",    "write"),
+    tdo.series("jbod",     "ext4",   "read"),
+    tdo.series("jbod",     "ext4",   "write"),
+    tdo.series("jbod",     "ext2",   "read"),
+    tdo.series("jbod",     "ext2",   "write"),
+    tdo.series("raid0",    "zfs",    "read"),
+    tdo.series("raid0",    "zfs",    "write"),
+    tdo.series("mdraid10", "xfs",    "read"),
+    tdo.series("mdraid10", "xfs",    "write"),
+    tdo.series("mdraid10", "ext4",   "read"),
+    tdo.series("mdraid10", "ext4",   "write"),
+    tdo.series("single",   "btrfs",  "read"),
+    tdo.series("single",   "btrfs",  "write"),
+    tdo.series("raid10",   "zfs",    "read"),
+    tdo.series("raid10",   "zfs",    "write"),
+    tdo.series("raid10",   "btrfs",  "read"),
+    tdo.series("raid10",   "btrfs",  "write")
     //tdo.series("j72x", "xfs", "read"),
     //tdo.series("j72x", "xfs", "write")
 	]
 } );
-addStuff(latency_graph, "latency_legend", "latency_x_axis", "latency_y_axis");
+addStuff(latency_graph, "latency_legend", "latency_x_axis", "latency_y_axis", true);
 
 // Bandwidth
 palette = new Rickshaw.Color.Palette( { scheme: palette_name } ); // reset the palette
@@ -196,19 +288,21 @@ var bw_graph = new Rickshaw.Graph( {
 	renderer: 'bar',
   stack: false,
 	series: [
-    { name: "xfs/mdraid0/read",  data: [ {x: 0, y: 185847} ], color: palette.color() },
-    { name: "xfs/mdraid0/write", data: [ {x: 0, y: 185928} ], color: palette.color() },
-    { name: "xfs/jbod/read",     data: [ {x: 0, y: 265483} ], color: palette.color() },
-    { name: "xfs/jbod/write",    data: [ {x: 0, y: 265465} ], color: palette.color() },
-    { name: "ext4/jbod/read",    data: [ {x: 0, y: 264163} ], color: palette.color() },
-    { name: "ext4/jbod/write",   data: [ {x: 0, y: 264289} ], color: palette.color() },
-    { name: "ext2/jbod/read",    data: [ {x: 0, y: 267729} ], color: palette.color() },
-    { name: "ext2/jbod/write",   data: [ {x: 0, y: 267750} ], color: palette.color() }
-    //{ name: "xfs/7200rpm/read",  data: [ {x: 0, y: 2044} ], color: palette.color() },
-    //{ name: "xfs/7200rpm/write", data: [ {x: 0, y: 2047} ], color: palette.color() },
+    { name: "xfs/mdraid0",    data: [ {x: 0, y: 185847},{x: 1, y: 185928} ], color: palette.color() },
+    { name: "ext4/mdraid0",   data: [ {x: 0, y: 183979},{x: 1, y: 183929} ], color: palette.color() },
+    { name: "xfs/jbod",       data: [ {x: 0, y: 265483},{x: 1, y: 265465} ], color: palette.color() },
+    { name: "ext4/jbod",      data: [ {x: 0, y: 264163},{x: 1, y: 264289} ], color: palette.color() },
+    { name: "ext2/jbod",      data: [ {x: 0, y: 267729},{x: 1, y: 267750} ], color: palette.color() },
+    { name: "zfs/raid0",      data: [ {x: 0, y:   9420},{x: 1, y:   9415} ], color: palette.color() },
+    { name: "btrfs/single",   data: [ {x: 0, y: 102502},{x: 1, y: 102428} ], color: palette.color() },
+    { name: "xfs/mdraid10",   data: [ {x: 0, y: 120706},{x: 1, y: 120728} ], color: palette.color() },
+    { name: "ext4/mdraid10",  data: [ {x: 0, y: 119758},{x: 1, y: 119698} ], color: palette.color() },
+    { name: "zfs/raid10",     data: [ {x: 0, y:   7937},{x: 1, y:   7939} ], color: palette.color() },
+    { name: "btrfs/raid10",   data: [ {x: 0, y: 122837},{x: 1, y: 122811} ], color: palette.color() },
+    { name: "xfs/j72x",       data: [ {x: 0, y:   2044},{x: 1, y:   2047} ], color: palette.color() }
 	]
 } );
-addStuff(bw_graph, "bw_legend", null, "bw_y_axis");
+addStuff(bw_graph, "bw_legend", "bw_x_axis", "bw_y_axis", false);
 
 // IOPS
 palette = new Rickshaw.Color.Palette( { scheme: palette_name } ); // reset the palette
@@ -219,20 +313,53 @@ var iops_graph = new Rickshaw.Graph( {
 	renderer: 'bar',
   stack: false,
 	series: [
-    { name: "xfs/mdraid0/read",  data: [ {x: 0, y: 46461} ], color: palette.color() },
-    { name: "xfs/mdraid0/write", data: [ {x: 0, y: 46481} ], color: palette.color() },
-    { name: "xfs/jbod/read",     data: [ {x: 0, y: 66370} ], color: palette.color() },
-    { name: "xfs/jbod/write",    data: [ {x: 0, y: 66366} ], color: palette.color() },
-    { name: "ext4/jbod/read",    data: [ {x: 0, y: 66040} ], color: palette.color() },
-    { name: "ext4/jbod/write",   data: [ {x: 0, y: 66072} ], color: palette.color() },
-    { name: "ext2/jbod/read",    data: [ {x: 0, y: 66932} ], color: palette.color() },
-    { name: "ext2/jbod/write",   data: [ {x: 0, y: 66937} ], color: palette.color() }
-    //{ name: "xfs/7200rpm/read",  data: [ {x: 0, y: 510} ], color: palette.color() },
-    //{ name: "xfs/7200rpm/write", data: [ {x: 0, y: 511} ], color: palette.color() },
+    { name: "xfs/mdraid0",    data: [ {x: 0, y: 46461},{x: 1, y: 46481} ], color: palette.color() },
+    { name: "ext4/mdraid0",   data: [ {x: 0, y: 45994},{x: 1, y: 46013} ], color: palette.color() },
+    { name: "xfs/jbod",       data: [ {x: 0, y: 66370},{x: 1, y: 66366} ], color: palette.color() },
+    { name: "ext4/jbod",      data: [ {x: 0, y: 66040},{x: 1, y: 66072} ], color: palette.color() },
+    { name: "ext2/jbod",      data: [ {x: 0, y: 66932},{x: 1, y: 66937} ], color: palette.color() },
+    { name: "zfs/raid0",      data: [ {x: 0, y:  2355},{x: 1, y:  2353} ], color: palette.color() },
+    { name: "btrfs/single",   data: [ {x: 0, y: 25625},{x: 1, y: 25606} ], color: palette.color() },
+    { name: "xfs/mdraid10",   data: [ {x: 0, y: 30176},{x: 1, y: 30212} ], color: palette.color() },
+    { name: "ext4/mdraid10",  data: [ {x: 0, y: 29949},{x: 1, y: 29924} ], color: palette.color() },
+    { name: "zfs/raid10",     data: [ {x: 0, y:  1984},{x: 1, y:  1984} ], color: palette.color() },
+    { name: "btrfs/raid10",   data: [ {x: 0, y: 30709},{x: 1, y: 30702} ], color: palette.color() },
+    { name: "xfs/j27x",       data: [ {x: 0, y:   510},{x: 1, y:   511} ], color: palette.color() }
 	]
 } );
+addStuff(iops_graph, "iops_legend", "iops_x_axis", "iops_y_axis", false);
 
-addStuff(iops_graph, "iops_legend", null, "iops_y_axis");
-</script>
+tdo.percentiles.unshift("");
+d3.select("#latency-table-head")
+  .append("tr")
+  .selectAll("th")
+  .data(tdo.percentiles)
+  .enter()
+  .append("th")
+  .attr("style", "text-align: right; font-family: monospace;")
+  .text(function (d) { return d; });
+
+var rowdata = [];
+var name_re = /_(?:read|write)$/;
+for (var key in tdo) {
+  if (name_re.test(key)) {
+    tdo[key].unshift(key); // throw the name in column 0
+    rowdata.push(tdo[key]);
+  }
+}
+
+var tr = d3.select("#latency-table-body")
+  .selectAll("tr")
+  .data(rowdata)
+  .enter()
+  .append("tr");
+
+tr.selectAll("td")
+  .data(function (d, i) { return rowdata[i]; })
+  .enter()
+  .append("td")
+  .attr("style", "text-align: right; font-family: monospace;")
+  .text(function (d) { return d; });
+});</script>
 
 </div>
