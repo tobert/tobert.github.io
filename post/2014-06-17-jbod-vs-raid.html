@@ -88,9 +88,10 @@ is being run on the exact same drives, in the
 no hardware changes between tests.</p>
 
 <p>An important trend I noticed is that the highest-performing tests always capped out at almost
-exactly 500MB/s (aggregate r/w). I suspect it has something to do with my hardware and PCIe negotation.
-A problem for another day. The important thing for this round of tests is that the configuration
-remained consistent, showing the difference between the various storage/filesystem combinations.</p>
+exactly 500MB/s (aggregate r/w). This is happening because my
+<a href="http://ark.intel.com/products/53557/intel-server-board-s1200btl">motherboard</a> will only
+assign a maximum of 4 lanes to a slot. Even though I have the card in the 16x slot, it can't
+get more than 4 lanes of PCIe 2.0.</p>
 
 <div style="clear: both;"><hr/></div>
 
