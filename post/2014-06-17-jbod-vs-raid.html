@@ -75,18 +75,21 @@
 <p><strong>TL;DR</strong>: JBOD is ~30% faster than MD RAID0. ext2/xfs/ext4 perform similarly.</p>
 <div style="clear: both;"><hr/></div>
 
-<p>While sitting around waiting for a cobbler sync of Fedora for portacluster, I decided
+<p>While sitting around waiting for a cobbler sync of Fedora for
+<a href="/post/2014-02-07-portacluster.html">portacluster</a>, I decided
 to dig into an issue I've been curious about for a while. Which is faster? RAID0 or JBOD.
 My guess was that JBOD would win since each drive would operate independently, with separate
 queues, separate filesystems, etc.. A friend who works at IO Switch came by with a loaner
 <a href="http://io-switch.com/store/product/raijin/">4x 256GB I/O Switch Raijin PCIe SSD</a>,
 which is basically perfect for this test. Each 256GB
 SSD on the card shows up as its own AHCI controller and subsequent drive letter. Every test
-is being run on the exact same drives, in the same machine, no hw changes between tests.</p>
+is being run on the exact same drives, in the
+<a href="/post/2014-03-29-benchmarking-disk-latency-setup.html">same machine</a>,
+no hardware changes between tests.</p>
 
 <div style="clear: both;"><hr/></div>
 
-<h3>fio Configs</h3>
+<h3><a href="/post/2014-04-28-getting-started-with-fio.html">fio</a> Configs</h3>
 
 <p>All tests were run with one of these 3 variants, which are roughly equivalent. The RAID test
 runs 4 processes against a single filesystem, while JBOD runs one process per filesystem for a
@@ -182,7 +185,7 @@ it for high-performance use on Linux (<em>Solaris and FreeBSD variants may be an
 
 <div style="clear: both;"><hr/></div>
 
-<h3>Raw Data</h3>
+<h3>Raw <a href="/post/2014-04-17-fio-output-explained.html">fio</a> Output</h3>
 <ul>
         <li><a href="https://gist.github.com/tobert/00fc17467e37510f353a">xfs/mdraid0/SSD</a></li>
         <li><a href="https://gist.github.com/tobert/0b7f5d4c0c5550cb68b3">ext4/mdraid0/SSD</a></li>
