@@ -54,6 +54,10 @@ workload of 50% reads and 50% writes using Linux AIO and O_DIRECT (to avoid VFS)
 
 <p>Unless otherwise noted, all the default settings for filesystems, mdraid, etc. are used.</p>
 
+<p>I forgot to capture the output of all the mkfs and mdadm commands to show what sizes were used. The drives are
+showing 4k block size and I did watch to make sure everything was aligned. Future tests will capture all this
+data in a more structured manner.</p>
+
 <ul>
         <li>ZFS raid0: <span style="font-family: monospace;">zpool create -f -m /mnt/sdi -o ashift=12 tank sdi1 sdj1 sdk1 sdl1</span></li>
         <li>ZFS raid10: <span style="font-family: monospace;">zpool create -f -m /mnt/sdi -o ashift=12 tank mirror sdi1 sdj1 mirror sdk1 sdl1</span></li>
