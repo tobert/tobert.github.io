@@ -7,10 +7,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-05-06</pubDate>
-	<lastBuildDate>2014-05-06</lastBuildDate>
+	<pubDate>2014-06-17</pubDate>
+	<lastBuildDate>2014-06-18</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>JBOD vs RAID</title>
+	  <link>http://tobert.github.io/post/2014-06-17-jbod-vs-raid.html</link>
+      <pubDate>Tue, 17 Jun 2014 22:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-06-17-jbod-vs-raid</guid>
+	  <description>While waiting for a slow download, I decided to benchmark some JBOD and RAID configs.</description>
+    </item>
     
     <item>
       <title>Publishing pcstat Binaries on Github</title>
