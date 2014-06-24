@@ -7,10 +7,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-06-17</pubDate>
-	<lastBuildDate>2014-06-18</lastBuildDate>
+	<pubDate>2014-06-24</pubDate>
+	<lastBuildDate>2014-06-24</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>Improved default settings for Linux machines</title>
+	  <link>http://tobert.github.io/post/2014-06-24-linux-defaults.html</link>
+      <pubDate>Tue, 24 Jun 2014 18:30:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-06-24-linux-defaults</guid>
+	  <description>A quick overview of Linux settings I change on almost every machine I manage.</description>
+    </item>
     
     <item>
       <title>JBOD vs RAID</title>

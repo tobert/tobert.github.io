@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="A quick overview of Linux settings I change on almost every machine I manage.">
+    <meta name="keywords" content="linux, tuning, ">
+    <meta property="article:published_time" content="2014-06-24"/>
+    <meta property="article:modified_time" content="2014-06-24"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Improved default settings for Linux machines : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="A quick overview of Linux settings I change on almost every machine I manage.">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Improved default settings for Linux machines</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-06-24-linux-defaults.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/linux-defaults.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>Improved default settings for Linux machines</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+<p>I get asked about my default settings for Linux fairly frequently and was writing this in an email
+and decided to post it for broader use. If you have better recommendations, by all means please
+send me a pull request. The Edit button at the top of this page will get you there.</p>
+
+<p>There are a couple groups of settings below. The first couple go in /etc/sysctl.conf or /etc/sysctl.d/filename.conf. I've
+applied most of these to hundreds of machines and never had an issue. That said, test in non-production first! I run the
+same settings across pretty much every Linux machine I touch, including laptops, Intel NUCs, Xeon workstations, and huge
+NUMA servers. There's more to be done for each case to get the best performance, but I think this is where almost every
+machine should start.</p>
+
+<pre><code>vm.swappiness = 0
+vm.max_map_count = 1048576
+fs.file-max = 1048576
+kernel.shmmax = 65536
+kernel.msgmax = 65536
+kernel.msgmnb = 65536
+kernel.pid_max = 999999 # unnecessary, but I like it
+kernel.panic = 300 # panic if the kernel hangs
+
+# do not enable if your machines are not physically secured
+# this can be used to force reboots, kill processses, cause kernel crashes, etc without logging in
+# but it's very handy when a machine is hung and you need to get control
+# that said, I always enable it
+kernel.sysrq = 1
+</code></pre>
+
+<p>These are improved defaults for opening up the Linux network stack. I recommend Googling &quot;Linux C10k&quot; to learn more about what they mean.</p>
+
+<pre><code>net.ipv4.ip_local_port_range = 10000 65535
+net.ipv4.tcp_window_scaling = 1
+net.ipv4.tcp_rmem = 4096 87380 16777216
+net.ipv4.tcp_wmem = 4096 65536 16777216
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.core.netdev_max_backlog = 2500
+net.core.somaxconn = 65000
+</code></pre>
+
+<p>These are some more advanced settings to control how much written data can be held in RAM before flushing to disk. These are generally safe to apply, but going crazy with numbers can (easily) adversely affect performance. I prefer a fairly low dirty_background setting to make sure IO
+doesn't get backed up. Setting these numbers really high can be useful for large file transfers that are smaller than RAM, but eventually
+you pay the cost of flushing to disk, so I don't recommend going crazy.</p>
+
+<pre><code># these will need local tuning, currently set to start flushing dirty pages at 256MB
+# writes will start blocking at 2GB of dirty data, but this should only ever happen if
+# your disks are far slower than your software is writing data
+# If you have an older kernel, you will need to s/bytes/ratio/ and adjust accordingly.
+vm.dirty_background_bytes = 268435456
+vm.dirty_bytes = 1073741824
+</code></pre>
+
+<p>Finally, I think the whole pam limits business is useless on single-user systems (e.g. workstations, database servers), so I effectively disable it.
+Put this /etc/security/limits.conf or /etc/security/limits.d/disable.conf (depending on your distro &amp; preferences):</p>
+
+<pre><code>* - nofile     1048576
+* - memlock    unlimited
+* - fsize      unlimited
+* - data       unlimited
+* - rss        unlimited
+* - stack      unlimited
+* - cpu        unlimited
+* - nproc      unlimited
+* - as         unlimited
+* - locks      unlimited
+* - sigpending unlimited
+* - msgqueue   unlimited
+</code></pre>
+
+<p>Once these settings are applied, a lot of issues go away. Please let me know if you run into any issues
+either on Twitter as <a href="">@AlTobey</a> or via email at <a href="mailto:tobert@gmail.com">tobert@gmail.com</a>.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/linux-defaults.md">ChangeLog</a>
+    
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
