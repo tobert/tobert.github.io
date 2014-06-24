@@ -78,5 +78,6 @@ Put this /etc/security/limits.conf or /etc/security/limits.d/disable.conf (depen
 ```
 
 Once these settings are applied, a lot of issues go away. Please let me know if you run into any issues
-either on Twitter as <a href="">@AlTobey</a> or via email at <a href="mailto:tobert@gmail.com">tobert@gmail.com</a>.
+either on Twitter as <a href="https://twitter.com/AlTobey">@AlTobey</a> or via email at
+<a href="mailto:tobert@gmail.com">tobert@gmail.com</a>.
 
