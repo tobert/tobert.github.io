@@ -16,8 +16,20 @@ same settings across pretty much every Linux machine I touch, including laptops,
 NUMA servers. There's more to be done for each case to get the best performance, but I think this is where almost every
 machine should start.
 
+Edit: I've run across a few comments complaining about these large max values. The reason I set them
+high is that the machines I work on are not multi-user in any way. These settings would be insane on
+a shared university machine, but for a Linux workstation or server, there's only one
+user/application that pretty much never wants or expects to hit the ridiculously low default limits.
+As I mentioned, I've run these
+settings on likely thousands of machines over the last few years and have never seen them cause
+an issue; in fact quite the opposite happens: users are not surprised by silly limits like 1024
+file handles or applications going away for non-deterministic amounts of time while the kernel
+fetches application pages from swap that were only swapped out to make room for VFS.
+
 ```
 # tell the kernel to only swap if it really needs it, rather than doing it all the time
+# as of Linux >= 3.5 this disables swap entirely, which I think is virtuous
+# set vm.swappiness=1 if you want swap available for overflow
 vm.swappiness = 0
 # increase the number of allowed mmapped files
 vm.max_map_count = 1048576
