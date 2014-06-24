@@ -17,14 +17,21 @@ NUMA servers. There's more to be done for each case to get the best performance,
 machine should start.
 
 ```
+# tell the kernel to only swap if it really needs it, rather than doing it all the time
 vm.swappiness = 0
+# increase the number of allowed mmapped files
 vm.max_map_count = 1048576
+# increase the number of file handles available globally
 fs.file-max = 1048576
+# increase the number of sysv ipc slots for each type
 kernel.shmmax = 65536
 kernel.msgmax = 65536
 kernel.msgmnb = 65536
+# allow up to 999999 processes with corresponding pids
+# this looks nice and rarely rolls over - I've never had a problem with it.
 kernel.pid_max = 999999 # unnecessary, but I like it
-kernel.panic = 300 # panic if the kernel hangs
+# panic if the kernel hangs for more than 300 seconds
+kernel.panic = 300
 
 # do not enable if your machines are not physically secured
 # this can be used to force reboots, kill processses, cause kernel crashes, etc without logging in
@@ -49,6 +56,13 @@ net.core.somaxconn = 65000
 These are some more advanced settings to control how much written data can be held in RAM before flushing to disk. These are generally safe to apply, but going crazy with numbers can (easily) adversely affect performance. I prefer a fairly low dirty_background setting to make sure IO
 doesn't get backed up. Setting these numbers really high can be useful for large file transfers that are smaller than RAM, but eventually
 you pay the cost of flushing to disk, so I don't recommend going crazy.
+
+See Also:
+
+<ul>
+    <li><a href="https://github.com/torvalds/linux/blob/master/Documentation/sysctl/vm.txt">linux/Documentation/sysctl/vm.txt</a></li>
+    <li><a href="https://lkml.org/lkml/2008/11/23/160">LKML post introducing dirty_bytes and dirty_background_bytes</a></li>
+</ul>
 
 ```
 # these will need local tuning, currently set to start flushing dirty pages at 256MB
