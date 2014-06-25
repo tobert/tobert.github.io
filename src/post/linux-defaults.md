@@ -11,8 +11,10 @@ and decided to post it for broader use. If you have better recommendations, by a
 send me a pull request. The Edit button at the top of this page will get you there.
 
 There are a couple groups of settings below. Most of the settings below should end up in /etc/sysctl.conf or
-/etc/sysctl.d/filename.conf (depending on your distro). I've
-applied most of these to hundreds of machines and never had an issue. That said, test in non-production first! I run the
+/etc/sysctl.d/filename.conf (depending on your distro). They can be applied immediately with `sudo
+sysctl -p /etc/sysctl.d/filename.conf`.
+
+I've applied most of these to hundreds of machines and never had an issue. That said, test in non-production first! I run the
 same settings across pretty much every Linux machine I touch, including laptops, Intel NUCs, Xeon workstations, and huge
 NUMA servers. There's more to be done for each case to get the best performance, but I think this is where almost every
 machine should start.
