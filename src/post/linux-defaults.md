@@ -10,7 +10,8 @@ I get asked about my default settings for Linux fairly frequently and was writin
 and decided to post it for broader use. If you have better recommendations, by all means please
 send me a pull request. The Edit button at the top of this page will get you there.
 
-There are a couple groups of settings below. The first couple go in /etc/sysctl.conf or /etc/sysctl.d/filename.conf. I've
+There are a couple groups of settings below. Most of the settings below should end up in /etc/sysctl.conf or
+/etc/sysctl.d/filename.conf (depending on your distro). I've
 applied most of these to hundreds of machines and never had an issue. That said, test in non-production first! I run the
 same settings across pretty much every Linux machine I touch, including laptops, Intel NUCs, Xeon workstations, and huge
 NUMA servers. There's more to be done for each case to get the best performance, but I think this is where almost every
@@ -86,7 +87,7 @@ vm.dirty_bytes = 1073741824
 ```
 
 Finally, I think the whole pam limits business is useless on single-user systems (e.g. workstations, database servers), so I effectively disable it.
-Put this /etc/security/limits.conf or /etc/security/limits.d/disable.conf (depending on your distro & preferences):
+Put this /etc/security/limits.conf or /etc/security/limits.d/disable.conf (depending on your distro & preferences). You will need to log out and back in for the limits to apply to any current logins. `ssh localhost ulimit -a` is a quick way to check if the settings are being applied.
 
 ```
 * - nofile     1048576
