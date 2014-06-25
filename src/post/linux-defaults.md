@@ -29,11 +29,13 @@ an issue; in fact quite the opposite happens: users are not surprised by silly l
 file handles or applications going away for non-deterministic amounts of time while the kernel
 fetches application pages from swap that were only swapped out to make room for VFS.
 
+As of Linux >= 3.5, setting to vm.swappiness=0 disables swap entirely, but you're better off running
+`swapoff -a` since
+<a href="http://www.mysqlperformanceblog.com/2014/04/28/oom-relation-vm-swappiness0-new-kernel/">others have reported pauses.</a>
+
 ```
-# tell the kernel to only swap if it really needs it, rather than doing it all the time
-# as of Linux >= 3.5 this disables swap entirely, which I think is virtuous
-# set vm.swappiness=1 if you want swap available for overflow
-vm.swappiness = 0
+# tell the kernel to only swap if it really needs it
+vm.swappiness = 1
 # increase the number of allowed mmapped files
 vm.max_map_count = 1048576
 # increase the number of file handles available globally
