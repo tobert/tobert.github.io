@@ -22,7 +22,7 @@ Ideally, users (you, hopefully!) can pull an image and be up and
 running with Cassandra without having to see a git repo. I also
 wanted to go through the process of building a new Docker image since I
 haven't done it in a really long time. The new code can be found at
-https://github.com/tobert/cassandra-docker
+[https://github.com/tobert/cassandra-docker](https://github.com/tobert/cassandra-docker)
 
 ### Single-node Quick Start
 
