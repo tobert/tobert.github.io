@@ -50,7 +50,7 @@ docker pull tobert/dsc208
 mkdir /srv/{cass0,cass1,cass2}
 
 # pass in heap settings with envvars
-HEAP="-e MAX_HEAP_SIZE=1G -e HEAP_NEWSIZE=100M"
+HEAP="-e MAX_HEAP_SIZE=1G -e HEAP_NEWSIZE=256M"
 
 docker run -d --name cass0 $HEAP -v /srv/cass0:/var/lib/cassandra dsc208
 IP=$(< /srv/cass0/etc/listen_address.txt)
