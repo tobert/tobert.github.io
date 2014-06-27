@@ -7,10 +7,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-06-24</pubDate>
-	<lastBuildDate>2014-06-24</lastBuildDate>
+	<pubDate>2014-06-26</pubDate>
+	<lastBuildDate>2014-06-27</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>Running Cassandra inside Docker</title>
+	  <link>http://tobert.github.io/post/2014-06-26-cassandra-and-docker.html</link>
+      <pubDate>Thu, 26 Jun 2014 20:30:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-06-26-cassandra-and-docker</guid>
+	  <description>Introduction to running Cassandra inside Docker.</description>
+    </item>
     
     <item>
       <title>Improved default settings for Linux machines</title>

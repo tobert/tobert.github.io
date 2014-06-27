@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="Introduction to running Cassandra inside Docker.">
+    <meta name="keywords" content="docker, cassandra, ">
+    <meta property="article:published_time" content="2014-06-26"/>
+    <meta property="article:modified_time" content="2014-06-26"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Running Cassandra inside Docker : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="Introduction to running Cassandra inside Docker.">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Running Cassandra inside Docker</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-06-26-cassandra-and-docker.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/cassandra-docker.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>Running Cassandra inside Docker</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+<h3>TL;DR: use volumes for /var/lib/cassandra</h3>
+
+<p>As a fan of Linux containers and evangelist for Apache Cassandra, I get a lot
+of questions about running Cassandra in Docker containers. I've run production
+Cassandra clusters with cgroups in the past and had good luck with it, but
+normally don't have much use for namespaces. One place where full containers
+really helps is running clusters on a single machine.</p>
+
+<h3>A new image</h3>
+
+<p>I looked around at some of the community Docker images there are some
+out there, but I wanted something with less moving pieces.
+Ideally, users (you, hopefully!) can pull an image and be up and
+running with Cassandra without having to see a git repo. I also
+wanted to go through the process of building a new Docker image since I
+haven't done it in a really long time. The new code can be found at
+https://github.com/tobert/cassandra-docker</p>
+
+<h3>Single-node Quick Start</h3>
+
+<p>If all you want to do is run a single-node Cassandra instance in docker,
+this should get you going. This command will pull down the tobert/dsc208
+image I've published in the public registry and then run it with data
+stored in the host's /srv/cassandra directory.</p>
+
+<pre><code>docker pull tobert/dsc20
+mkdir /srv/cassandra
+docker run -v /srv/cassandra:/var/lib/cassandra dsc208
+</code></pre>
+
+<h3>Cluster Quick Start</h3>
+
+<p>The process starts out the same way for a cluster, but there's a little more work to
+do to pass in the seeds. You will need to create a data directory for each node in
+the cluster, then tell Docker to use that as a volume inside each container. To get
+gossip working one node needs to be started first so it can be used as a seed for the others.</p>
+
+<pre><code>docker pull tobert/dsc208
+
+mkdir /srv/{cass0,cass1,cass2}
+
+# pass in heap settings with envvars
+HEAP=&quot;-e MAX_HEAP_SIZE=1G -e HEAP_NEWSIZE=100M&quot;
+
+docker run -d --name cass0 $HEAP -v /srv/cass0:/var/lib/cassandra dsc208
+IP=$(&lt; /srv/cass0/etc/listen_address.txt)
+
+# you only need to set SEEDS the first time, but it doesn't hurt
+docker run -d --name cass1 $HEAP -e SEEDS=$IP -v /srv/cass1:/var/lib/cassandra dsc208
+docker run -d --name cass2 $HEAP -e SEEDS=$IP -v /srv/cass2:/var/lib/cassandra dsc208
+
+# wait a minute or two for the gossip to converge
+nodetool -h $IP status
+</code></pre>
+
+<h3>Building the Image</h3>
+
+<p>This image uses a simple Dockerfile. It should be straightforward.</p>
+
+<pre><code>git clone https://github.com/tobert/cassandra-docker
+cd cassandra-docker
+docker pull ubuntu:raring
+docker build -t dsc208 .
+</code></pre>
+
+<h2>Conclusion</h2>
+
+<p>Running Cassandra in Docker isn't ideal, but it can be quite handy for development and QA work.
+For now, I still don't recommend running dockerizing production Cassandra clusters, but as
+the configuration tooling changes, I may change my mind.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/cassandra-docker.md">ChangeLog</a>
+    
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
