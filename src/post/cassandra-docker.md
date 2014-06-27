@@ -77,6 +77,11 @@ docker build -t dsc208 .
 ## Conclusion
 
 Running Cassandra in Docker isn't ideal, but it can be quite handy for development and QA work.
-For now, I still don't recommend running dockerizing production Cassandra clusters, but as
-the configuration tooling changes, I may change my mind.
+For now, I still don't recommend dockerizing production Cassandra clusters. This may change
+when the tooling gets better and it's clear that a stable environment can be provided. After all,
+your database is responsible for all of the important state in applications and IMO should be
+treated with a little more care.
+
+If you find any issues, a Github issue against https://github.com/tobert/cassandra-docker would
+be great or hit me on Twitter: [@AlTobey](https://twitter.com/AlTobey).
 
