@@ -40,10 +40,6 @@ vm.swappiness = 1
 vm.max_map_count = 1048576
 # increase the number of file handles available globally
 fs.file-max = 1048576
-# increase the number of sysv ipc slots for each type
-kernel.shmmax = 65536
-kernel.msgmax = 65536
-kernel.msgmnb = 65536
 # allow up to 999999 processes with corresponding pids
 # this looks nice and rarely rolls over - I've never had a problem with it.
 kernel.pid_max = 999999 # unnecessary, but I like it
@@ -88,6 +84,20 @@ See Also:
 # If you have an older kernel, you will need to s/bytes/ratio/ and adjust accordingly.
 vm.dirty_background_bytes = 268435456
 vm.dirty_bytes = 1073741824
+```
+
+Edit: Moved the shared memory settings out of the main block since they caused problems for some desktop users. KDE,
+especially, seems to use a lot of shared memory. 64k is a fairly common setting, but will break KDE setups, so some
+people report seeing 33554432 and higher values. For now I'm going to recommend checking your distro settings and if
+they're already above 64k, the setting is fine and should be left alone. These are now all set to 32M, including the
+msgmnb which reflects the max message size. As long as apps aren't going wild with shared memory, 32M should be
+perfectly safe on modern hardware.
+
+```
+# increase the sysv ipc limits
+kernel.shmmax = 33554432
+kernel.msgmax = 33554432
+kernel.msgmnb = 33554432
 ```
 
 Finally, I think the whole pam limits business is useless on single-user systems (e.g. workstations, database servers), so I effectively disable it.
