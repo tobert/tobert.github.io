@@ -1,0 +1,269 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="A simple PXE imaging setup for installing Arch Linux on my portable cluster">
+    <meta name="keywords" content="portacluster, pxe, dnsmasq, nginx, systemrescuecd, linux, sysadmin, devops, ">
+    <meta property="article:published_time" content="2014-07-14"/>
+    <meta property="article:modified_time" content="2014-07-14"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Portacluster: System Imaging : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="A simple PXE imaging setup for installing Arch Linux on my portable cluster">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Portacluster: System Imaging</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-07-14-portacluster-system-imaging.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/portacluster-system-imaging.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>Portacluster: System Imaging</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+<p>I reimaged <a href="/post/2014-02-07-portacluster.html">portacluster</a> back to stock
+Arch Linux yesterday and need to install and configure Cassandra and Spark
+on them. I had recently surveyed many of the existing bare metal provisioning systems,
+and decided to assemble a simple setup. The basics of how it works are outlined
+below.</p>
+
+<p>I run Arch Linux everywhere I can, so that's what I'm using on portacluster. If
+one of the provisioning systems out there were easy enough to configure, I might
+switch distros, but this turned out to be a lot less work. I'm still happy with
+running Arch on these systems and hope this is helpful to others trying to
+deploy distros that don't provide sophisticated bare metal installation tools.</p>
+
+<p>The descriptions of files come after the code blocks below. node0 is the admin
+node of portacluster and runs all the miscellaneous services including PXE and HTTP.</p>
+
+<pre><code>atobey@node0 ~ $ cat /etc/nginx/nginx.conf
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include            mime.types;
+    default_type       application/octet-stream;
+    sendfile           on;
+    keepalive_timeout  0;
+
+    server {
+        listen      80 default_server;
+        server_name node0.pc.datastax.com node0 localhost 192.168.10.10;
+
+        location / {
+            root   /srv/public;
+            autoindex on;
+        }
+    }
+}
+</code></pre>
+
+<p>The nginx configuration is about as simple as it gets. Pretty much all I had to
+do to get started is change the web root to /srv/public and set
+keepalive_timeout to 0 (fixes some downloads hanging).</p>
+
+<pre><code>atobey@node0 ~ $ cat /etc/dnsmasq.conf
+interface=eno1
+enable-tftp
+tftp-root=/srv/public/pxe
+read-ethers
+dhcp-range=192.168.10.130,192.168.10.180,1h
+dhcp-boot=/pxelinux.0
+
+dhcp-host=c4:04:15:90:bf:b4,switch.pc.datastax.com
+dhcp-host=00:c0:b7:b6:6a:4c,pdu.pc.datastax.com
+dhcp-host=c0:3f:d5:60:e5:a1,node1.pc.datastax.com
+dhcp-host=c0:3f:d5:60:cd:8b,node2.pc.datastax.com
+dhcp-host=c0:3f:d5:60:e5:b9,node3.pc.datastax.com
+dhcp-host=c0:3f:d5:60:e4:ac,node4.pc.datastax.com
+dhcp-host=c0:3f:d5:60:6f:18,node5.pc.datastax.com
+dhcp-host=c0:3f:d5:60:d0:9e,node6.pc.datastax.com
+</code></pre>
+
+<p>The simplicity of configuration is the main reason I like using dnsmasq. It
+provides DHCP, tftp, and DNS proxying in one daemon and I don't have to
+remember the rules of various tools' configuration syntax. This configuration
+boots pxelinux which will pull down a config (below) and boot the system
+in short order. I use the interface= line to bind it to the portacluster
+network interface so it's unlikely it will accidentally stomp on a foreign
+network's DHCP services even when I have another USB interface attached.</p>
+
+<pre><code>atobey@node0 ~ $ cd /srv/public/pxe/pxelinux.cfg/
+atobey@node0 /srv/public/pxe/pxelinux.cfg $ ls -l
+total 40
+lrwxrwxrwx 1 root root  10 Jul 13 19:13 01-c0-3f-d5-60-6f-18 -&gt; arch-linux
+lrwxrwxrwx 1 root root  10 Jul 13 19:13 01-c0-3f-d5-60-cd-8b -&gt; arch-linux
+lrwxrwxrwx 1 root root  10 Jul 13 19:13 01-c0-3f-d5-60-d0-9e -&gt; arch-linux
+lrwxrwxrwx 1 root root  10 Jul 13 19:13 01-c0-3f-d5-60-e4-ac -&gt; arch-linux
+lrwxrwxrwx 1 root root  10 Jul 13 19:13 01-c0-3f-d5-60-e5-a1 -&gt; arch-linux
+lrwxrwxrwx 1 root root  10 Jul 13 19:13 01-c0-3f-d5-60-e5-b9 -&gt; arch-linux
+-rw-r--r-- 1 root root 260 Jun 27 22:48 arch-linux
+lrwxrwxrwx 1 root root   9 Jun 28 00:19 default -&gt; installer
+-rw-r--r-- 1 root root 237 Jun 28 00:10 installer
+-rw-r--r-- 1 root root 234 Jun 28 00:19 rescue
+</code></pre>
+
+<p>This is a simple PXE bootstrapping setup that I've used a few times in the past. The only
+infrastructure required is dnsmasq and nginx. When I want to reimage a system, I symlink
+its MAC to the 'installer' and reboot.  The MAC and default file names follow the convention of
+<a href="http://www.syslinux.org/wiki/index.php/PXELINUX">pxelinux</a>.</p>
+
+<pre><code>atobey@node0 /srv/public/pxe/pxelinux.cfg $ cat arch-linux
+PROMPT 0
+TIMEOUT 10
+DEFAULT arch
+
+LABEL arch
+        LINUX /arch-kernel
+        INITRD /arch-initramfs
+        APPEND root=/dev/sda2 rw
+</code></pre>
+
+<p>The <code>arch-linux</code> config boots the system normally using a kernel and initramfs stored on
+node0. This isn't entirely practical since it's easy to get out-of-sync kernel/modules.
+I put this in place because I eventually want to get rid of the root partition entirely
+and run the OS directly out of initramfs, but that's a topic for a different post.
+Nodes 1-6 currently do not have boot sectors installed, since this works fine and I also
+haven't settled whether I will continue to boot them in legacy BIOS mode or do the work
+to get them PXE booting into native UEFI mode.</p>
+
+<p>I typically run the following shell loop to enable the installer:</p>
+
+<pre><code>for mac in 01-c0-*
+do
+  ln -nfs installer $mac
+done
+</code></pre>
+
+<p>After that I will reboot the systems with cluster ssh or power cycle them by pulling
+the plug. Enabling normal boot is the same procedure but links to <code>arch-linux</code> instead
+of <code>installer</code>.</p>
+
+<pre><code>atobey@node0 /srv/public/pxe/pxelinux.cfg $ cat installer
+PROMPT 0
+TIMEOUT 10
+DEFAULT installer
+
+LABEL installer
+        LINUX /sysrcd-kernel
+        INITRD /sysrcd-initram.igz
+        APPEND docache dodhcp setkmap=us netboot=http://192.168.10.10/sysrcd/sysrcd.dat ar_source=http://192.168.10.10/installer ar_nowait
+</code></pre>
+
+<p>The installer config uses <a href="http://www.sysresccd.org/Sysresccd-manual-en_PXE_network_booting">System Rescue CD</a>'s
+autorun functionality to execute a
+<a href="https://github.com/tobert/portacluster-scripts/blob/master/overlay/admin/srv/public/installer/autorun">system installer</a>
+written in bash. It's fast in my experience and easy to hack on. The golden image is
+a simple tarball of an <a href="https://wiki.archlinux.org/index.php/DeveloperWiki:Building_in_a_Clean_Chroot">Arch Chroot</a>
+with the a few extra packages pre-installed. There is no additional configuration
+in the tarball. Any extra config is pushed later using
+<a href="https://github.com/tobert/portacluster-scripts">portacluster-scripts</a>.</p>
+
+<p>I usually watch for systems to finish installing by tailing <code>/var/log/nginx/access.log</code>. The installer script
+does a wget to a currently non-existent URL with the system's hostname and MAC. Eventually I may write
+a small program to disable the installer, but for now it's good enough.</p>
+
+<pre><code>PROMPT 0
+TIMEOUT 10
+DEFAULT installer
+
+LABEL installer
+        LINUX /sysrcd-kernel
+        INITRD /sysrcd-initram.igz
+        APPEND docache dodhcp setkmap=us netboot=http://192.168.10.10/sysrcd/sysrcd.dat ar_source=http://192.168.10.10/rescue ar_nowait
+</code></pre>
+
+<p>The rescue config is the same as intaller but with ar_source pointed at http://node0/rescue
+instead of installer. The rescue autorun installs my atobey user and ssh key so I can log in
+over ssh.</p>
+
+<p>In previous setups like this I've generated custom initramfs images for the
+installer, but System Rescue CD is working great and is now a component I don't
+have to maintain. I copy the essential files out of the ISO into /srv/public/sysrcd
+and symlink the kernel + initramfs into /srv/public/pxe so they can be served
+over tftp by dnsmasq. I haven't found many machines that aren't supported by SysRCD
+which has helped it to become one of my favorite power tools for bare metal systems work.</p>
+
+<h2>Coming Soon</h2>
+
+<p>I originally started this post to describe how to install an OSS Cassandra/Spark cluster
+but decided to publish this part separately. The Cassandra/Spark post will likely go out
+tomorrow (2014-07-15).</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/portacluster-system-imaging.md">ChangeLog</a>
+    
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
