@@ -1,0 +1,242 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="An overview of the steps required to install the Apache Cassandra + Spark stack on Linux.">
+    <meta name="keywords" content="cassandra, spark, ">
+    <meta property="article:published_time" content="2014-07-15"/>
+    <meta property="article:modified_time" content="2014-07-15"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Installing the Cassandra / Spark OSS Stack : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="An overview of the steps required to install the Apache Cassandra + Spark stack on Linux.">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>Installing the Cassandra / Spark OSS Stack</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-07-15-installing-cassandra-spark-stack.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/installing-cassandra-spark-stack.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>Installing the Cassandra / Spark OSS Stack</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+<h2>Init</h2>
+
+<p>As mentioned in my <a href="/post/2014-07-14-portacluster-system-imaging.html">portacluster system imaging</a> post,
+I am performing this install on 1 admin node (node0) and 6 worker nodes (node[1-6]) running 64-bit Arch Linux.
+If you're attempting to do the same on a Redhat or Debian variant, you will need to
+change package names and commands for the target distro. The
+rest of the process should port over without much modification.</p>
+
+<h2>Overview</h2>
+
+<p>When assembling an analytics stack, there are usually myriad choices to make. For this build, I decided to
+build the smallest stack possible that lets me run Spark queries on Cassandra data. As configured it is
+not highly available since the Spark master is standalone. It's a decent tradeoff for portacluster, since
+I can run the master on the admin node which doesn't get rebooted/reimaged constantly. I'm also going to
+skip HDFS or some kind of HDFS replacement for now. Options I plan to look at later are GlusterFS's HDFS
+adapter and <a href="http://pithos.io">Pithos</a> as an S3 adapter. In the end, the stack is simply Cassandra and
+Spark with the <a href="https://github.com/datastax/spark-cassandra-connector">spark-cassandra-connector</a>.</p>
+
+<h2>Install Cassandra</h2>
+
+<p>My first pass at this section involved setting up a package repo, but since I don't have time to package
+Spark properly right now, I'm going to use the tarball distros of Cassandra and Spark to keep it simple.
+<a href="https://github.com/joschi">joschi</a> maintains a package on the <a href="https://aur.archlinux.org/packages/cassandra/">AUR</a>
+but I have chosen not to use it for this install.
+I'm also using the Arch packages of OpenJDK, which isn't supported by Datastax, but works fine for hacking.
+The JDK is pre-installed on my Arch image, it's as simple as <code>sudo pacman -S extra/jdk7-openjdk</code>.</p>
+
+<p>First, I downloaded the Cassandra tarball from <a href="http://cassandra.apache.org/download/">apache.org</a> to
+node0 in /srv/public/tgz.</p>
+
+<pre><code>sudo curl -o /srv/public/tgz/apache-cassandra-2.0.9-bin.tar.gz \
+  http://mirrors.gigenet.com/apache/cassandra/2.0.9/apache-cassandra-2.0.9-bin.tar.gz
+</code></pre>
+
+<p>Then on the worker nodes, it gets downloaded and expanded in /opt.
+<a href="https://github.com/tobert/perl-ssh-tools/blob/master/cl-run.pl">cl-run.pl</a> is part
+of my custom parallel ssh tools. pssh, etc. will work similarly.</p>
+
+<pre><code>pkg=&quot;apache-cassandra-2.0.9-bin.tar.gz&quot;
+cl-run.pl -c &quot;curl http://node0/tgz/$pkg |sudo tar -C /opt -xzf -&quot;
+cl-run.pl -c &quot;sudo ln -s /opt/apache-cassandra-2.0.9 /opt/cassandra&quot;
+</code></pre>
+
+<p>To make it easier to do upgrades without regenerating the configuration, I
+relocate the conf dir to /etc/cassandra to match what packages do. This assumes there
+is no existing /etc/cassandra.</p>
+
+<pre><code>cl-run.pl -c &quot;sudo mv /opt/cassandra/conf /etc/cassandra&quot;
+cl-run.pl -c &quot;sudo ln -s /etc/cassandra /opt/cassandra/conf&quot;
+</code></pre>
+
+<p>I will start Cassandra with a systemd unit, so I push that out as well. This unit
+file runs Cassandra out of the tarball as the cassandra user with the stdout/stderr going
+to the systemd journal (which you can view with <code>journalctl -f</code>). I also included some
+ulimit settings and bump the OOM score downwards to make it less likely that the kernel
+will kill Cassandra when out of memory. Finally, since the target machines have 16GB of
+RAM, the heap needs to be set to 8GB (cassandra-env.sh calculates 3995M which is way too low).</p>
+
+<pre><code>cat &gt; cassandra.service &lt;&lt;EOF
+[Unit]
+Description=Cassandra Tarball
+After=network.target
+
+[Service]
+User=cassandra
+Group=cassandra
+RuntimeDirectory=cassandra
+PIDFile=/run/cassandra/cassandra.pid
+ExecStart=/opt/cassandra/bin/cassandra -f -p /run/cassandra/cassandra.pid
+StandardOutput=journal
+StandardError=journal
+OOMScoreAdjust=-500
+LimitNOFILE=infinity
+LimitMEMLOCK=infinity
+LimitNPROC=infinity
+LimitAS=infinity
+Environment=MAX_HEAP_SIZE=8G HEAP_NEWSIZE=1G CASSANDRA_HEAPDUMP_DIR=/srv/cassandra/log
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cl-sendfile.pl -x -l cassandra.service -r /etc/systemd/system/multi-user.target.wants/cassandra.service
+cl-run.pl -c &quot;sudo systemctl daemon-reload&quot;
+</code></pre>
+
+<p>Since all Cassandra data is being redirected to /srv/cassandra and it's going to run as the
+cassandra user, those need to be created.</p>
+
+<pre><code>cat &gt; user.sh &lt;&lt;EOF
+mkdir -p /srv/cassandra/{log,data,commitlogs,saved_caches}
+(grep -q '^cassandra:' /etc/group)  || groupadd -g 1234 cassandra
+(grep -q '^cassandra:' /etc/passwd) || useradd -u 1234 -c &quot;Apache Cassandra&quot; -g cassandra -s /bin/bash -d /srv/cassandra cassandra
+chown -R cassandra:cassandra /srv/cassandra
+EOF
+
+cl-run.pl -x -s user.sh
+</code></pre>
+
+<h2>Configure Cassandra</h2>
+
+<p>Before starting Cassandra I want to make a few changes to the standard configurations. I'm not a big
+fan of LSB so I redirect all of the /var files to /srv/cassandra so they're all in one place. There's
+only one SSD in the target systems so the commit log goes on the same drive.</p>
+
+<p>Note that my systems have a bridge in front of the default interface. You will need to adjust the
+ip=$() line to work on your systems.</p>
+
+<pre><code>cat config.sh
+ip=$(ip addr show br0 |perl -ne 'if ($_ =~ /inet (\d+\.\d+\.\d+\.\d+)/) { print $1 }')
+
+perl -ibak -pe &quot;
+  s/^(cluster_name:).*/\$1 'Portable Cluster'/;
+  s/^(listen|rpc)_address:.*/\${1}_address: $ip/;
+  s|/var/lib|/srv|;
+  s/(\s+-\s+seeds:).*/\$1 '192.168.10.11,192.168.10.12,192.168.10.13,192.168.10.14,192.168.10.15,192.168.10.16'/
+&quot; /opt/cassandra/conf/cassandra.yaml
+# EOF
+
+cl-run.pl -x -s config.sh
+</code></pre>
+
+<p>The default log4-server.propterties has log4j printing to stdout. This is not desirable in a background
+service configuration, so I remove it. The logs are also now written to /srv/cassandra/log.</p>
+
+<pre><code>cat &gt; log4j-server.properties &lt;&lt;EOF
+log4j.rootLogger=INFO,R
+log4j.appender.R=org.apache.log4j.RollingFileAppender
+log4j.appender.R.maxFileSize=20MB
+log4j.appender.R.maxBackupIndex=20
+log4j.appender.R.layout=org.apache.log4j.PatternLayout
+log4j.appender.R.layout.ConversionPattern=%5p [%t] %d{ISO8601} %F (line %L) %m%n
+log4j.appender.R.File=/srv/cassandra/log/system.log
+log4j.logger.org.apache.thrift.server.TNonblockingServer=ERROR
+EOF
+
+cl-sendfile.pl -x -l log4j-server.properties -r /opt/cassandra/conf/log4j-server.properties
+</code></pre>
+
+<p>And with that, Cassandra is ready to start.</p>
+
+<pre><code>cl-run.pl -c &quot;sudo systemctl start cassandra.service&quot;
+ssh node3 tail -f /srv/cassandra/log/system.log
+</code></pre>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/installing-cassandra-spark-stack.md">ChangeLog</a>
+    
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
