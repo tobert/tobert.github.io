@@ -7,7 +7,7 @@ pubdate: 2014-07-14T23:10:00Z
 ---
 
 I reimaged [portacluster](/post/2014-02-07-portacluster.html) back to stock
-Arch Linux yesterday and need to install and configure Cassandra and Spark
+Arch Linux yesterday to prepare for installing the OSS Cassandra and Spark stack
 on them. I had recently surveyed many of the existing bare metal provisioning systems,
 and decided to assemble a simple setup. The basics of how it works are outlined
 below.
