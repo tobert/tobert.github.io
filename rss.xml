@@ -7,19 +7,10 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-07-14</pubDate>
-	<lastBuildDate>2014-07-14</lastBuildDate>
+	<pubDate>2014-07-15</pubDate>
+	<lastBuildDate>2014-07-15</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
-    
-    <item>
-      <title>Installing the Cassandra / Spark OSS Stack</title>
-	  <link>http://tobert.github.io/post/2014-07-14-installing-cassandra-spark-stack.html</link>
-      <pubDate>Mon, 14 Jul 2014 23:29:51 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>2014-07-14-installing-cassandra-spark-stack</guid>
-	  <description>An overview of the steps required to install the Apache Cassandra + Spark stack on Linux.</description>
-    </item>
     
     <item>
       <title>Portacluster: System Imaging</title>
