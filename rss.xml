@@ -13,6 +13,15 @@
 	
     
     <item>
+      <title>Installing the Cassandra / Spark OSS Stack</title>
+	  <link>http://tobert.github.io/post/2014-07-14-installing-cassandra-spark-stack.html</link>
+      <pubDate>Mon, 14 Jul 2014 23:29:51 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-07-14-installing-cassandra-spark-stack</guid>
+	  <description>An overview of the steps required to install the Apache Cassandra + Spark stack on Linux.</description>
+    </item>
+    
+    <item>
       <title>Portacluster: System Imaging</title>
 	  <link>http://tobert.github.io/post/2014-07-14-portacluster-system-imaging.html</link>
       <pubDate>Mon, 14 Jul 2014 23:10:00 UTC</pubDate>
@@ -64,15 +73,6 @@
       <author>Albert P Tobey</author>
       <guid>2014-04-29-a-quick-prototype</guid>
 	  <description>A short story about hacking a prototype that is turning into an end-user tool.</description>
-    </item>
-    
-    <item>
-      <title>Getting Started With Fio</title>
-	  <link>http://tobert.github.io/post/2014-04-28-getting-started-with-fio.html</link>
-      <pubDate>Mon, 28 Apr 2014 22:00:00 UTC</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>2014-04-28-getting-started-with-fio</guid>
-	  <description>How to benchmark your storage with fio, the Flexible IO Tester</description>
     </item>
     
     <item>
