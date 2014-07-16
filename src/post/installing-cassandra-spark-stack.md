@@ -402,6 +402,8 @@ scala> val table = sc.cassandraTable("keyspace", "table")
 scala> table.count
 ```
 
+![screenshot](/images/spark-stages-screenshot-2014-07-15.jpg)
+
 ## Conclusion
 
 It was a lot of work getting here, but what we have at the end is a Spark shell that can
