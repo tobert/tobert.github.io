@@ -247,43 +247,48 @@ sudo curl -o /srv/public/tgz/$pkg http://d3kbcqa49mib13.cloudfront.net/spark-1.0
 
 cl-run.pl --list all -c &quot;curl http://node0/tgz/$pkg |sudo tar -C /opt -xzf -&quot;
 cl-run.pl --list all -c &quot;sudo ln -s /opt/spark-1.0.1-bin-hadoop2 /opt/spark&quot;
-cl-run.pl --list all -c &quot;sudo mkdir /etc/spark&quot;
+cl-run.pl --list all -c &quot;sudo mv /opt/spark/conf /etc/spark&quot;
+cl-run.pl --list all -c &quot;sudo ln -s /etc/spark /opt/spark/conf&quot;
 </code></pre>
 
 <p>Create /srv/spark and the spark user.</p>
 
 <pre><code>cat &gt; spark-user.sh &lt;&lt;EOF
-mkdir -p /srv/spark/{log,work,tmp}
+mkdir -p /srv/spark/{logs,work,tmp,pids}
 (grep -q '^spark:' /etc/group)  || groupadd -g 4321 spark
 (grep -q '^spark:' /etc/passwd) || useradd -u 4321 -c &quot;Apache Spark&quot; -g spark -s /bin/bash -d /srv/spark spark
 chown -R spark:spark /srv/spark
 # make spark tmp world writable and sticky
 chmod 4755 /srv/spark/tmp
 EOF
+
+cl-run.pl --list all -x -s spark-user.sh
 </code></pre>
 
 <h2>Configuring Spark</h2>
 
 <p>Many of Spark's settings are controlled by environment variables. Since I want all volatile data
-in /srv, many of these need to be changed. Systemd units can point to an EnvironmentFile that is
-a simple list of shell variables like you'd find in /etc/sysconfig or /etc/default files. The Intel
-NUC systems I'm running this stack on have 4 cores and 16G of RAM, so I'll give Spark 2 cores and 4G
-of memory for now.</p>
+in /srv, many of these need to be changed. Spark will pick up spark-env.sh automatically.</p>
+
+<p>The Intel NUC systems I'm running this stack on have 4 cores and 16G of RAM, so I'll give
+Spark 2 cores and 4G of memory for now.</p>
 
 <pre><code>cat &gt; spark-env.sh &lt;&lt;EOF
 export SPARK_WORKER_CORES=&quot;2&quot;
 export SPARK_WORKER_MEMORY=&quot;4g&quot;
-export SPARK_MEM=&quot;2g&quot;
+export SPARK_DRIVER_MEMORY=&quot;2g&quot;
 export SPARK_REPL_MEM=&quot;4g&quot;
 export SPARK_CONF_DIR=&quot;/etc/spark&quot;
 export SPARK_TMP_DIR=&quot;/srv/spark/tmp&quot;
+export SPARK_PID_DIR=&quot;/srv/spark/pids&quot;
 export SPARK_LOG_DIR=&quot;/srv/spark/logs&quot;
 export SPARK_WORKER_DIR=&quot;/srv/spark/work&quot;
 export SPARK_LOCAL_DIRS=&quot;/srv/spark/tmp&quot;
 export SPARK_COMMON_OPTS=&quot;$SPARK_COMMON_OPTS -Dspark.kryoserializer.buffer.mb=32 &quot;
-export SPARK_MASTER_OPTS=&quot; -Dspark.log.file=/srv/spark/log/master.log &quot;
-export SPARK_WORKER_OPTS=&quot; -Dspark.log.file=/srv/spark/log/worker.log &quot;
-export SPARK_EXECUTOR_OPTS=&quot; -Djava.io.tmpdir=/srv/spark/tmp/executor &quot;
+LOG4J=&quot;-Dlog4j.configuration=file://$SPARK_CONF_DIR/log4j.properties&quot;
+export SPARK_MASTER_OPTS=&quot; $LOG4J -Dspark.log.file=/srv/spark/logs/master.log &quot;
+export SPARK_WORKER_OPTS=&quot; $LOG4J -Dspark.log.file=/srv/spark/logs/worker.log &quot;
+export SPARK_EXECUTOR_OPTS=&quot; $LOG4J -Djava.io.tmpdir=/srv/spark/tmp/executor &quot;
 export SPARK_REPL_OPTS=&quot; -Djava.io.tmpdir=/srv/spark/tmp/repl/\$USER &quot;
 export SPARK_APP_OPTS=&quot; -Djava.io.tmpdir=/srv/spark/tmp/app/\$USER &quot;
 export PYSPARK_PYTHON=&quot;/bin/python2&quot;
@@ -313,14 +318,13 @@ After=network.target
 [Service]
 User=spark
 Group=spark
-ExecStart=/opt/spark/sbin/start-slave.sh spark://node0:7077
+ExecStart=/opt/spark/sbin/start-slave.sh 0 spark://node0:7077
 StandardOutput=journal
 StandardError=journal
 LimitNOFILE=infinity
 LimitMEMLOCK=infinity
 LimitNPROC=infinity
 LimitAS=infinity
-EnvironmentFile=/etc/spark/spark-env.sh
 CPUAccounting=true
 CPUShares=100
 
@@ -347,7 +351,6 @@ LimitNOFILE=infinity
 LimitMEMLOCK=infinity
 LimitNPROC=infinity
 LimitAS=infinity
-EnvironmentFile=/etc/spark/spark-env.sh
 
 [Install]
 WantedBy=multi-user.target
@@ -359,14 +362,12 @@ a couple templates, then write all the files there. spark-env.sh goes on all nod
 The unit files are described above. Finally,
 a command is run to instruct systemd to read the new unit files.</p>
 
-<pre><code>cl-run.pl --list all -c &quot;sudo mv /opt/spark/conf /etc/spark&quot;
-cl-run.pl --list all -c &quot;sudo ln -s /etc/spark /opt/spark/conf&quot;
-cl-run.pl --list all -c &quot;sudo cp /opt/spark/conf/log4j.properties.template /opt/spark/conf/log4j.properties&quot;
+<pre><code>cl-run.pl --list all -c &quot;sudo cp /opt/spark/conf/log4j.properties.template /opt/spark/conf/log4j.properties&quot;
 cl-run.pl --list all -c &quot;sudo cp /opt/spark/conf/fairscheduler.xml.template /opt/spark/conf/fairscheduler.xml&quot;
 cl-sendfile.pl --list all -x -l spark-env.sh -r /etc/spark/spark-env.sh
 cl-sendfile.pl --list all -x -l spark-defaults.conf -r /etc/spark/spark-defaults.conf
 cl-sendfile.pl --list workers -x -l spark-worker.service -r /etc/systemd/system/multi-user.target.wants/spark-worker.service
-cl-sendfile.pl --list all --incl node0 -x -l spark-worker.service -r /etc/systemd/system/multi-user.target.wants/spark-worker.service
+cl-sendfile.pl --list all --incl node0 -x -l spark-master.service -r /etc/systemd/system/multi-user.target.wants/spark-master.service
 cl-run.pl --list all -c &quot;sudo systemctl daemon-reload&quot;
 </code></pre>
 
