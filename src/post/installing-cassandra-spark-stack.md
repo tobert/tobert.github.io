@@ -195,6 +195,8 @@ chmod 4755 /srv/spark/tmp
 EOF
 ```
 
+## Configuring Spark
+
 Many of Spark's settings are controlled by environment variables. Since I want all volatile data
 in /srv, many of these need to be changed. Systemd units can point to an EnvironmentFile that is
 a simple list of shell variables like you'd find in /etc/sysconfig or /etc/default files. The Intel
