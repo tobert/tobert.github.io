@@ -335,7 +335,7 @@ cl-run.pl --list workers -c "sudo systemctl start spark-worker.service"
 
 Now I can browse to the Spark master webui.
 
-[screenshot](/images/spark-master-screenshot-2014-07-15.jpg)
+![screenshot](/images/spark-master-screenshot-2014-07-15.jpg)
 
 ## Installing spark-cassandra-connector
 
