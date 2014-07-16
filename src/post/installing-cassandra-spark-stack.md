@@ -248,7 +248,7 @@ spark-submit and other tools may use spark-defaults.conf to find the master and 
 
 ```
 cat > spark-defaults.conf <<EOF
-spark.master            spark://node0:7077
+spark.master            spark://node0.pc.datastax.com:7077
 spark.executor.memory   512m
 spark.eventLog.enabled  true
 spark.serializer        org.apache.spark.serializer.KryoSerializer
@@ -270,7 +270,7 @@ After=network.target
 Type=forking
 User=spark
 Group=spark
-ExecStart=/opt/spark/sbin/start-slave.sh 1 spark://node0:7077
+ExecStart=/opt/spark/sbin/start-slave.sh 1 spark://node0.pc.datastax.com:7077
 StandardOutput=journal
 StandardError=journal
 LimitNOFILE=infinity
@@ -298,7 +298,7 @@ After=network.target
 Type=forking
 User=spark
 Group=spark
-ExecStart=/opt/spark/sbin/start-master.sh
+ExecStart=/opt/spark/sbin/start-master.sh 1
 StandardOutput=journal
 StandardError=journal
 LimitNOFILE=infinity
@@ -333,3 +333,10 @@ cl-run.pl --list all --incl node0 -c "sudo systemctl start spark-master.service"
 cl-run.pl --list workers -c "sudo systemctl start spark-worker.service"
 ```
 
+Now I can browse to the Spark master webui.
+
+[screenshot](/images/spark-master-screenshot-2014-07-15.jpg)
+
+## Installing spark-cassandra-connector
+
+[spark-cassandra-connector](https://github.com/datastax/spark-cassandra-connector)
