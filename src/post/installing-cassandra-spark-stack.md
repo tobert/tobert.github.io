@@ -339,4 +339,74 @@ Now I can browse to the Spark master webui.
 
 ## Installing spark-cassandra-connector
 
-[spark-cassandra-connector](https://github.com/datastax/spark-cassandra-connector)
+The connector is now published in Maven and can be installed easiest using ivy on the
+command line. Ivy can pull all dependencies as well as the connector jar, saving a lot of
+fiddling around. In addition, while you can let ivy download the connector directly, it will
+end up pulling down all of Cassandra and Spark. The script fragment below pulls down only what
+is necessary to run the connector against a pre-built Spark.
+
+This is only really needed for the spark-shell so it can access Cassandra. Most of your projects
+should include the necessary jars in your deployment jar rather than pushing these packages
+to every node.
+
+```
+cat > download-connector.sh <<EOF
+mkdir /opt/connector
+cd /opt/connector
+
+rm *.jar
+
+curl -o ivy-2.3.0.jar \
+  'http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.3.0/ivy-2.3.0.jar'
+curl -o spark-cassandra-connector_2.10-1.0.0-beta1.jar \
+  'http://search.maven.org/remotecontent?filepath=com/datastax/spark/spark-cassandra-connector_2.10/1.0.0-beta1/spark-cassandra-connector_2.10-1.0.0-beta1.jar'
+
+ivy () { java -jar ivy-2.3.0.jar -dependency $* -retrieve "[artifact]-[revision](-[classifier]).[ext]" }
+
+ivy org.apache.cassandra cassandra-thrift 2.0.9
+ivy com.datastax.cassandra cassandra-driver-core 2.0.3
+ivy joda-time joda-time 2.3
+ivy org.joda joda-convert 1.6
+
+rm -f *-{sources,javadoc}.jar
+
+EOF
+
+sudo bash download-connector.sh
+```
+
+## Using spark-cassandra-connector With spark-shell
+
+All that's left to get started with the connector now is to get spark-shell to pick it up. The easiest
+way I've found is to set the classpath with --driver-class-path then restart the context in the REPL
+with the necessary classes imported so you can access sc.cassandraTable().
+
+```
+/opt/spark/bin/spark-shell --driver-class-path $(echo /opt/connector/*.jar |sed 's/ /:/g')
+```
+
+It will print a bunch of log information then you will see the scala&gt; prompt.
+
+```
+scala> sc.stop
+```
+
+Now that the context is stopped, it's time to import the connector.
+
+```
+scala> import com.datastax.spark.connector._
+scala> val conf = new SparkConf()
+scala> conf.set("cassandra.connection.host", "node1.pc.datastax.com")
+scala> val sc = new SparkContext("local[2]", "Cassandra Connector Test", conf)
+scala> val table = sc.cassandraTable("keyspace", "table")
+scala> table.count
+```
+
+## Conclusion
+
+It was a lot of work getting here, but what we have at the end is a Spark shell that can
+access tables in Cassandra as RDDs with types pre-mapped and ready to go.
+
+There are some things that can be improved upon. I will likely package all of this into
+a Docker image at some point. For now, I need it up and running for some demos that will
+be running on portacluster at [OSCON 2014](http://www.oscon.com/oscon2014).
