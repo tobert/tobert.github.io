@@ -80,7 +80,8 @@ rest of the process should port over without much modification.</p>
 
 <p>When assembling an analytics stack, there are usually myriad choices to make. For this build, I decided to
 build the smallest stack possible that lets me run Spark queries on Cassandra data. As configured it is
-not highly available since the Spark master is standalone. It's a decent tradeoff for portacluster, since
+not highly available since the Spark master is standalone. (note: Datastax Enterprise Spark's master has
+HA based on Cassandra). It's a decent tradeoff for portacluster, since
 I can run the master on the admin node which doesn't get rebooted/reimaged constantly. I'm also going to
 skip HDFS or some kind of HDFS replacement for now. Options I plan to look at later are GlusterFS's HDFS
 adapter and <a href="http://pithos.io">Pithos</a> as an S3 adapter. In the end, the stack is simply Cassandra and
@@ -104,7 +105,9 @@ node0 in /srv/public/tgz.</p>
 
 <p>Then on the worker nodes, it gets downloaded and expanded in /opt.
 <a href="https://github.com/tobert/perl-ssh-tools/blob/master/cl-run.pl">cl-run.pl</a> is part
-of my custom parallel ssh tools. pssh, etc. will work similarly.</p>
+of my custom parallel ssh tools. pssh, etc. will work similarly. I have two lists
+configured for cl-tools, 'workers' has the 6 worker nodes in it and is the default
+when no list is specied. The other is 'all' which includes nodes 0-6.</p>
 
 <pre><code>pkg=&quot;apache-cassandra-2.0.9-bin.tar.gz&quot;
 cl-run.pl -c &quot;curl http://node0/tgz/$pkg |sudo tar -C /opt -xzf -&quot;
@@ -123,8 +126,10 @@ cl-run.pl -c &quot;sudo ln -s /etc/cassandra /opt/cassandra/conf&quot;
 file runs Cassandra out of the tarball as the cassandra user with the stdout/stderr going
 to the systemd journal (which you can view with <code>journalctl -f</code>). I also included some
 ulimit settings and bump the OOM score downwards to make it less likely that the kernel
-will kill Cassandra when out of memory. Finally, since the target machines have 16GB of
-RAM, the heap needs to be set to 8GB (cassandra-env.sh calculates 3995M which is way too low).</p>
+will kill Cassandra when out of memory. Since we're going to be running two large JVM apps
+on each worker node, this unit also enables cgroups so Cassandra can be given priority
+over Spark. Finally, since the target machines have 16GB of RAM, the heap needs to be
+set to 8GB (cassandra-env.sh calculates 3995M which is way too low).</p>
 
 <pre><code>cat &gt; cassandra.service &lt;&lt;EOF
 [Unit]
@@ -145,6 +150,8 @@ LimitMEMLOCK=infinity
 LimitNPROC=infinity
 LimitAS=infinity
 Environment=MAX_HEAP_SIZE=8G HEAP_NEWSIZE=1G CASSANDRA_HEAPDUMP_DIR=/srv/cassandra/log
+CPUAccounting=true
+CPUShares=1000
 
 [Install]
 WantedBy=multi-user.target
@@ -157,14 +164,14 @@ cl-run.pl -c &quot;sudo systemctl daemon-reload&quot;
 <p>Since all Cassandra data is being redirected to /srv/cassandra and it's going to run as the
 cassandra user, those need to be created.</p>
 
-<pre><code>cat &gt; user.sh &lt;&lt;EOF
+<pre><code>cat &gt; cassandra-user.sh &lt;&lt;EOF
 mkdir -p /srv/cassandra/{log,data,commitlogs,saved_caches}
 (grep -q '^cassandra:' /etc/group)  || groupadd -g 1234 cassandra
 (grep -q '^cassandra:' /etc/passwd) || useradd -u 1234 -c &quot;Apache Cassandra&quot; -g cassandra -s /bin/bash -d /srv/cassandra cassandra
 chown -R cassandra:cassandra /srv/cassandra
 EOF
 
-cl-run.pl -x -s user.sh
+cl-run.pl -x -s cassandra-user.sh
 </code></pre>
 
 <h2>Configure Cassandra</h2>
@@ -176,7 +183,7 @@ only one SSD in the target systems so the commit log goes on the same drive.</p>
 <p>Note that my systems have a bridge in front of the default interface. You will need to adjust the
 ip=$() line to work on your systems.</p>
 
-<pre><code>cat config.sh
+<pre><code>cat cassandra-config.sh
 ip=$(ip addr show br0 |perl -ne 'if ($_ =~ /inet (\d+\.\d+\.\d+\.\d+)/) { print $1 }')
 
 perl -ibak -pe &quot;
@@ -187,7 +194,7 @@ perl -ibak -pe &quot;
 &quot; /opt/cassandra/conf/cassandra.yaml
 # EOF
 
-cl-run.pl -x -s config.sh
+cl-run.pl -x -s cassandra-config.sh
 </code></pre>
 
 <p>The default log4-server.propterties has log4j printing to stdout. This is not desirable in a background
@@ -211,6 +218,145 @@ cl-sendfile.pl -x -l log4j-server.properties -r /opt/cassandra/conf/log4j-server
 
 <pre><code>cl-run.pl -c &quot;sudo systemctl start cassandra.service&quot;
 ssh node3 tail -f /srv/cassandra/log/system.log
+</code></pre>
+
+<h2>Installing Spark</h2>
+
+<p>The process for Spark is quite similar, except that unlike Cassandra, it has a master.</p>
+
+<p>Since I'm not using any Hadoop components, any of the builds should be fine so I used the
+hadoop2 build.</p>
+
+<pre><code>pkg=&quot;spark-1.0.1-bin-hadoop2.tgz&quot;
+sudo curl -o /srv/public/tgz/$pkg http://d3kbcqa49mib13.cloudfront.net/spark-1.0.1-bin-hadoop2.tgz
+
+cl-run.pl --list all -c &quot;curl http://node0/tgz/$pkg |sudo tar -C /opt -xzf -&quot;
+cl-run.pl --list all -c &quot;sudo ln -s /opt/spark-1.0.1-bin-hadoop2 /opt/spark&quot;
+cl-run.pl --list all -c &quot;sudo mkdir /etc/spark&quot;
+</code></pre>
+
+<p>Create /srv/spark and the spark user.</p>
+
+<pre><code>cat &gt; spark-user.sh &lt;&lt;EOF
+mkdir -p /srv/spark/{log,work,tmp}
+(grep -q '^spark:' /etc/group)  || groupadd -g 4321 spark
+(grep -q '^spark:' /etc/passwd) || useradd -u 4321 -c &quot;Apache Spark&quot; -g spark -s /bin/bash -d /srv/spark spark
+chown -R spark:spark /srv/spark
+# make spark tmp world writable and sticky
+chmod 4755 /srv/spark/tmp
+EOF
+</code></pre>
+
+<p>Many of Spark's settings are controlled by environment variables. Since I want all volatile data
+in /srv, many of these need to be changed. Systemd units can point to an EnvironmentFile that is
+a simple list of shell variables like you'd find in /etc/sysconfig or /etc/default files. The Intel
+NUC systems I'm running this stack on have 4 cores and 16G of RAM, so I'll give Spark 2 cores and 4G
+of memory for now.</p>
+
+<pre><code>cat &gt; spark-env.sh &lt;&lt;EOF
+export SPARK_WORKER_CORES=&quot;2&quot;
+export SPARK_WORKER_MEMORY=&quot;4g&quot;
+export SPARK_MEM=&quot;2g&quot;
+export SPARK_REPL_MEM=&quot;4g&quot;
+export SPARK_CONF_DIR=&quot;/etc/spark&quot;
+export SPARK_TMP_DIR=&quot;/srv/spark/tmp&quot;
+export SPARK_LOG_DIR=&quot;/srv/spark/logs&quot;
+export SPARK_WORKER_DIR=&quot;/srv/spark/work&quot;
+export SPARK_LOCAL_DIRS=&quot;/srv/spark/tmp&quot;
+export SPARK_COMMON_OPTS=&quot;$SPARK_COMMON_OPTS -Dspark.kryoserializer.buffer.mb=32 -Djava.io.tmpdir=/srv/spark/tmp &quot;
+export SPARK_MASTER_OPTS=&quot; -Dspark.deploy.defaultCores=2 -Dspark.local.dir=/srv/spark/master -Dspark.log.file=/srv/spark/log/master.log &quot;
+export SPARK_WORKER_OPTS=&quot; -Dspark.local.dir=/srv/spark/tmp/worker -Dspark.log.file=/srv/spark/log/worker.log &quot;
+export SPARK_EXECUTOR_OPTS=&quot; -Djava.io.tmpdir=/srv/spark/tmp/executor &quot;
+export SPARK_REPL_OPTS=&quot; -Djava.io.tmpdir=/srv/spark/tmp/repl/\$USER &quot;
+export SPARK_APP_OPTS=&quot; -Djava.io.tmpdir=/srv/spark/tmp/app/\$USER &quot;
+export PYSPARK_PYTHON=&quot;/bin/python2&quot;
+EOF
+</code></pre>
+
+<p>spark-submit and other tools may use spark-defaults.conf to find the master and other configuration items.</p>
+
+<pre><code>cat &gt; spark-defaults.conf &lt;&lt;EOF
+spark.master            spark://node0:7077
+spark.executor.memory   512m
+spark.eventLog.enabled  true
+spark.serializer        org.apache.spark.serializer.KryoSerializer
+EOF
+</code></pre>
+
+<p>The systemd units are a little less complex than Cassandra's. The spark-master.service unit
+should only exist on node0, while every other node runs spark-worker. Spark workers are given
+a weight of 100 compared to Cassandra's weight of 1000 so that Cassandra is given priority over
+Spark without starving it entirely.</p>
+
+<pre><code>cat &gt; spark-worker.service &lt;&lt;EOF
+[Unit]
+Description=Spark Worker
+After=network.target
+
+[Service]
+User=spark
+Group=spark
+ExecStart=/opt/spark/sbin/start-slave.sh spark://node0:7077
+StandardOutput=journal
+StandardError=journal
+LimitNOFILE=infinity
+LimitMEMLOCK=infinity
+LimitNPROC=infinity
+LimitAS=infinity
+EnvironmentFile=/etc/spark/spark-env.sh
+CPUAccounting=true
+CPUShares=100
+
+[Install]
+WantedBy=multi-user.target
+EOF
+</code></pre>
+
+<p>The master unit is similar and only gets installed on node0. Since it is not competing
+for resources, there's no need to turn on cgroups for now.</p>
+
+<pre><code>cat &gt; spark-master.service &lt;&lt;EOF
+[Unit]
+Description=Spark Master
+After=network.target
+
+[Service]
+User=spark
+Group=spark
+ExecStart=/opt/spark/sbin/start-master.sh
+StandardOutput=journal
+StandardError=journal
+LimitNOFILE=infinity
+LimitMEMLOCK=infinity
+LimitNPROC=infinity
+LimitAS=infinity
+EnvironmentFile=/etc/spark/spark-env.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+</code></pre>
+
+<p>Now deploy all of these configs. Relocate the spark config into /etc/spark and copy
+a couple templates, then write all the files there. spark-env.sh goes on all nodes.
+The unit files are described above. Finally,
+a command is run to instruct systemd to read the new unit files.</p>
+
+<pre><code>cl-run.pl --list all -c &quot;sudo mv /opt/spark/conf /etc/spark&quot;
+cl-run.pl --list all -c &quot;sudo ln -s /etc/spark /opt/spark/conf&quot;
+cl-run.pl --list all -c &quot;sudo cp /opt/spark/conf/log4j.properties.template /opt/spark/conf/log4j.properties&quot;
+cl-run.pl --list all -c &quot;sudo cp /opt/spark/conf/fairscheduler.xml.template /opt/spark/conf/fairscheduler.xml&quot;
+cl-sendfile.pl --list all -x -l spark-env.sh -r /etc/spark/spark-env.sh
+cl-sendfile.pl --list all -x -l spark-defaults.conf -r /etc/spark/spark-defaults.conf
+cl-sendfile.pl -x -l spark-worker.service -r /etc/systemd/system/multi-user.target.wants/spark-worker.service
+cl-sendfile.pl --list all --incl node0 -x -l spark-worker.service -r /etc/systemd/system/multi-user.target.wants/spark-worker.service
+cl-run.pl --list all -c &quot;sudo systemctl daemon-reload&quot;
+</code></pre>
+
+<p>With all of that done, it's time to turn on Spark to see if it works.</p>
+
+<pre><code>cl-run.pl --list all --incl node0 -c &quot;sudo systemctl start spark-master.service&quot;
+cl-run.pl -c &quot;sudo systemctl start spark-worker.service&quot;
 </code></pre>
 </div><!-- container-bottom -->
 <!-- begin footer.html -->
