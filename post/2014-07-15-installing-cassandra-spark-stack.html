@@ -316,9 +316,10 @@ Description=Spark Worker
 After=network.target
 
 [Service]
+Type=forking
 User=spark
 Group=spark
-ExecStart=/opt/spark/sbin/start-slave.sh 0 spark://node0:7077
+ExecStart=/opt/spark/sbin/start-slave.sh 1 spark://node0:7077
 StandardOutput=journal
 StandardError=journal
 LimitNOFILE=infinity
@@ -342,6 +343,7 @@ Description=Spark Master
 After=network.target
 
 [Service]
+Type=forking
 User=spark
 Group=spark
 ExecStart=/opt/spark/sbin/start-master.sh
