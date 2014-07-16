@@ -270,11 +270,16 @@ in /srv, many of these need to be changed. Spark will pick up spark-env.sh autom
 <p>The Intel NUC systems I'm running this stack on have 4 cores and 16G of RAM, so I'll give
 Spark 2 cores and 4G of memory for now.</p>
 
+<p>One line worth calling out is the <code>SPARK_WORKER_PORT=9000</code>. It can be any port. If you don't set
+it, every time a work is restarted the master will have a stale entry for a while. It's not
+a big deal but I like it better this way.</p>
+
 <pre><code>cat &gt; spark-env.sh &lt;&lt;EOF
 export SPARK_WORKER_CORES=&quot;2&quot;
 export SPARK_WORKER_MEMORY=&quot;4g&quot;
 export SPARK_DRIVER_MEMORY=&quot;2g&quot;
 export SPARK_REPL_MEM=&quot;4g&quot;
+export SPARK_WORKER_PORT=9000
 export SPARK_CONF_DIR=&quot;/etc/spark&quot;
 export SPARK_TMP_DIR=&quot;/srv/spark/tmp&quot;
 export SPARK_PID_DIR=&quot;/srv/spark/pids&quot;
