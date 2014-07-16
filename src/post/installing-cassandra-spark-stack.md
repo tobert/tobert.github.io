@@ -10,9 +10,7 @@ pubdate: 2014-07-15T23:00:00Z
 
 As mentioned in my [portacluster system imaging](/post/2014-07-14-portacluster-system-imaging.html) post,
 I am performing this install on 1 admin node (node0) and 6 worker nodes (node\[1-6]) running 64-bit Arch Linux.
-If you're attempting to do the same on a Redhat or Debian variant, you will need to
-change package names and commands for the target distro. The
-rest of the process should port over without much modification.
+Most of what I describe in this post should work on other Linux variants with minor adjustments.
 
 ## Overview
 
@@ -80,7 +78,7 @@ cl-run.pl --list workers -c "sudo ln -s /etc/cassandra /opt/cassandra/conf"
 
 I will start Cassandra with a systemd unit, so I push that out as well. This unit
 file runs Cassandra out of the tarball as the cassandra user with the stdout/stderr going
-to the systemd journal (which you can view with `journalctl -f`). I also included some
+to the systemd journal (view with `journalctl -f`). I also included some
 ulimit settings and bump the OOM score downwards to make it less likely that the kernel
 will kill Cassandra when out of memory. Since we're going to be running two large JVM apps
 on each worker node, this unit also enables cgroups so Cassandra can be given priority
@@ -138,14 +136,13 @@ Before starting Cassandra I want to make a few changes to the standard configura
 fan of LSB so I redirect all of the /var files to /srv/cassandra so they're all in one place. There's
 only one SSD in the target systems so the commit log goes on the same drive.
 
-Note that my systems have a bridge in front of the default interface. You will need to adjust the
-ip=$() line to work on your systems.
+I configured portacluster nodes to have a bridge in front of the default interface, making br0 the default interface.
 
 ```
 cat cassandra-config.sh
 ip=$(ip addr show br0 |perl -ne 'if ($_ =~ /inet (\d+\.\d+\.\d+\.\d+)/) { print $1 }')
 
-perl -ibak -pe "
+perl -i.bak -pe "
   s/^(cluster_name:).*/\$1 'Portable Cluster'/;
   s/^(listen|rpc)_address:.*/\${1}_address: $ip/;
   s|/var/lib|/srv|;
@@ -341,13 +338,17 @@ Now I can browse to the Spark master webui.
 
 The connector is now published in Maven and can be installed easiest using ivy on the
 command line. Ivy can pull all dependencies as well as the connector jar, saving a lot of
-fiddling around. In addition, while you can let ivy download the connector directly, it will
+fiddling around. In addition, while ivy can download the connector directly, it will
 end up pulling down all of Cassandra and Spark. The script fragment below pulls down only what
 is necessary to run the connector against a pre-built Spark.
 
-This is only really needed for the spark-shell so it can access Cassandra. Most of your projects
-should include the necessary jars in your deployment jar rather than pushing these packages
+This is only really needed for the spark-shell so it can access Cassandra. Most projects
+should include the necessary jars in a fat jar rather than pushing these packages
 to every node.
+
+I run these commands on node0 since that's where I usually work with spark-shell. To run it on
+another machine, Spark will have to be present and match the version of the cluster, then this
+same process will get everything needed to use the connector.
 
 ```
 cat > download-connector.sh <<EOF
@@ -379,13 +380,15 @@ sudo bash download-connector.sh
 
 All that's left to get started with the connector now is to get spark-shell to pick it up. The easiest
 way I've found is to set the classpath with --driver-class-path then restart the context in the REPL
-with the necessary classes imported so you can access sc.cassandraTable().
+with the necessary classes imported to make sc.cassandraTable() visible.
+
+The newly loaded methods will not show up in tab completion. I don't know why.
 
 ```
 /opt/spark/bin/spark-shell --driver-class-path $(echo /opt/connector/*.jar |sed 's/ /:/g')
 ```
 
-It will print a bunch of log information then you will see the scala&gt; prompt.
+It will print a bunch of log information then present scala&gt; prompt.
 
 ```
 scala> sc.stop
@@ -403,7 +406,7 @@ scala> table.count
 ```
 
 To make sure everything is working, I ran some code I'm working on for my 2048 game analytics
-project. Each context gets an application webui that you can use to monitor job status.
+project. Each context gets an application webui that displays job status.
 
 ![screenshot](/images/spark-stages-screenshot-2014-07-15.jpg)
 
