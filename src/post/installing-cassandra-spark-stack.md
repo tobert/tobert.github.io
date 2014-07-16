@@ -402,6 +402,9 @@ scala> val table = sc.cassandraTable("keyspace", "table")
 scala> table.count
 ```
 
+To make sure everything is working, I ran some code I'm working on for my 2048 game analytics
+project. Each context gets an application webui that you can use to monitor job status.
+
 ![screenshot](/images/spark-stages-screenshot-2014-07-15.jpg)
 
 ## Conclusion
