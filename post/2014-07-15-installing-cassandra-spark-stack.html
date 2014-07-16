@@ -87,6 +87,28 @@ skip HDFS or some kind of HDFS replacement for now. Options I plan to look at la
 adapter and <a href="http://pithos.io">Pithos</a> as an S3 adapter. In the end, the stack is simply Cassandra and
 Spark with the <a href="https://github.com/datastax/spark-cassandra-connector">spark-cassandra-connector</a>.</p>
 
+<h2>Responsible Configuration</h2>
+
+<p>For this post I've used my <a href="https://github.com/tobert/perl-ssh-tools">perl-ssh-tools</a> suite. The intent
+is to show what needs to be done and one way to do it. For production deployments, I recommend using
+your favorite configuration management tool.</p>
+
+<p>perl-ssh-tools uses a configuration similar to dsh, which uses simple files with one
+host per line. I use two lists below. Most commands run on the fleet of workers. Because
+cl-run.pl provides more than ssh commands, it's also used to run commands on node0 using
+its --incl flag e.g. <code>cl-run.pl --list all --incl node0</code>.</p>
+
+<pre><code>cat .dsh/machines.workers
+node1
+node2
+node3
+node4
+node5
+node6
+</code></pre>
+
+<p><code>machines.all</code> is the same with node0 added.</p>
+
 <h2>Install Cassandra</h2>
 
 <p>My first pass at this section involved setting up a package repo, but since I don't have time to package
@@ -97,29 +119,22 @@ I'm also using the Arch packages of OpenJDK, which isn't supported by Datastax, 
 The JDK is pre-installed on my Arch image, it's as simple as <code>sudo pacman -S extra/jdk7-openjdk</code>.</p>
 
 <p>First, I downloaded the Cassandra tarball from <a href="http://cassandra.apache.org/download/">apache.org</a> to
-node0 in /srv/public/tgz.</p>
-
-<pre><code>sudo curl -o /srv/public/tgz/apache-cassandra-2.0.9-bin.tar.gz \
-  http://mirrors.gigenet.com/apache/cassandra/2.0.9/apache-cassandra-2.0.9-bin.tar.gz
-</code></pre>
-
-<p>Then on the worker nodes, it gets downloaded and expanded in /opt.
-<a href="https://github.com/tobert/perl-ssh-tools/blob/master/cl-run.pl">cl-run.pl</a> is part
-of my custom parallel ssh tools. pssh, etc. will work similarly. I have two lists
-configured for cl-tools, 'workers' has the 6 worker nodes in it and is the default
-when no list is specied. The other is 'all' which includes nodes 0-6.</p>
+node0 in /srv/public/tgz. Then on the worker nodes, it gets downloaded and expanded in /opt.</p>
 
 <pre><code>pkg=&quot;apache-cassandra-2.0.9-bin.tar.gz&quot;
-cl-run.pl -c &quot;curl http://node0/tgz/$pkg |sudo tar -C /opt -xzf -&quot;
-cl-run.pl -c &quot;sudo ln -s /opt/apache-cassandra-2.0.9 /opt/cassandra&quot;
+sudo curl -o /srv/public/tgz/$pkg \
+  http://mirrors.gigenet.com/apache/cassandra/2.0.9/apache-cassandra-2.0.9-bin.tar.gz
+
+cl-run.pl --list workers -c &quot;curl http://node0/tgz/$pkg |sudo tar -C /opt -xzf -&quot;
+cl-run.pl --list workers -c &quot;sudo ln -s /opt/apache-cassandra-2.0.9 /opt/cassandra&quot;
 </code></pre>
 
 <p>To make it easier to do upgrades without regenerating the configuration, I
 relocate the conf dir to /etc/cassandra to match what packages do. This assumes there
 is no existing /etc/cassandra.</p>
 
-<pre><code>cl-run.pl -c &quot;sudo mv /opt/cassandra/conf /etc/cassandra&quot;
-cl-run.pl -c &quot;sudo ln -s /etc/cassandra /opt/cassandra/conf&quot;
+<pre><code>cl-run.pl --list workers -c &quot;sudo mv /opt/cassandra/conf /etc/cassandra&quot;
+cl-run.pl --list workers -c &quot;sudo ln -s /etc/cassandra /opt/cassandra/conf&quot;
 </code></pre>
 
 <p>I will start Cassandra with a systemd unit, so I push that out as well. This unit
@@ -157,8 +172,8 @@ CPUShares=1000
 WantedBy=multi-user.target
 EOF
 
-cl-sendfile.pl -x -l cassandra.service -r /etc/systemd/system/multi-user.target.wants/cassandra.service
-cl-run.pl -c &quot;sudo systemctl daemon-reload&quot;
+cl-sendfile.pl --list workers -x -l cassandra.service -r /etc/systemd/system/multi-user.target.wants/cassandra.service
+cl-run.pl --list workers -c &quot;sudo systemctl daemon-reload&quot;
 </code></pre>
 
 <p>Since all Cassandra data is being redirected to /srv/cassandra and it's going to run as the
@@ -171,7 +186,7 @@ mkdir -p /srv/cassandra/{log,data,commitlogs,saved_caches}
 chown -R cassandra:cassandra /srv/cassandra
 EOF
 
-cl-run.pl -x -s cassandra-user.sh
+cl-run.pl --list workers -x -s cassandra-user.sh
 </code></pre>
 
 <h2>Configure Cassandra</h2>
@@ -194,7 +209,7 @@ perl -ibak -pe &quot;
 &quot; /opt/cassandra/conf/cassandra.yaml
 # EOF
 
-cl-run.pl -x -s cassandra-config.sh
+cl-run.pl --list workers -x -s cassandra-config.sh
 </code></pre>
 
 <p>The default log4-server.propterties has log4j printing to stdout. This is not desirable in a background
@@ -211,12 +226,12 @@ log4j.appender.R.File=/srv/cassandra/log/system.log
 log4j.logger.org.apache.thrift.server.TNonblockingServer=ERROR
 EOF
 
-cl-sendfile.pl -x -l log4j-server.properties -r /opt/cassandra/conf/log4j-server.properties
+cl-sendfile.pl --list workers -x -l log4j-server.properties -r /opt/cassandra/conf/log4j-server.properties
 </code></pre>
 
 <p>And with that, Cassandra is ready to start.</p>
 
-<pre><code>cl-run.pl -c &quot;sudo systemctl start cassandra.service&quot;
+<pre><code>cl-run.pl --list workers -c &quot;sudo systemctl start cassandra.service&quot;
 ssh node3 tail -f /srv/cassandra/log/system.log
 </code></pre>
 
@@ -350,7 +365,7 @@ cl-run.pl --list all -c &quot;sudo cp /opt/spark/conf/log4j.properties.template 
 cl-run.pl --list all -c &quot;sudo cp /opt/spark/conf/fairscheduler.xml.template /opt/spark/conf/fairscheduler.xml&quot;
 cl-sendfile.pl --list all -x -l spark-env.sh -r /etc/spark/spark-env.sh
 cl-sendfile.pl --list all -x -l spark-defaults.conf -r /etc/spark/spark-defaults.conf
-cl-sendfile.pl -x -l spark-worker.service -r /etc/systemd/system/multi-user.target.wants/spark-worker.service
+cl-sendfile.pl --list workers -x -l spark-worker.service -r /etc/systemd/system/multi-user.target.wants/spark-worker.service
 cl-sendfile.pl --list all --incl node0 -x -l spark-worker.service -r /etc/systemd/system/multi-user.target.wants/spark-worker.service
 cl-run.pl --list all -c &quot;sudo systemctl daemon-reload&quot;
 </code></pre>
@@ -358,7 +373,7 @@ cl-run.pl --list all -c &quot;sudo systemctl daemon-reload&quot;
 <p>With all of that done, it's time to turn on Spark to see if it works.</p>
 
 <pre><code>cl-run.pl --list all --incl node0 -c &quot;sudo systemctl start spark-master.service&quot;
-cl-run.pl -c &quot;sudo systemctl start spark-worker.service&quot;
+cl-run.pl --list workers -c &quot;sudo systemctl start spark-worker.service&quot;
 </code></pre>
 </div><!-- container-bottom -->
 <!-- begin footer.html -->
