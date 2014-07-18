@@ -367,7 +367,7 @@ curl -o ivy-2.3.0.jar \
 curl -o spark-cassandra-connector_2.10-1.0.0-beta1.jar \
   'http://search.maven.org/remotecontent?filepath=com/datastax/spark/spark-cassandra-connector_2.10/1.0.0-beta1/spark-cassandra-connector_2.10-1.0.0-beta1.jar'
 
-ivy () { java -jar ivy-2.3.0.jar -dependency $* -retrieve "[artifact]-[revision](-[classifier]).[ext]" }
+ivy () { java -jar ivy-2.3.0.jar -dependency \$* -retrieve "[artifact]-[revision](-[classifier]).[ext]"; }
 
 ivy org.apache.cassandra cassandra-thrift 2.0.9
 ivy com.datastax.cassandra cassandra-driver-core 2.0.3
