@@ -15,6 +15,16 @@ body {
   height: 30px;
 }
 
+code {
+  font-family: "Consolas", "Inconsolata", "Source Code Pro", "Monaco", monospace;
+}
+
+code.json {
+  display: block;
+  white-space: pre;
+  background-color: #ffffff;
+}
+
 /* reduce container width on high-resolution screens */
 @media (min-width: 1200px) {
   .container {

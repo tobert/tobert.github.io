@@ -1,0 +1,113 @@
+div.f7u12-score {
+	height: 40px;
+	width: 200px;
+    line-height: 40px;
+    font-size: 12px;
+    text-align: center;
+}
+
+div.f7u12-grid {
+    display: inline-block;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 3px 3px 5px #888888;
+    border: 1px solid #c8d7dc;
+    border-radius: 3px;
+}
+
+div.f7u12-cell {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    float: left;
+    line-height: 80px;
+    font-size: 40px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    margin: 3px;
+    box-shadow: 3px 3px 5px #888888;
+    border: 1px solid #c8d7dc;
+    border-radius: 3px;
+}
+
+div.f7u12-cell-empty {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+
+/* TODO: update these to be unique over a gradient */
+div.f7u12-cell-2 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-4 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-8 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-16 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-32 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-64 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-128 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-256 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-512 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-1024 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+div.f7u12-cell-2048 {
+    background-color: #f2f5f6;
+    background-image: linear-gradient(to bottom, #f2f5f6, #c8d7dc);
+}
+
+/* appended dpad css for blog version */
+table.dpad {
+    display: inline-block;
+}
+
+td.arrow {
+    cursor: pointer;
+    background-color: gray;
+    color: white;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border: 1px solid #c8d7dc;
+    border-radius: 3px;
+}
+
+div.game-container {
+    display: inline-block;
+}
+
+div.game-stats {
+  height: 40px;
+  line-height: 40px;
+  font-size: 24px;
+  text-align: center;
+  display: inline-block;
+}
+

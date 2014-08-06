@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="A post-show overview of the F7U12 demo application and how it was built.">
+    <meta name="keywords" content="cassandra, spark, github, open source, oscon, ">
+    <meta property="article:published_time" content="2014-08-04"/>
+    <meta property="article:modified_time" content="2014-08-04"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="The OSCON 2014 Datastax Demo: F7U12 : @AlTobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="A post-show overview of the F7U12 demo application and how it was built.">
+     <meta name="twitter:domain" content="http://tobert.github.io">
+
+    <title>The OSCON 2014 Datastax Demo: F7U12</title>
+    <link rel="canonical" href="http://tobert.github.io/post/2014-08-04-oscon-demo-f7u12.html">
+    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/tobert.css"><link type="text/css" rel="stylesheet" href="/css/f7u12.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/f7u12.html">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+<hr/>
+<h1>The OSCON 2014 Datastax Demo: F7U12</h1>
+<hr/>
+<br/>
+<!-- end container-top -->
+
+<!-- decided to do this one in HTML originally because I thought about laying out
+     the comic using the bootstrap grid. May yet do that since it would automatically
+     pop vertical on mobile, but for now it's just a png export from OmniGraffle. -->
+
+<div class="row"><div class="col-xs-12">
+   <h1>Not for circulation (yet)!</h1>
+</div></div>
+
+<div class="row"><div class="col-xs-12">
+<p>My talk proposal for OSCON 2014 was not accepted so I was attending as a booth brain.
+I liked this plan just fine since I wouldn't have to prepare much
+and could simply attend the conference and have fun showing off Cassandra / Spark demos on
+<a href="/post/2014-02-07-portacluster.html">portacluster</a>. Then, 2 weeks before the conference,
+this happened.</p>
+</div></div>
+
+<div class="row"><div class="col-xs-12">
+  <img src="/images/f7u12-rage.png" alt="rage comic"/>
+</div></div>
+
+<div class="row"><div class="col-xs-12">
+<p>Following that conversation, I looked at the source for many open source 2048 games, including
+<a href="http://gabrielecirulli.github.io/2048/">the original</a>. Since I needed to add swipe
+controls as well as gathering metrics from the game, I decided to spend an evening writing my own clone
+using <a href="http://d3js.org/">D3.js</a> to see how far I could get. I was able to push a nearly complete
+version of it
+<a href="https://github.com/tobert/f7u12/commit/e8bb10d666848b432324f8302dcaaa16e4e9e67a">to github</a>
+the next day.
+</p>
+
+<p>I actually had working code the previous evening, but I needed a name. One of the versions of the game
+I considered had a fun quote in its <a href="https://github.com/Saming/2048/blob/master/README.md">README.md</a>,
+"The best game you'll ever hate." Somehow, that instantly made me think of <a href="http://www.reddit.com/r/fffffffuuuuuuuuuuuu">
+rage comics</a> and the name was set.</p>
+
+<p>
+Besides using D3, the f7u12 version of the game is different in other ways. The game itself is isolated in
+the <a href="https://github.com/tobert/f7u12/blob/master/public/js/f7u12.js">f7u12.js</a> file. It does not
+implement input or any game rules besides scoring. The whole thing is designed to be easy to wire up in
+various ways so I could quickly adapt to whatever equipment was available in our booth, which was not clear
+to me until 5 minutes before the doors opened - more about that later.
+</p>
+
+<p>Here is the game. It is not reporting to any servers. Moves can be made with the arrow keys, by clicking
+on the d-pad to the right, or by using the arrow keys on your keyboard.</p>
+</div></div>
+
+<div class="row">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-3 game-stats">
+    <span>Score: </span><span id="score-value">0</span>
+  </div>
+  <div class="col-xs-3 game-stats">
+    <span>Turn: </span><span id="turn-id-value">0</span>
+  </div>
+  <div class="col-xs-3"></div>
+</div>
+
+<div class="row">
+  <div class="col-xs-3"></div>
+  <div class="col-xs-6">
+     <div id="f7u12-container"></div>
+  </div>
+  <div class="col-xs-3">
+     <div id="f7u12-dpad" style="margin-top: 160px;"></div>
+  </div>
+</div>
+
+<div class="row"><div class="col-xs-12">
+<p>One of the reasons I decided to write the game from scratch was that I wanted to make it possible
+to capture everything that is happening, including some things beyond the obvious such as the
+amount of time between moves, direction choices, and the entire board state.</p>
+
+<p>While many implementations use a 2-dimensional array, e.g. <code>[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]</code>, which
+could be translated to something easier to serialize, but it's even easier with the way that f7u12 implements it
+as a flat array, e.g. <code>[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]</code>.
+
+<p>If you make a few moves in the game above, the data that gets sent to Cassandra should show up in the
+log area below.</p>
+</div></div>
+
+<div class="row" style="height: 12em;">
+  <div class="col-sm-12">
+     <div id="f7u12-json" style="overflow-x: scroll;"></div>
+  </div>
+</div>
+
+
+<div class="row"><div class="col-xs-12">
+
+<h1>TO BE CONTINUED .... </h1>
+
+</div></div>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.touchswipe/1.6.4/jquery.touchSwipe.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+<script src="/js/prism.js"></script>
+<script src="/js/performance-now-polyfill.js"></script>
+<script src="/js/uuid.js"></script>
+<script src="/js/f7u12.js"></script>
+<script src="/js/f7u12-dpad.js"></script>
+<script src="/js/f7u12-app.js"></script>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    
+    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/f7u12.html">ChangeLog</a>
+    
+    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
