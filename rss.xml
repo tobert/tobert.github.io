@@ -7,10 +7,19 @@
 	<link>http://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-07-15</pubDate>
-	<lastBuildDate>2014-07-18</lastBuildDate>
+	<pubDate>2014-08-11</pubDate>
+	<lastBuildDate>2014-08-11</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>F7U12: The Demo (1/3) Implementing 2048</title>
+	  <link>http://tobert.github.io/post/2014-08-11-f7u12-part1.html</link>
+      <pubDate>Mon, 11 Aug 2014 00:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-08-11-f7u12-part1</guid>
+	  <description>A post-show overview of the F7U12 demo application and how it was built.</description>
+    </item>
     
     <item>
       <title>Installing the Cassandra / Spark OSS Stack</title>
