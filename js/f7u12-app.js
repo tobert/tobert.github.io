@@ -4,7 +4,6 @@
   var showdata = function (game) {
     moves[game.sequence] = game.serialize();
     var data = moves.slice(-10).reverse();
-    console.log(game.sequence, data);
 
     var lines = d3.select("#f7u12-json")
       .selectAll("code")
@@ -36,10 +35,11 @@
 
   var game = new F7U12(4); // 4x4 grid
       game.init(2); // start with 2 tiles
+      game.uuid = 1; // make the JSON smaller and easier to read
       game.render("#f7u12-container");
       game.make_dpad("#f7u12-dpad");
       game.score = 0;
-      game.set_name("Player1");
+      game.name = "Player1";
 
   showdata(game);
 
