@@ -12,46 +12,66 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * F7U12: A simple implementation of the 2048 game using D3.
- * Uses performance.now() for timings, might break on older browsers.
  */
 
-// constructor: takes a width
+/**
+ * @fileoverview A simple implementation of the 2048 Depends on d3.js.
+ * Also assumes performance.now() is present, which requires a polyfill on Safari.
+ * @author atobey@datastax.com (Al Tobey)
+ */
+
+/**
+ * Creates a new game of 2048.
+ * @param {Number} width The width of the grid in cells.
+ * @property {Boolean} visible
+ * @property {Number} sequence
+ * @property {Number} score
+ * @property {Array.<Number>} cells values on the grid
+ * @constructor
+ */
 var F7U12 = function (width) {
+  // mutable properties
   this.visible = false;
+  this.sequence = 0;
+  this.score = 0;
+
+  // should not change again after initialization
   this.width = width;
   this.size = width * width;
   this.last = this.size - 1;
-  this.sequence = 0;
-  this.score = 0;
-  this.cells = new Array(this.size);
   this.started = performance.now();
   this.last_turn = this.started;
 
+  /* initialize all cells to 0 */
+  this.cells = new Array(this.size);
   for (var i=0; i<this.size; i++) {
     this.cells[i] = 0;
   }
 };
 
-F7U12.cell_class = function (d,i) {
-  if (d === 0) {
-    return "f7u12-cell f7u12-cell-empty";
-  } else {
-    return "f7u12-cell f7u12-cell-" + d;
+/**
+ * Places starting tiles on the board and renders it if this.visibility = true.
+ * @param {Number} count number of tiles to place on the board
+ * @return {Array.<Number>} indexes of the tiles inserted
+ */
+F7U12.prototype.init = function (count) {
+  var tiles = [];
+  for (var i=0; i<count; i++) {
+    tiles.push(this.insert());
   }
+
+  if (this.visible) {
+    this.update();
+  }
+
+  return tiles;
 };
 
-// used internally in a few .text() calls below
-F7U12.print = function (d) {
-  if (d > 0) {
-    return d;
-  } else {
-    return "";
-  }
-};
-
-// makes a copy of the object
+/**
+ * Makes a new F7U12 object with the same grid state. All other values
+ * (score, sequence, etc.) are not copied.
+ * @return {F7U12}
+ */
 F7U12.prototype.clone = function () {
   var out = new F7U12(this.width);
   this.cells.forEach(function (d,i) {
@@ -60,17 +80,29 @@ F7U12.prototype.clone = function () {
   return out;
 };
 
+/**
+ * Remove an f7u12 grid from the target DOM element.
+ * @param {String} CSS selector for the parent DOM element
+ */
 F7U12.prototype.clear = function (target) {
   d3.select(target).selectAll(".f7u12-grid").remove();
 };
 
-// render the game grid
+/**
+ * Append the current f7u12 game grid in the target DOM element.
+ * Target DOM elements should be empty. Calling multiple times will append
+ * grids, but not replace/overwrite them. Sets game.visible = true.
+ * @param {String} CSS selector for the parent DOM element
+ */
 F7U12.prototype.render = function (target) {
   var game = this;
-      game.visible = true;
+
+  // TODO: this is probably an unnecessary side-effect and should be removed
+  game.visible = true;
 
   var pagediv = d3.select(target);
-  // not safe across multiple calls ... does it matter?
+  // multiple calls to render() on the same target will cause additional
+  // grids to be rendered
   game.container = pagediv.append("div").classed("f7u12-grid", true);
 
   game.cell_divs = game.container.selectAll(".f7u12-cell")
@@ -85,8 +117,9 @@ F7U12.prototype.render = function (target) {
     .text(F7U12.print);
 };
 
-// assuming the grid has been changed on the object with
-// game.grid = [...], update the board with those new values
+/**
+ * Update a grid in-place. Modifies the DOM unless {@code this.visible = false}.
+ */
 // TODO: d3 transitions
 F7U12.prototype.update = function () {
   // cells are only ever updated, never added or removed
@@ -101,52 +134,51 @@ F7U12.prototype.update = function () {
   }
 };
 
-// calculate the from/to coordinates for use in slide() & merge()
-// eol is set to true on pairs that wrap around the grid
+/**
+ * Calculate the from/to coordinates for use in slide() & merge()
+ * Probably only useful for internal use by merge() and slide().
+ * @param {String} dir up/down/left/right
+ * @param {Number} i index of the cell in {@code this.cells} array
+ * @return {Number} index of the next cell in the given direction, -1 if at end of col/row
+ */
 F7U12.prototype.next = function (dir, i) {
-    var out = { from: 0, to: 0, eol: false };
+    var next = -1;
 
     // DOWN:
     // the cell below i is width cells forward
     if (dir === "down") {
-      out.from = i;
-      out.to = i + this.width;
-      if (out.to >= this.size) {
-        out.eol = true;
+      next = i + this.width;
+      if (next >= this.size) {
+        return -1;
       }
     }
 
     // UP:
-    // start on the bottom right
-    // the cell above from is width cells backward
+    // the cell above i is width cells back
     else if (dir === "up") {
-      out.from = this.last - i;
-      out.to = out.from - this.width;
-      if (out.to < 0) {
-        out.eol = true;
+      next = i - this.width;
+      if (next < 0) {
+        return -1;
       }
     }
 
     // RIGHT:
     // the cell to the right is forward one cell
     else if (dir === "right") {
-      out.from = i;
-      out.to = i + 1;
+      next = i + 1;
 
-      if (out.to % this.width === 0) {
-        out.eol = true;
+      if (next % this.width === 0) {
+        return -1;
       }
     }
 
     // LEFT:
-    // start at the bottom right
     // the cell to the left is backwards one cell
     else if (dir === "left") {
-      out.from = this.last - i;
-      out.to = out.from - 1;
+      next = i - 1;
 
-      if (out.from % this.width === 0) {
-        out.eol = true;
+      if (i % this.width === 0) {
+        return -1;
       }
     }
 
@@ -155,27 +187,44 @@ F7U12.prototype.next = function (dir, i) {
       console.log("BUG: invalid direction '" + dir + "'.");
     }
 
-    return out;
+    return next;
 };
 
-// move populated tiles into unpopulated tiles in the given direction
-// calls itself recursively until there are no more moves
-// return the number of slides completed
-F7U12.prototype.slide = function (dir, prev_count) {
-  var count = prev_count || 0;
+/**
+ * Moves tiles in the requested direction.
+ * Does not merge tiles. Does not modify DOM. Game state is updated.
+ * @param {String} dir up/down/left/right
+ * @return {Number} the number of cells moved
+ */
+F7U12.prototype.slide = function (dir) {
+  return this._slide(dir, 0);
+};
+
+/**
+ * Slide tiles in the requested direction. Recurses until there are no more moves.
+ * @see slide
+ * @param {String} dir up/down/left/right
+ * @param {Number} count number of cells moved
+ * @return {Number} the number of cells moved
+ *
+ * Compares values in the given direction using this.next to walk rows or
+ * columns as necessary.
+ */
+F7U12.prototype._slide = function (dir, count) {
   var game = this;
   var dirty = false;
 
   var updated = game.cells.map(function (val, i) {
-    var idxs = game.next(dir, i);
+    var next = game.next(dir, i);
 
-    if (idxs.eol) {
+    // negative values mean end of row/column, nothing to do
+    if (next < 0) {
       return val;
     }
 
-    if (game.cells[idxs.to] == 0 && game.cells[idxs.from] > 0) {
-      game.cells[idxs.to] = game.cells[idxs.from];
-      game.cells[idxs.from] = 0;
+    if (game.cells[next] == 0 && game.cells[i] > 0) {
+      game.cells[next] = game.cells[i];
+      game.cells[i] = 0;
       count++;
       dirty = true;
     }
@@ -192,28 +241,33 @@ F7U12.prototype.slide = function (dir, prev_count) {
   return count;
 };
 
-// merge cells with matching numbers
-// returns a list of indices of cells merged
+/**
+ * Merge adjacent cells with the same value in the direction specified. Does
+ * not modify DOM. Game state is updated.
+ * @param {String} dir up/down/left/right
+ * @return {Array.<Number>} list of indices of cells merged
+ */
 F7U12.prototype.merge = function (dir) {
   var game = this;
   var score = 0;
 
   // track which cells have been updated and only merge them once per move
   var merged = new Array(game.size);
-  merged.forEach(function (v,i) { merged[i] = 0; });
+  merged.forEach(function (v,i) { merged[i] = 0; }); // initialize
 
   var updated = game.cells.map(function (val, i) {
-    var idxs = game.next(dir, i);
+    var next = game.next(dir, i);
 
-    if (idxs.eol) {
+    // negative values mean end of row/column, nothing to do
+    if (next < 0) {
       return val;
     }
 
-    if (game.cells[idxs.from] == game.cells[idxs.to] && !merged[idxs.from]) {
-      game.cells[idxs.from] = 0;
-      game.cells[idxs.to] = game.cells[idxs.to] * 2;
-      score += game.cells[idxs.to];
-      merged[idxs.to] = game.cells[idxs.to]; // return the combined value
+    if (game.cells[i] == game.cells[next] && !merged[i]) {
+      game.cells[next] = game.cells[next] + game.cells[i];
+      game.cells[i] = 0;
+      score += game.cells[next];
+      merged[next] = game.cells[next]; // don't merge cells twice
     }
 
     return game.cells[i];
@@ -223,12 +277,21 @@ F7U12.prototype.merge = function (dir) {
 
   game.update();
 
-  return merged.filter(function (val) { if (val > 0) { return true; } else { return false; } });
+  return merged.filter(function (val) {
+    if (val > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  });
 };
 
-// collapse tiles, move, collapse again
-// returns true if the board changed, false otherwise
-// does NOT insert a new piece, you must call insert()
+/**
+ * Performs slide() and merge() and updates game state. Does not insert
+ * the new piece, insert() must be called afterwards if that's what you want.
+ * @param {String} dir up/down/left/right
+ * @return {Boolean} true if the board changed, false if it didn't
+ */
 F7U12.prototype.move = function (dir) {
   var game = this;
 
@@ -252,7 +315,12 @@ F7U12.prototype.move = function (dir) {
   return false;
 };
 
-// returns true if moving <dir> will change the board
+/**
+ * Similar to move() without side-effects.
+ * @nosideeffects
+ * @param {String} dir up/down/left/right
+ * @return {Boolean} true if the board changed, false if it didn't
+ */
 F7U12.prototype.can_move = function (dir) {
   // make a clone of the game and throw it away
   var game = this.clone();
@@ -269,10 +337,15 @@ F7U12.prototype.can_move = function (dir) {
   return false;
 };
 
-// probably slow, esp on bigger boards, but good enough for now
+/**
+ * Test whether or not the game is over.
+ * @nosideeffects
+ * @return {Boolean} true if game is over. false if it's possible to move.
+ */
 F7U12.prototype.over = function () {
   var game = this;
 
+  // probably slow on big boards, negligible on 4x4 grids
   if (game.can_move("up")) {
      return false;
   } else if (game.can_move("down")) {
@@ -286,19 +359,50 @@ F7U12.prototype.over = function () {
   }
 };
 
-// returns the number of empty cells on the board
+/**
+ * Counts how many empty cells (value = 0) are present on the board.
+ * @nosideeffects
+ * @return {Number} count of empty cells on the board
+ */
 F7U12.prototype.empty_cells = function () {
   return this.cells.reduce(function (pv, cv) {
-      if (cv == 0) {
-          return pv + 1;
-      } else {
-          return pv;
-      }
+    if (cv == 0) {
+      return pv + 1;
+    } else {
+      return pv;
+    }
   });
 };
 
-// randomly insert a 2 or 4 on the grid
+/**
+ * Randomly insert a 2 or 4 on the grid. Not weighted. Writes the new tile to
+ * this.cells, updates this.latest_tile_idx and this.latest_tile_value.
+ * @return {Number} index of the new tile
+ */
 F7U12.prototype.insert = function () {
+  var game = this;
+
+  var i = game.random_empty_tile();
+
+  // take the first value and assign 2 or 4 at random
+  game.cells[i] = d3.shuffle([2,4])[0];
+
+  // display the new grid (if visible)
+  game.update();
+
+  // serialize() saves these values, handy for replays, etc.
+  game.latest_tile_idx = i;
+  game.latest_tile_value = game.cells[i];
+
+  return i;
+};
+
+/**
+ * Find a random empty tile.
+ * @nosideeffects
+ * @return {Number} index of an empty (value = 0) tile
+ */
+F7U12.prototype.random_empty_tile = function () {
   var game = this;
 
   // make a list of all empty cells' (value = 0) indexes
@@ -310,28 +414,26 @@ F7U12.prototype.insert = function () {
 
   // shuffle the empty index list
   d3.shuffle(available);
-  // take the first value and assign 2 or 4 at random
-  game.cells[available[0]] = d3.shuffle([2,4])[0];
 
-  // display the new grid (if visible)
-  game.update();
-
-  // serialize() saves these values, handy for replays, etc.
-  game.latest_tile_idx = available[0];
-  game.latest_tile_value = game.cells[available[0]];
-
-  // return the index of the inserted tile
+  // return the index where the tile should be inserted
   return available[0];
 };
 
-// set the name of the game / player, an arbitrary string
-F7U12.prototype.set_name = function (name) {
-  this.name = name;
-};
-
-// grabs the latest game state stored in the game object and returns JSON
-// since F7U12 doesn't implement score directly, it will always
-// be 0 unless you set it.
+/**
+ * Serializes game state to JSON.
+ * @nosideeffects
+ * @return {String} json representation of the game state
+ * @property game_id   {String} hex UUID, defaults to all zeroes if not set
+ * @property turn_id   {Number} number of moves since game start (this.sequence)
+ * @property offset_ms {Number} time elapsed since the start of the game
+ * @property turn_ms   {Number} time elapsed since the previous move
+ * @property player    {String} player name, if set, default of empty string
+ * @property score     {Number} the current score
+ * @property tile_val  {Number} the value of the tile added most recently
+ * @property tile_idx  {Number} the index of the tile added most recently
+ * @property dir       {Number} the direction moved most recently
+ * @property state     {Array.<Number>} all values currently on the grid
+ */
 F7U12.prototype.serialize = function () {
   var game = this;
 
@@ -351,17 +453,22 @@ F7U12.prototype.serialize = function () {
   return JSON.stringify(out);
 };
 
-// render the board with count values on it
-// returns the indexes of the tiles inserted
-F7U12.prototype.init = function (count) {
-  var tiles = [];
-  for (var i=0; i<count; i++) {
-    tiles.push(this.insert());
+/** @ignore this is an internal utility function to generate CSS class names */
+F7U12.cell_class = function (d,i) {
+  if (d === 0) {
+    return "f7u12-cell f7u12-cell-empty";
+  } else {
+    return "f7u12-cell f7u12-cell-" + d;
   }
-
-  if (this.visible) {
-    this.update();
-  }
-
-  return tiles;
 };
+
+/** @ignore this is an internal utility function to populate cells with numbers */
+F7U12.print = function (d) {
+  if (d > 0) {
+    return d;
+  } else {
+    return "";
+  }
+};
+
+// vim: et ts=2 sw=2 ai smarttab
