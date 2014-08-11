@@ -25,10 +25,15 @@ code.json {
   background-color: #ffffff;
 }
 
+img.img-left {
+  display: inline;
+  float: left;
+  padding-right: 2em;
+}
+
 /* reduce container width on high-resolution screens */
 @media (min-width: 1200px) {
   .container {
       width: 970px;
   }
 }
-
