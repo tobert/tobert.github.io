@@ -63,6 +63,7 @@ type Page struct {
 	SrcRel   string    // relative path of the source doc
 	PubPath  string    // the path the file will be written to
 	PubRel   string    // relative path of the published doc
+	PubFull  string    // full permanent path to the doc e.g. https://tobert.github.io/post/2014-01-01-foobar.html
 	Dir      string    // the subdirectory, e.g. / for index.html, 'post' for posts
 	Type     string    // md html txt xml json
 	src      string    // raw data
@@ -98,9 +99,9 @@ func init() {
 func main() {
 	flag.Parse()
 
-	baseUrl, err := url.Parse(fmt.Sprintf("http://%s", domainFlag))
+	baseUrl, err := url.Parse(fmt.Sprintf("https://%s", domainFlag))
 	if err != nil {
-		log.Fatalf("Could not parse base URL 'http://%s': %s", domainFlag, err)
+		log.Fatalf("Could not parse base URL 'https://%s': %s", domainFlag, err)
 	}
 
 	if portFlag != 80 {
@@ -321,6 +322,7 @@ func findPages(c Config) (pages Pages) {
 		page.SrcPath = fpath
 		page.SrcRel = path.Join(subpath, fname) // will include leading /
 		page.PubRel = path.Join(subpath, strings.Join(fparts, ""))
+		page.PubFull = fmt.Sprintf("%s%s", c.BaseURL.String(), page.PubRel)
 		page.PubPath = path.Join(c.PubRoot, subpath, strings.Join(fparts, ""))
 		page.Dir = strings.Trim(subpath, "/")
 		if page.Dir == "" {
