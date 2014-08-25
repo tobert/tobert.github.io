@@ -15,6 +15,22 @@ body {
   height: 30px;
 }
 
+/* make the buttons on titles exactly square and match h1 font size of 36px */
+.social-title {
+  width: 36px;
+  height: 36px;
+}
+
+.social-follow {
+  text-align: left;
+  width: 120px;
+  height: 36px;
+}
+
+i {
+  width: 1em;
+}
+
 code {
   font-family: "Consolas", "Inconsolata", "Source Code Pro", "Monaco", monospace;
 }
@@ -48,8 +64,6 @@ img.img-left {
 
 .btn-facebook {
   color: #ffffff;
-  width: 36px;
-  height: 36px;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #2b4b90;
   *background-color: #133783;
@@ -83,8 +97,6 @@ img.img-left {
 
 .btn-twitter {
   color: #ffffff;
-  width: 36px;
-  height: 36px;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #1c95d0;
   *background-color: #0271bf;
@@ -118,8 +130,6 @@ img.img-left {
 
 .btn-github {
   color: #000000;
-  width: 36px;
-  height: 36px;
   text-shadow: 0 0.7px 0 rgba(0, 0, 0, 0.1);
   background-color: #f2f2f2;
   *background-color: #e6e6e6;
@@ -153,8 +163,6 @@ img.img-left {
 
 .btn-google-plus {
   color: #ffffff;
-  width: 36px;
-  height: 36px;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #d34332;
   *background-color: #c53727;
