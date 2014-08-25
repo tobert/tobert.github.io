@@ -23,7 +23,7 @@ body {
 
 .social-follow {
   text-align: left;
-  width: 120px;
+  min-width: 120px;
   height: 36px;
 }
 
@@ -194,3 +194,35 @@ img.img-left {
   background-color: #9a2b1f \9;
 }
 
+.btn-linkedin {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #60a9ce;
+  *background-color: #4393bb;
+  background-image: -moz-linear-gradient(top, #73b8db, #4393bb);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#73b8db), to(#4393bb));
+  background-image: -webkit-linear-gradient(top, #73b8db, #4393bb);
+  background-image: -o-linear-gradient(top, #73b8db, #4393bb);
+  background-image: linear-gradient(to bottom, #73b8db, #4393bb);
+  background-repeat: repeat-x;
+  border-color: #4393bb #4393bb #2f6783;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff73b8db', endColorstr='#ff4393bb', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+}
+
+.btn-linkedin:hover,
+.btn-linkedin:focus,
+.btn-linkedin:active,
+.btn-linkedin.active,
+.btn-linkedin.disabled,
+.btn-linkedin[disabled] {
+  color: #ffffff;
+  background-color: #4393bb;
+  *background-color: #3c84a8;
+}
+
+.btn-linkedin:active,
+.btn-linkedin.active {
+  background-color: #367595 \9;
+}
