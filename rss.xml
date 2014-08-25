@@ -4,17 +4,17 @@
      xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
   <channel>
     <title>@AlTobey Writes</title>
-	<link>http://tobert.github.io/rss.xml</link>
+	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
 	<pubDate>2014-08-11</pubDate>
-	<lastBuildDate>2014-08-11</lastBuildDate>
+	<lastBuildDate>2014-08-24</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
     
     <item>
       <title>F7U12: The Demo (1/3) Implementing 2048</title>
-	  <link>http://tobert.github.io/post/2014-08-11-f7u12-part1.html</link>
+	  <link>https://tobert.github.io/post/2014-08-11-f7u12-part1.html</link>
       <pubDate>Mon, 11 Aug 2014 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-08-11-f7u12-part1</guid>
@@ -23,7 +23,7 @@
     
     <item>
       <title>Installing the Cassandra / Spark OSS Stack</title>
-	  <link>http://tobert.github.io/post/2014-07-15-installing-cassandra-spark-stack.html</link>
+	  <link>https://tobert.github.io/post/2014-07-15-installing-cassandra-spark-stack.html</link>
       <pubDate>Tue, 15 Jul 2014 23:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-07-15-installing-cassandra-spark-stack</guid>
@@ -32,7 +32,7 @@
     
     <item>
       <title>Portacluster: System Imaging</title>
-	  <link>http://tobert.github.io/post/2014-07-14-portacluster-system-imaging.html</link>
+	  <link>https://tobert.github.io/post/2014-07-14-portacluster-system-imaging.html</link>
       <pubDate>Mon, 14 Jul 2014 23:10:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-07-14-portacluster-system-imaging</guid>
@@ -41,7 +41,7 @@
     
     <item>
       <title>Running Cassandra inside Docker</title>
-	  <link>http://tobert.github.io/post/2014-06-26-cassandra-and-docker.html</link>
+	  <link>https://tobert.github.io/post/2014-06-26-cassandra-and-docker.html</link>
       <pubDate>Thu, 26 Jun 2014 20:30:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-06-26-cassandra-and-docker</guid>
@@ -50,7 +50,7 @@
     
     <item>
       <title>Improved default settings for Linux machines</title>
-	  <link>http://tobert.github.io/post/2014-06-24-linux-defaults.html</link>
+	  <link>https://tobert.github.io/post/2014-06-24-linux-defaults.html</link>
       <pubDate>Tue, 24 Jun 2014 18:30:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-06-24-linux-defaults</guid>
@@ -59,7 +59,7 @@
     
     <item>
       <title>JBOD vs RAID</title>
-	  <link>http://tobert.github.io/post/2014-06-17-jbod-vs-raid.html</link>
+	  <link>https://tobert.github.io/post/2014-06-17-jbod-vs-raid.html</link>
       <pubDate>Tue, 17 Jun 2014 22:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-06-17-jbod-vs-raid</guid>
@@ -68,7 +68,7 @@
     
     <item>
       <title>Publishing pcstat Binaries on Github</title>
-	  <link>http://tobert.github.io/post/2014-05-06-publishing-pcstat-binaries-on-github.html</link>
+	  <link>https://tobert.github.io/post/2014-05-06-publishing-pcstat-binaries-on-github.html</link>
       <pubDate>Tue, 06 May 2014 23:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-05-06-publishing-pcstat-binaries-on-github</guid>
@@ -77,7 +77,7 @@
     
     <item>
       <title>A Quick Prototype</title>
-	  <link>http://tobert.github.io/post/2014-04-29-a-quick-prototype.html</link>
+	  <link>https://tobert.github.io/post/2014-04-29-a-quick-prototype.html</link>
       <pubDate>Tue, 29 Apr 2014 22:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-04-29-a-quick-prototype</guid>
@@ -86,7 +86,7 @@
     
     <item>
       <title>Getting Started With Fio</title>
-	  <link>http://tobert.github.io/post/2014-04-28-getting-started-with-fio.html</link>
+	  <link>https://tobert.github.io/post/2014-04-28-getting-started-with-fio.html</link>
       <pubDate>Mon, 28 Apr 2014 22:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-04-28-getting-started-with-fio</guid>
@@ -95,7 +95,7 @@
     
     <item>
       <title>Fio Output Explained</title>
-	  <link>http://tobert.github.io/post/2014-04-17-fio-output-explained.html</link>
+	  <link>https://tobert.github.io/post/2014-04-17-fio-output-explained.html</link>
       <pubDate>Fri, 18 Apr 2014 00:20:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-04-17-fio-output-explained</guid>
@@ -104,7 +104,7 @@
     
     <item>
       <title>New Blog</title>
-	  <link>http://tobert.github.io/post/2014-04-17-new-blog.html</link>
+	  <link>https://tobert.github.io/post/2014-04-17-new-blog.html</link>
       <pubDate>Thu, 17 Apr 2014 16:30:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-04-17-new-blog</guid>
@@ -113,7 +113,7 @@
     
     <item>
       <title>Benchmarking Disk Latency: Setup</title>
-	  <link>http://tobert.github.io/post/2014-03-29-benchmarking-disk-latency-setup.html</link>
+	  <link>https://tobert.github.io/post/2014-03-29-benchmarking-disk-latency-setup.html</link>
       <pubDate>Sat, 29 Mar 2014 01:56:59 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-03-29-benchmarking-disk-latency-setup</guid>
@@ -122,7 +122,7 @@
     
     <item>
       <title>Mirrored FAT32 EFI Boot Partitions</title>
-	  <link>http://tobert.github.io/post/2014-03-25-mirrored-fat32-efi-boot-partitions.html</link>
+	  <link>https://tobert.github.io/post/2014-03-25-mirrored-fat32-efi-boot-partitions.html</link>
       <pubDate>Tue, 25 Mar 2014 04:49:05 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-03-25-mirrored-fat32-efi-boot-partitions</guid>
@@ -131,7 +131,7 @@
     
     <item>
       <title>Running at Night</title>
-	  <link>http://tobert.github.io/post/2014-03-22-running-at-night.html</link>
+	  <link>https://tobert.github.io/post/2014-03-22-running-at-night.html</link>
       <pubDate>Sat, 22 Mar 2014 01:52:58 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-03-22-running-at-night</guid>
@@ -140,7 +140,7 @@
     
     <item>
       <title>Primitive Tooling</title>
-	  <link>http://tobert.github.io/post/2014-03-19-primitive-tooling.html</link>
+	  <link>https://tobert.github.io/post/2014-03-19-primitive-tooling.html</link>
       <pubDate>Wed, 19 Mar 2014 20:54:14 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-03-19-primitive-tooling</guid>
@@ -149,7 +149,7 @@
     
     <item>
       <title>Open Source Video Production</title>
-	  <link>http://tobert.github.io/post/2014-03-10-open-source-video-production.html</link>
+	  <link>https://tobert.github.io/post/2014-03-10-open-source-video-production.html</link>
       <pubDate>Mon, 10 Mar 2014 19:52:59 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-03-10-open-source-video-production</guid>
@@ -158,7 +158,7 @@
     
     <item>
       <title>Marriage Stuff</title>
-	  <link>http://tobert.github.io/post/2014-02-19-marriage-stuff.html</link>
+	  <link>https://tobert.github.io/post/2014-02-19-marriage-stuff.html</link>
       <pubDate>Wed, 19 Feb 2014 05:50:52 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-02-19-marriage-stuff</guid>
@@ -167,7 +167,7 @@
     
     <item>
       <title>Portacluster</title>
-	  <link>http://tobert.github.io/post/2014-02-07-portacluster.html</link>
+	  <link>https://tobert.github.io/post/2014-02-07-portacluster.html</link>
       <pubDate>Fri, 07 Feb 2014 21:08:21 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-02-07-portacluster</guid>
@@ -176,7 +176,7 @@
     
     <item>
       <title>Read this NAO</title>
-	  <link>http://tobert.github.io/post/2014-02-07-read-this-nao.html</link>
+	  <link>https://tobert.github.io/post/2014-02-07-read-this-nao.html</link>
       <pubDate>Fri, 07 Feb 2014 20:27:59 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2014-02-07-read-this-nao</guid>
@@ -185,7 +185,7 @@
     
     <item>
       <title>日本2014訪問</title>
-	  <link>http://tobert.github.io/post/Japan-2014-02-07-2014.html</link>
+	  <link>https://tobert.github.io/post/Japan-2014-02-07-2014.html</link>
       <pubDate>Fri, 07 Feb 2014 00:37:29 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>Japan-2014-02-07-2014</guid>
@@ -194,7 +194,7 @@
     
     <item>
       <title>Thermocouples: safe &amp; silent failures</title>
-	  <link>http://tobert.github.io/post/2013-12-12-thermocouples-safe-silent-failures.html</link>
+	  <link>https://tobert.github.io/post/2013-12-12-thermocouples-safe-silent-failures.html</link>
       <pubDate>Thu, 12 Dec 2013 23:34:30 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2013-12-12-thermocouples-safe-silent-failures</guid>
@@ -203,7 +203,7 @@
     
     <item>
       <title>Arch Linux on ZFS</title>
-	  <link>http://tobert.github.io/post/2013-11-12-arch-linux-on-zfs.html</link>
+	  <link>https://tobert.github.io/post/2013-11-12-arch-linux-on-zfs.html</link>
       <pubDate>Tue, 12 Nov 2013 22:12:48 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2013-11-12-arch-linux-on-zfs</guid>
@@ -212,7 +212,7 @@
     
     <item>
       <title>Foodfight!</title>
-	  <link>http://tobert.github.io/post/2013-11-06-foodfight.html</link>
+	  <link>https://tobert.github.io/post/2013-11-06-foodfight.html</link>
       <pubDate>Wed, 06 Nov 2013 05:41:41 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2013-11-06-foodfight</guid>
@@ -221,7 +221,7 @@
     
     <item>
       <title>Endurance Predation</title>
-	  <link>http://tobert.github.io/post/2013-10-11-endurance-predation.html</link>
+	  <link>https://tobert.github.io/post/2013-10-11-endurance-predation.html</link>
       <pubDate>Fri, 11 Oct 2013 01:42:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2013-10-11-endurance-predation</guid>
@@ -230,7 +230,7 @@
     
     <item>
       <title>Hello (again) World</title>
-	  <link>http://tobert.github.io/post/2013-10-07-hello-again-world.html</link>
+	  <link>https://tobert.github.io/post/2013-10-07-hello-again-world.html</link>
       <pubDate>Mon, 07 Oct 2013 19:15:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2013-10-07-hello-again-world</guid>
@@ -239,7 +239,7 @@
     
     <item>
       <title>Test &amp; Build Automation with btrfs</title>
-	  <link>http://tobert.github.io/post/2012-05-17-test-build-automation-with-btrfs.html</link>
+	  <link>https://tobert.github.io/post/2012-05-17-test-build-automation-with-btrfs.html</link>
       <pubDate>Thu, 17 May 2012 19:08:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2012-05-17-test-build-automation-with-btrfs</guid>
@@ -248,7 +248,7 @@
     
     <item>
       <title>New Experiment Language Choices</title>
-	  <link>http://tobert.github.io/post/2011-07-21-new-experiment-language-choices.html</link>
+	  <link>https://tobert.github.io/post/2011-07-21-new-experiment-language-choices.html</link>
       <pubDate>Wed, 21 Sep 2011 06:13:25 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2011-07-21-new-experiment-language-choices</guid>
@@ -257,7 +257,7 @@
     
     <item>
       <title>Over-breeding &amp; Culling EC2 Instances for IO Performance</title>
-	  <link>http://tobert.github.io/post/2011-09-21-over-breeding-culling-ec2-instances-for.html</link>
+	  <link>https://tobert.github.io/post/2011-09-21-over-breeding-culling-ec2-instances-for.html</link>
       <pubDate>Wed, 21 Sep 2011 06:06:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2011-09-21-over-breeding-culling-ec2-instances-for</guid>
@@ -266,7 +266,7 @@
     
     <item>
       <title>My Christmas Wish</title>
-	  <link>http://tobert.github.io/post/2010-12-23-my-christmas-wish.html</link>
+	  <link>https://tobert.github.io/post/2010-12-23-my-christmas-wish.html</link>
       <pubDate>Thu, 23 Dec 2010 21:42:00 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2010-12-23-my-christmas-wish</guid>
@@ -275,7 +275,7 @@
     
     <item>
       <title>Ride Report 2010-09-05</title>
-	  <link>http://tobert.github.io/post/2010-09-06-ride-report-2010-09-05.html</link>
+	  <link>https://tobert.github.io/post/2010-09-06-ride-report-2010-09-05.html</link>
       <pubDate>Mon, 06 Sep 2010 04:49:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2010-09-06-ride-report-2010-09-05</guid>
@@ -284,7 +284,7 @@
     
     <item>
       <title>Blocking SSH Attacks</title>
-	  <link>http://tobert.github.io/post/2010-08-12-blocking-ssh-attacks.html</link>
+	  <link>https://tobert.github.io/post/2010-08-12-blocking-ssh-attacks.html</link>
       <pubDate>Thu, 12 Aug 2010 19:12:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2010-08-12-blocking-ssh-attacks</guid>
@@ -293,7 +293,7 @@
     
     <item>
       <title>Virtualization Madness</title>
-	  <link>http://tobert.github.io/post/2008-04-06-virtualization-madness.html</link>
+	  <link>https://tobert.github.io/post/2008-04-06-virtualization-madness.html</link>
       <pubDate>Sun, 06 Apr 2008 18:50:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2008-04-06-virtualization-madness</guid>
@@ -302,7 +302,7 @@
     
     <item>
       <title>Xen Networking</title>
-	  <link>http://tobert.github.io/post/2007-09-07-xen-networking.html</link>
+	  <link>https://tobert.github.io/post/2007-09-07-xen-networking.html</link>
       <pubDate>Fri, 07 Sep 2007 15:18:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2007-09-07-xen-networking</guid>
@@ -311,7 +311,7 @@
     
     <item>
       <title>Moving sucks.</title>
-	  <link>http://tobert.github.io/post/2007-05-20-moving-sucks-can-i-have-amen.html</link>
+	  <link>https://tobert.github.io/post/2007-05-20-moving-sucks-can-i-have-amen.html</link>
       <pubDate>Sun, 20 May 2007 03:30:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2007-05-20-moving-sucks-can-i-have-amen</guid>
@@ -320,7 +320,7 @@
     
     <item>
       <title>New Job, New City</title>
-	  <link>http://tobert.github.io/post/2007-04-04-new-job-new-city.html</link>
+	  <link>https://tobert.github.io/post/2007-04-04-new-job-new-city.html</link>
       <pubDate>Wed, 04 Apr 2007 14:18:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2007-04-04-new-job-new-city</guid>
@@ -329,7 +329,7 @@
     
     <item>
       <title>First Post!</title>
-	  <link>http://tobert.github.io/post/2007-02-27-hi-my-name-is-al-tobey.html</link>
+	  <link>https://tobert.github.io/post/2007-02-27-hi-my-name-is-al-tobey.html</link>
       <pubDate>Tue, 27 Feb 2007 00:57:00 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2007-02-27-hi-my-name-is-al-tobey</guid>
@@ -338,7 +338,7 @@
     
     <item>
       <title>64-bit perl on HP-UX (PARISC or Itanium)</title>
-	  <link>http://tobert.github.io/post/2005-10-13-64-bit-perl-on-hp-ux-parisc-or-itanium.html</link>
+	  <link>https://tobert.github.io/post/2005-10-13-64-bit-perl-on-hp-ux-parisc-or-itanium.html</link>
       <pubDate>Thu, 13 Oct 2005 02:30:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2005-10-13-64-bit-perl-on-hp-ux-parisc-or-itanium</guid>
@@ -347,7 +347,7 @@
     
     <item>
       <title>Building pdksh on HP-UX/Itanium</title>
-	  <link>http://tobert.github.io/post/2005-09-20-pdksh-5.html</link>
+	  <link>https://tobert.github.io/post/2005-09-20-pdksh-5.html</link>
       <pubDate>Tue, 20 Sep 2005 23:00:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2005-09-20-pdksh-5</guid>
@@ -356,7 +356,7 @@
     
     <item>
       <title>root-tail on nautilus/kde/xfdesktop</title>
-	  <link>http://tobert.github.io/post/2004-07-01-i-hacked-root-tail-to-work-with.html</link>
+	  <link>https://tobert.github.io/post/2004-07-01-i-hacked-root-tail-to-work-with.html</link>
       <pubDate>Thu, 01 Jul 2004 01:00:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2004-07-01-i-hacked-root-tail-to-work-with</guid>
@@ -365,7 +365,7 @@
     
     <item>
       <title>SNMP plugins for Nagios</title>
-	  <link>http://tobert.github.io/post/2004-06-30-i-wrote-couple-snmp-plugins-for-nagios.html</link>
+	  <link>https://tobert.github.io/post/2004-06-30-i-wrote-couple-snmp-plugins-for-nagios.html</link>
       <pubDate>Wed, 30 Jun 2004 19:00:00 PDT</pubDate>
       <author>Albert P Tobey</author>
       <guid>2004-06-30-i-wrote-couple-snmp-plugins-for-nagios</guid>
@@ -374,7 +374,7 @@
     
     <item>
       <title>A shell implementation of bootprofile</title>
-	  <link>http://tobert.github.io/post/2003-12-02-here-is-drop-in-replacement-for-rajeev.html</link>
+	  <link>https://tobert.github.io/post/2003-12-02-here-is-drop-in-replacement-for-rajeev.html</link>
       <pubDate>Tue, 02 Dec 2003 17:00:00 -0700</pubDate>
       <author>Albert P Tobey</author>
       <guid>2003-12-02-here-is-drop-in-replacement-for-rajeev</guid>

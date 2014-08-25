@@ -14,17 +14,18 @@
      <!-- twitter cards -->
      <meta name="twitter:card" content="summary">
      <meta name="twitter:site" content="@AlTobey">
-     <meta name="twitter:title" content="A Quick Prototype : @AlTobey Writes">
+     <meta name="twitter:title" content="A Quick Prototype : Al Tobey Writes">
      <meta name="twitter:creator" content="@AlTobey">
      <meta name="twitter:description" content="A short story about hacking a prototype that is turning into an end-user tool.">
-     <meta name="twitter:domain" content="http://tobert.github.io">
+     <meta name="twitter:domain" content="https://tobert.github.io">
 
     <title>A Quick Prototype</title>
-    <link rel="canonical" href="http://tobert.github.io/post/2014-04-29-a-quick-prototype.html">
-    <link href="http://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="@AlTobey Writes" />
+    <link rel="canonical" href="https://tobert.github.io/post/2014-04-29-a-quick-prototype.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Al Tobey Writes" />
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/tobert.css">
   </head>
 <body>
@@ -40,7 +41,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">@AlTobey Writes</a>
+      <a class="navbar-brand" href="/">Al Tobey Writes</a>
     </div>
 
     <div class="navbar-collapse collapse">
@@ -51,7 +52,18 @@
             <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
           </ul>
         </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://twitter.com/AlTobey"><i class="fa fa-twitter"></i> | @AlTobey</a></li>
+              <li><a href="https://plus.google.com/+AlTobey"><i class="fa fa-google-plus"></i> | +AlTobey</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa fa-github"></i> | tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa fa-rss"></i> | RSS</a></li>
+            </ul>
+        </li>
       </ul>
+
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/about.html">About</a></li>
         <li><a href="/contact.html">Contact</a></li>
@@ -63,10 +75,24 @@
 <!-- end of header.html -->
 <!-- begin container-top -->
 <div class="container">
-<hr/>
-<h1>A Quick Prototype</h1>
-<hr/>
-<br/>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">A Quick Prototype</h1>
+      <span class="pull-right">
+        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/post/2014-04-29-a-quick-prototype.html&text=A Quick Prototype&via=AlTobey"
+           class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
+        <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/post/2014-04-29-a-quick-prototype.html"
+           class="btn btn-facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://plus.google.com/share?url=https://tobert.github.io/post/2014-04-29-a-quick-prototype.html"
+           class="btn btn-google-plus"><i class="fa fa-google-plus"></i></a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
 <!-- end container-top -->
 <p>I've been spending a lot of time with <a href="/post/2014-04-28-getting-started-with-fio.html">fio</a>
 <a href="/post/2014-04-17-fio-output-explained.html">lately</a>. I've also been tweeting about it and the
@@ -127,10 +153,14 @@ pass. We all want to write great code, but you have to start somewhere. Go for i
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">
-    
-    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/a-quick-prototype.md">ChangeLog</a>
-    
-    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/a-quick-prototype.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Albert P. Tobey</a></span>
+      </div>
+    </div>
   </div>
 </footer>
 
