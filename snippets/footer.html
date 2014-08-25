@@ -2,12 +2,14 @@
 <footer class="footer">
   <hr style="padding: 1em;"/>
   <div id="footer" class="container">
-    {{ if .Page.SrcRel }}
-    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src{{ .Page.SrcRel }}">ChangeLog</a>
-    {{ else }}
-    <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io">Source Code</a>
-    {{ end }}
-    <a class="pull-right" style="padding-right: 1em;" href="/attributes">License &amp; Credits</a>
+    <div class="row">
+      <div class="col-sm-6">
+        {{ if .Page.SrcRel }}<a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src{{ .Page.SrcRel }}">ChangeLog</a>{{ else }}<a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io">Source Code</a>{{ end }}
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Albert P. Tobey</a></span>
+      </div>
+    </div>
   </div>
 </footer>
 
