@@ -1,9 +1,9 @@
 ---
-id: "2014-09-24-adhd"
+id: "2014-09-25-adhd"
 title: "ADHD"
 abstract: "My experience with ADHD so far."
 tags: ["adhd", "personal"]
-pubdate: 2014-09-24T23:00:00Z
+pubdate: 2014-09-25T22:30:00Z
 ---
 
 ADHD
@@ -16,12 +16,12 @@ it. So what's the problem?
 I have what's called Attention Deficit Hyperactivity Disorder. The ADHD name
 is one of the most egregiously misleading names for a thing I can think of. I don't have
 a deficit of attention. If anything it's a surplus. Not all people with ADHD are
-hyperactive. Finally, while it can be debilitating, I have a hard time seeing it
+hyperactive. Finally, while it can be make life difficult, I have a hard time seeing it
 as a disorder, because of how many things I'm good at because of it.
 
 A friend of mine who has a child with ADHD asked me for some tips a while back. I've
 been thinking about what to write for a while and haven't really settled on anything
-so here we go...
+so here we go. This is going to be a bit stream-of-consciousness or I'll never finish it.
 
 **Pro Tips**: various friends have asked me for tips on how to manage this beast, so
 I'm going back through and adding a tip related to each section.
