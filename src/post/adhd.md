@@ -17,13 +17,16 @@ A friend of mine who has a child with ADHD asked me for some tips a while back. 
 been thinking about what to write for a while and haven't really settled on anything
 so here we go...
 
+**Pro Tips**: various friends have asked me for tips on how to manage this beast, so
+I'm going back through and adding a tip related to each section.
+
 Living with ADHD (11)
 =====================
 
 As a father, I've spent a lot more time than I otherwise would trying to remember what
 it was like being my son's age. He's 4. Fortunately I can remember quite a bit going
 back to around this time in his life. It's a huge help when, as
-[@Jasont1022](https://twitter.com/Jasont1022) puts it, he's "being 4". This introspection
+[@Jasont1022](https://twitter.com/Jasont1022) puts it, "he's being four". This introspection
 often turns up memories of my awful academic life, which makes a lot more sense now.
 
 I remember hearing about ADD on TV as a kid, but
@@ -44,6 +47,10 @@ We discussed treatment options and explored a few digressions before he had to (
 me out. I declined the idea of using neuro-feedback treatment and agreed to talk to my doctor
 about medication if I decided to explore that avenue (more on that later).
 
+**Pro Tip**: if you think you have ADHD or are on the Autism spectrum, *take the test*! I wasted
+too many years of my life wondering. I tried lots of techniques before getting a diagnosis but
+never really stuck with them because I hadn't really acknowledged there was a problem.
+
 The Problem (3)
 ===============
 
@@ -54,10 +61,11 @@ himself ...." I know my teachers were frustrated. What I don't think they ever u
 is how frustrated I was too. I wanted to do it. I just couldn't find the energy, no matter
 how hard I tried.
 
-Different people will have different experiences, but one that I think is common is the hump.
+As it goes in life, every person with ADHD will have different experiences. One that I think
+is common is what I refer to as 'the hump'.
 There might be a clinical term for it, but who cares. It's the hump. It's related to impulse
-control, which is certainly something I struggle with, but the hump is something like an
-inversion of impulse control. Umm. Let me tell you about homework.
+control, which is certainly something I struggle with, but the hump is something like
+anti-impulsiveness but really it's an impulse problem. Umm. Let me tell you about homework.
 
 Homework (5)
 ============
@@ -144,6 +152,65 @@ I've found stimulants to be quite useful in getting things done, but also notice
 they take. I take the pills on days I think I'll really need them. It seems to be a stress
 tradeoff - save a little avoidance stress now, pay the price later. Take it for a few days,
 pay for a couple weeks.
+
+Running (3)
+===========
+
+When I started running, my wife said, "don't turn into one of those running freaks." I'm
+afraid I've failed again. I'm one of those people and I love it. Over the years I've tried
+a lot of different exercises and didn't find any I could get into. Weight training is cool
+but I can't focus. Karate was fun, but I couldn't get into practicing outside class so I
+fell out.
+
+Our Samoyed, Rufus, joined us in early 2013. Being a working dog, he needs a lot of exercise
+to be mentally healthy, so once he cleared all of his shots I started walking / running with
+him every day. It was really, really hard at first because I couldn't run more than a block
+without running out of air, but there was a challenge in that. Before I started running, I
+never really spent more than short periods on any atheltic endeavor so I didn't appreciate
+how mental a lot it is until recently. As a trombone player, I should have known, but then
+again maybe that's why I could never get past "pretty good."
+
+Running is a mental exercise. Getting that first mile is simply a matter of practicing the
+art of convincing yourself that you're not actually going to die and you should try to go
+just a little bit further. That's a mouthful, so we call it running.
+
+The other burden of owning a sled dog is that they are stuck wearing a fur coat all year
+round, so running with Rufus in San Jose heat isn't so great for him. My workaround is
+running with him after dusk. This has the additional benefit of being quite a bit more
+dangerous than running in daylight. I call it a benefit because I've found that just
+managing my breathing and the hazards around me are enough to keep my mind busy for the
+whole run. Add in my desire for mastery and it's a pretty good way to keep from getting
+bored.
+
+I know people who feel like being in better shape helps them deal with the ADHD. Running
+has definitely benefited me and I suspect most of the benefit comes from the mental work
+of running more than the purely physical part.
+
+The runner's wall is probably the closest
+thing NTs will experience to the hump. It's a feeling you get after running some distance,
+where your mind and body conspire to convince you that your ass looks just fine as it is
+and it's awful hot outside and nobody else will know if you only did 2 miles instead of 3
+so maybe you should go home and have a nice glass of lemonade. I usually hit the wall a
+couple times on every run.
+
+The first wall is between the time I decide it's time to run
+and the time I close the door behind me. I call it the procrastination phase. It takes
+about an hour and drives Rufus crazy.
+
+The second is usually around 1.5 miles. I'm all warmed up. Usually feeling pretty good. This
+is the easiest to overcome because I know I have plenty of resources (water, sugar). Just keep
+pushing on and it passes.
+
+The third wall comes around mile 3. One way I mitigate a lot of the risk of running at night
+is by using the same route every time. I know where every sidewalk bulge is. Where the
+[Sweetgum](http://en.wikipedia.org/wiki/Liquidambar#mediaviewer/File:Sweetgum_tree_seed_pods.jpg)
+trees are. One result is that around mile 3 I'm usually going uphill. The other is that I
+am practicing monotony.
+
+**Pro Tip**: practice monotony. Find some thing that is engaging enough to do regularly and
+combine it with something monotonous. This similar to chasing mastery while doing monotonous
+tasks, but inverted. Find monotonous tasks (that can be) attached to activities that are
+motivated by mastery and do it. Practice!
 
 Kthxbai!
 ========
