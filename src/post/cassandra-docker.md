@@ -6,6 +6,14 @@ tags: ["docker", "cassandra"]
 pubdate: 2014-06-26T20:30:00Z
 ---
 
+### Update 2014-11-07
+
+I've revamped cassandra-docker with a new entrypoint. It is available on
+Github as `tobert/cassandra:2.1.1` and `tobert/cassandra:2.0.11`. The instructions
+are fairly similar but the syntax and paths have changed. The
+[README.md](https://github.com/tobert/cassandra-docker/blob/master/README.md) has further
+details.
+
 ### TL;DR: use volumes for /var/lib/cassandra
 
 As a fan of Linux containers and evangelist for Apache Cassandra, I get a lot
