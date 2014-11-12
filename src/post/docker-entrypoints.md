@@ -52,11 +52,14 @@ Here we see procedural code being used to build a string of options to pass to t
 
 So what I'm saying is, the way processes are started is nowhere near precise. We're passing an array of parameters to a shell script that turns those params into variables that get concetenated into a huge string so it can be parsed again and turned back into a couple arrays. In the process, a bunch of environment variables get leaked, perhaps a [shellshock exploit](https://github.com/tobert/sh-c-shock/blob/master/test.sh), not to mention all the opportunities for strings to get mangled.
 
-Ever since the shellshock fiasco, I've been thinking about how to get the shell out of the process of launching services. We've come a long ways in recent years with things like [systemd units](http://www.freedesktop.org/software/systemd/man/systemd.unit.html), but even that doesn't go far enough in my opinion because it still uses a command string where an array is [feasible](https://github.com/toml-lang/toml#array) even in an INI-like format. When I kept coming up empty, I decided to hack something up and now [sprok](https://github.com/tobert/sprok) exists.
+Ever since the shellshock fiasco, I've been thinking about how to get the shell out of the process of launching services. We've come a long ways in recent years with things like [systemd units](http://www.freedesktop.org/software/systemd/man/systemd.unit.html), but even that doesn't go far enough in my opinion. Why use a command strings instead of having a syntax for argv [arrays](https://github.com/toml-lang/toml#array). When my search for a precise launcher kept coming up empty, I decided to hack something up and now [sprok](https://github.com/tobert/sprok) exists. I wired up a few things and felt like it is worthwhile.
 
 ### Entrypoints
 
-The new entrypoint for cassandra-docker, [uses sprok to achieve precision](https://github.com/tobert/cassandra-docker/blob/master/conf/sproks/cassandra.yaml). It also uses it to enable some UX improvements I've wanted for a while.
+The new entrypoint for cassandra-docker, [uses sprok to achieve precision](https://github.com/tobert/cassandra-docker/blob/master/conf/sproks/cassandra.yaml). It also uses it to enable some UX improvements I've wanted for a while, such as wrapping all the subcommands, moving all mutable state (config, logs, data) onto a single root path, and precision.
 
+### User Experience
 
-TODO: finish this
+Projects like Cassandra tend to have tools that are shipped with the core product - you know, nodetool, cqlsh, cassandra-stress. Mysql has `mysql`, `mysqld`, and a host of supporting utilities. The special thing about JVM projects is that they ship consistently awful shell code in reliably inconsistent filesystem trees. Namespaces and cgroups have been around for a while, not to mention openvz, jails or zones. What Docker nailed that these others didn't is UX. When I'm working with Docker, it's natural to think a lot about UX.
+
+STILL NOT DONE
