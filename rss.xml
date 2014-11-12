@@ -7,10 +7,19 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-09-25</pubDate>
-	<lastBuildDate>2014-11-07</lastBuildDate>
+	<pubDate>2014-11-07</pubDate>
+	<lastBuildDate>2014-11-12</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>Docker Entrypoints and the UX of Containers</title>
+	  <link>https://tobert.github.io/post/2014-11-07-docker-entrypoints.html</link>
+      <pubDate>Fri, 07 Nov 2014 20:30:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2014-11-07-docker-entrypoints</guid>
+	  <description>Docker entrypoints provide an opportunity to give your users a better UX than they would have without Docker</description>
+    </item>
     
     <item>
       <title>ADHD</title>

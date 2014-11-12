@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="Docker entrypoints provide an opportunity to give your users a better UX than they would have without Docker">
+    <meta name="keywords" content="docker, cassandra, entrypoint, sprok, ">
+    <meta property="article:published_time" content="2014-11-07"/>
+    <meta property="article:modified_time" content="2014-11-07"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="Docker Entrypoints and the UX of Containers : Al Tobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="Docker entrypoints provide an opportunity to give your users a better UX than they would have without Docker">
+     <meta name="twitter:domain" content="https://tobert.github.io">
+
+    <title>Docker Entrypoints and the UX of Containers</title>
+    <link rel="canonical" href="https://tobert.github.io/post/2014-11-07-docker-entrypoints.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Al Tobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Al Tobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://twitter.com/AlTobey"><i class="fa fa-twitter"></i> | @AlTobey</a></li>
+              <li><a href="https://plus.google.com/+AlTobey"><i class="fa fa-google-plus"></i> | +AlTobey</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa fa-github"></i> | tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa fa-rss"></i> | RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/docker-entrypoints.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">Docker Entrypoints and the UX of Containers</h1>
+      <span class="pull-right">
+        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/post/2014-11-07-docker-entrypoints.html&text=Docker Entrypoints and the UX of Containers&via=AlTobey"
+           class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
+        <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/post/2014-11-07-docker-entrypoints.html"
+           class="btn btn-facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://plus.google.com/share?url=https://tobert.github.io/post/2014-11-07-docker-entrypoints.html"
+           class="btn btn-google-plus"><i class="fa fa-google-plus"></i></a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<h3>Entrypoints</h3>
+
+<p>When building containers using Dockerfiles, you can specify an entrypoint for the container
+that Docker will use as process 1 inside the container. This is the default command that
+is executed on <code>docker run</code>. It looks like this: <code>ENTRYPOINT /bin/cassandra-docker</code>. When this is in place,
+<code>docker run</code> will execute that program with remaining arguments passed to it unless the user overrides
+it with <code>docker run --entrypoint=command</code>. This has some handy side-effects.</p>
+
+<p>It seems that most people are going with a process supervisor these days. That's a fine
+approach, but it doesn't take full advantage of shipping your software inside a Docker image.</p>
+
+<h3>Precision</h3>
+
+<p>One of my goals for the <a href="https://github.com/tobert/cassandra-docker">cassandra-docker</a> images
+is to have very precise control over how Cassandra and its tools start. It is common to have to edit
+shell scripts to tune projects that use the JVM and this has always bothered me. What started out as a
+clever way to build a classpath has grown over time to be a sprawling set of shell scripts with lots
+of undefined behavior. I also don't like the way '../' shows up in so many paths. It could be cleaned up
+but it works, so there it is. It makes me itchy every time I see it.</p>
+
+<blockquote>
+<p>cassandra 9359 9358 19 19:34 pts/0 00:00:06 java -ea -javaagent:./../lib/jamm-0.2.6.jar -XX:+CMSClassUnloadingEnabled -XX:+UseThreadPriorities -XX:ThreadPriorityPolicy=42 -Xms3941M -Xmx3941M -Xmn800M -XX:+HeapDumpOnOutOfMemoryError -Xss256k -XX:StringTableSize=1000003 -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSParallelRemarkEnabled -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=1 -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+UseTLAB -XX:CompileCommandFile=./../conf/hotspot_compiler -XX:CMSWaitDuration=10000 -XX:+UseCondCardMark -Djava.net.preferIPv4Stack=true -Dcom.sun.management.jmxremote.port=7199 -Dcom.sun.management.jmxremote.rmi.port=7199 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dlogback.configurationFile=logback.xml -Dcassandra.logdir=./../logs -Dcassandra.storagedir=./../data -Dcassandra-foreground=yes -cp ./../conf:./../build/classes/main:./../build/classes/thrift:./../lib/airline-0.6.jar:./../lib/antlr-runtime-3.5.2.jar:./../lib/apache-cassandra-2.1.1.jar:./../lib/apache-cassandra-clientutil-2.1.1.jar:./../lib/apache-cassandra-thrift-2.1.1.jar:./../lib/commons-cli-1.1.jar:./../lib/commons-codec-1.2.jar:./../lib/commons-lang3-3.1.jar:./../lib/commons-math3-3.2.jar:./../lib/compress-lzf-0.8.4.jar:./../lib/concurrentlinkedhashmap-lru-1.4.jar:./../lib/disruptor-3.0.1.jar:./../lib/guava-16.0.jar:./../lib/high-scale-lib-1.0.6.jar:./../lib/jackson-core-asl-1.9.2.jar:./../lib/jackson-mapper-asl-1.9.2.jar:./../lib/jamm-0.2.6.jar:./../lib/javax.inject.jar:./../lib/jbcrypt-0.3m.jar:./../lib/jline-1.0.jar:./../lib/jna-4.0.0.jar:./../lib/json-simple-1.1.jar:./../lib/libthrift-0.9.1.jar:./../lib/logback-classic-1.1.2.jar:./../lib/logback-core-1.1.2.jar:./../lib/lz4-1.2.0.jar:./../lib/metrics-core-2.2.0.jar:./../lib/netty-all-4.0.23.Final.jar:./../lib/reporter-config-2.1.0.jar:./../lib/slf4j-api-1.7.2.jar:./../lib/snakeyaml-1.11.jar:./../lib/snappy-java-1.0.5.2.jar:./../lib/stream-2.5.2.jar:./../lib/stringtemplate-4.0.2.jar:./../lib/super-csv-2.1.0.jar:./../lib/thrift-server-0.3.7.jar org.apache.cassandra.service.CassandraDaemon</p>
+</blockquote>
+
+<p>So what about precision?</p>
+
+<p>While the most common options - heap sizes - can be overridden in <code>/etc/{default,sysconfig}/cassandra</code>, there are plenty
+of other settings I'm interested in benchmarking that require editing a shell script. This could be automated using
+templates, but the number of input variables grows to include most of them quickly if you want to avoid using conflicting
+settings (such as different GC strategies).</p>
+
+<pre><code># GC tuning options
+JVM_OPTS=&quot;$JVM_OPTS -XX:+UseParNewGC&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:+UseConcMarkSweepGC&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:+CMSParallelRemarkEnabled&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:SurvivorRatio=8&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:MaxTenuringThreshold=1&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:CMSInitiatingOccupancyFraction=75&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:+UseCMSInitiatingOccupancyOnly&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:+UseTLAB&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:CompileCommandFile=$CASSANDRA_CONF/hotspot_compiler&quot;
+JVM_OPTS=&quot;$JVM_OPTS -XX:CMSWaitDuration=10000&quot;
+
+</code></pre>
+
+<p>Here we see procedural code being used to build a string of options to pass to the JVM. This is what almost everybody does, but it is not how the kernel does things. The execve(2p) system call looks like this: <code>int execve(const char *path, char *const argv[], char *const envp[]);</code>. Path is usually something like <code>/usr/bin/java</code>, argv[] is an <em>array</em>. Envp, surprisingly, is another array of <code>KEY=VALUE</code> pairs.</p>
+
+<p>So what I'm saying is, the way processes are started is nowhere near precise. We're passing an array of parameters to a shell script that turns those params into variables that get concetenated into a huge string so it can be parsed again and turned back into a couple arrays. In the process, a bunch of environment variables get leaked, perhaps a <a href="https://github.com/tobert/sh-c-shock/blob/master/test.sh">shellshock exploit</a>, not to mention all the opportunities for strings to get mangled.</p>
+
+<p>Ever since the shellshock fiasco, I've been thinking about how to get the shell out of the process of launching services. We've come a long ways in recent years with things like <a href="http://www.freedesktop.org/software/systemd/man/systemd.unit.html">systemd units</a>, but even that doesn't go far enough in my opinion. Why use a command strings instead of having a syntax for argv <a href="https://github.com/toml-lang/toml#array">arrays</a>. When my search for a precise launcher kept coming up empty, I decided to hack something up and now <a href="https://github.com/tobert/sprok">sprok</a> exists. I wired up a few things and felt like it is worthwhile.</p>
+
+<h3>Entrypoints</h3>
+
+<p>The new entrypoint for cassandra-docker, <a href="https://github.com/tobert/cassandra-docker/blob/master/conf/sproks/cassandra.yaml">uses sprok to achieve precision</a>. It also uses it to enable some UX improvements I've wanted for a while, such as wrapping all the subcommands, moving all mutable state (config, logs, data) onto a single root path, and precision.</p>
+
+<h3>User Experience</h3>
+
+<p>Projects like Cassandra tend to have tools that are shipped with the core product - you know, nodetool, cqlsh, cassandra-stress. Mysql has <code>mysql</code>, <code>mysqld</code>, and a host of supporting utilities. The special thing about JVM projects is that they ship consistently awful shell code in reliably inconsistent filesystem layouts. This leads to
+a poor user experience across projects. A comprehensive entrypoint provides an opportunity to work
+around this problem by providing a consistent experience.</p>
+
+<p>For Cassandra, this is what it looks like in <a href="https://github.com/tobert/cassandra-docker">cassandra-docker</a>:</p>
+
+<pre><code class="sh">docker run --name cass -d -v /srv/cassandra:/data tobert/cassandra:2.1.1 cassandra -name &quot;My Cluster&quot;
+docker exec cass nodetool status
+docker exec cass cassandra-stress
+docker exec cass cqlsh
+</code></pre>
+
+<p>This intentionally looks just like the commands are being executed as-is, but that is not the case! While
+I could have set the PATH to include <code>/opt/cassandra/bin:/opt/cassandra/tools/bin</code>, that does not provide
+any way to hook these tools and provide settings automatically, such as ports and IP addresses. This is
+a little tricky, but can be quite effective with a little pre-parsing of command-line arguments passed
+to the entrypoint.</p>
+
+<p>For example, <code>docker exec cass cqlsh</code> is automatically passed the IP of the default interface as its
+first argument <em>if no arguments are specified</em>. This is the expected default behavior for cqlsh, but
+it didn't work in my older containers because Cassandra is bound on the default IP rather than localhost.</p>
+
+<p>Another example is running nodetool. The nodetool shell script appends the JMX port with <code>-p $JMX_PORT</code>
+if the -p option is not used. The entrypoint takes care of this same job but can make more informed
+decisions about what parameters to pass since it's programmed to be &quot;docker aware&quot;.</p>
+
+<h3>Supervisors, Part 2</h3>
+
+<p>Many of my ops coleagues will have noticed that sprok and the cassandra-docker entrypoint call exec()
+and do not supervise processes. This is because I believe that process supervision is something the
+user or the user's framework should handle. Having the user handle supervision means they get full
+visibility into failures and get better control over containerized processes. This way, users who
+like runit or systemd or whatever can specify their own restart policies and target <code>docker run</code> rather
+than the cassandra process directly. Users of systems like Kubernetes, Fig, Mesos, and the others
+can use the same image without worrying about complex interactions between competing process supervisors.</p>
+
+<h3>Conclusion</h3>
+
+<p>A great entrypoint should be boring for your users. It can take care of all the details of running
+a given application inside Docker without requiring the user to learn project layouts or other minutae
+of the containerized application. For simple entrypoints with simple configurations,
+<a href="https://github.com/tobert/sprok">sprok</a> might
+be applicable, but I suspect you will find interesting ways to build entrypoints on your own.</p>
+
+<p>Please let me know if you see an entrypoint you like but tweeting at <a href="https://twitter.com/AlTobey">@AlTobey</a>.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/docker-entrypoints.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Albert P. Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
