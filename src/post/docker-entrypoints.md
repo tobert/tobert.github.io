@@ -48,21 +48,14 @@ JVM_OPTS="$JVM_OPTS -XX:CMSWaitDuration=10000"
 
 ```
 
-By the time you get all of the options into a data file, it starts to look an awwful lot like
-an argv array ...
+Here we see procedural code being used to build a string of options to pass to the JVM. This is what almost everybody does, but it is not how the kernel does things. The execve(2p) system call looks like this: `int execve(const char *path, char *const argv[], char *const envp[]);`. Path is usually something like `/usr/bin/java`, argv[] is an _array_. Envp, surprisingly, is another array of `KEY=VALUE` pairs.
 
-```yaml
-argv:
-  - /usr/bin/java
-  - -ea
-  - -javaagent:{{ glob "" "/opt/cassandra/lib/jamm-*.jar" }}
-  - -XX:+CMSClassUnloadingEnabled
-  - -XX:+UseThreadPriorities
-  - -XX:ThreadPriorityPolicy=42
-  - -Xms3941M
-  - -Xmx3941M
-  - -Xmn800M
-  ...
-```
+So what I'm saying is, the way processes are started is nowhere near precise. We're passing an array of parameters to a shell script that turns those params into variables that get concetenated into a huge string so it can be parsed again and turned back into a couple arrays. In the process, a bunch of environment variables get leaked, perhaps a [shellshock exploit](https://github.com/tobert/sh-c-shock/blob/master/test.sh), not to mention all the opportunities for strings to get mangled.
+
+Ever since the shellshock fiasco, I've been thinking about how to get the shell out of the process of launching services. We've come a long ways in recent years with things like [systemd units](http://www.freedesktop.org/software/systemd/man/systemd.unit.html), but even that doesn't go far enough in my opinion because it still uses a command string where an array is [feasible](https://github.com/toml-lang/toml#array) even in an INI-like format. When I kept coming up empty, I decided to hack something up and now [sprok](https://github.com/tobert/sprok) exists.
+
+### Entrypoints
+
+
 
 In the entrypoint for cassandra-docker, [this is exactly how it's done](https://github.com/tobert/cassandra-docker/blob/master/conf/sproks/cassandra.yaml).
