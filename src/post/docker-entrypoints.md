@@ -10,7 +10,7 @@ pubdate: 2014-11-07T20:30:00Z
 
 When building containers using Dockerfiles, you can specify an entrypoint for the container
 that Docker will use as process 1 inside the container. This is the default command that
-is executed on `docker run`. It looks like this: `ENTRYPOINT /bin/cassandra-docker`. When this is place,
+is executed on `docker run`. It looks like this: `ENTRYPOINT /bin/cassandra-docker`. When this is in place,
 `docker run` will execute that program with remaining arguments passed to it unless the user overrides
 it with `docker run --entrypoint=command`. This has some handy side-effects.
 
