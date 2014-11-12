@@ -62,6 +62,50 @@ The new entrypoint for cassandra-docker, [uses sprok to achieve precision](https
 
 ### User Experience
 
-Projects like Cassandra tend to have tools that are shipped with the core product - you know, nodetool, cqlsh, cassandra-stress. Mysql has `mysql`, `mysqld`, and a host of supporting utilities. The special thing about JVM projects is that they ship consistently awful shell code in reliably inconsistent filesystem trees. Namespaces and cgroups have been around for a while, not to mention openvz, jails or zones. What Docker nailed that these others didn't is UX. When I'm working with Docker, it's natural to think a lot about UX.
+Projects like Cassandra tend to have tools that are shipped with the core product - you know, nodetool, cqlsh, cassandra-stress. Mysql has `mysql`, `mysqld`, and a host of supporting utilities. The special thing about JVM projects is that they ship consistently awful shell code in reliably inconsistent filesystem layouts. This leads to
+a poor user experience across projects. A comprehensive entrypoint provides an opportunity to work
+around this problem by providing a consistent experience.
 
-STILL NOT DONE
+For Cassandra, this is what it looks like in [cassandra-docker](https://github.com/tobert/cassandra-docker):
+
+```sh
+docker run --name cass -d -v /srv/cassandra:/data tobert/cassandra:2.1.1 cassandra -name "My Cluster"
+docker exec cass nodetool status
+docker exec cass cassandra-stress
+docker exec cass cqlsh
+```
+
+This intentionally looks just like the commands are being executed as-is, but that is not the case! While
+I could have set the PATH to include `/opt/cassandra/bin:/opt/cassandra/tools/bin`, that does not provide
+any way to hook these tools and provide settings automatically, such as ports and IP addresses. This is
+a little tricky, but can be quite effective with a little pre-parsing of command-line arguments passed
+to the entrypoint.
+
+For example, `docker exec cass cqlsh` is automatically passed the IP of the default interface as its
+first argument *if no arguments are specified*. This is the expected default behavior for cqlsh, but
+it didn't work in my older containers because Cassandra is bound on the default IP rather than localhost.
+
+Another example is running nodetool. The nodetool shell script appends the JMX port with `-p $JMX_PORT`
+if the -p option is not used. The entrypoint takes care of this same job but can make more informed
+decisions about what parameters to pass since it's programmed to be "docker aware".
+
+### Supervisors, Part 2
+
+Many of my ops coleagues will have noticed that sprok and the cassandra-docker entrypoint call exec()
+and do not supervise processes. This is because I believe that process supervision is something the
+user or the user's framework should handle. Having the user handle supervision means they get full
+visibility into failures and get better control over containerized processes. This way, users who
+like runit or systemd or whatever can specify their own restart policies and target `docker run` rather
+than the cassandra process directly. Users of systems like Kubernetes, Fig, Mesos, and the others
+can use the same image without worrying about complex interactions between competing process supervisors.
+
+### Conclusion
+
+A great entrypoint should be boring for your users. It can take care of all the details of running
+a given application inside Docker without requiring the user to learn project layouts or other minutae
+of the containerized application. For simple entrypoints with simple configurations,
+[sprok](https://github.com/tobert/sprok) might
+be applicable, but I suspect you will find interesting ways to build entrypoints on your own.
+
+Please let me know if you see an entrypoint you like but tweeting at [@AlTobey](https://twitter.com/AlTobey).
+
