@@ -56,6 +56,7 @@ Ever since the shellshock fiasco, I've been thinking about how to get the shell 
 
 ### Entrypoints
 
+The new entrypoint for cassandra-docker, [uses sprok to achieve precision](https://github.com/tobert/cassandra-docker/blob/master/conf/sproks/cassandra.yaml). It also uses it to enable some UX improvements I've wanted for a while.
 
 
-In the entrypoint for cassandra-docker, [this is exactly how it's done](https://github.com/tobert/cassandra-docker/blob/master/conf/sproks/cassandra.yaml).
+TODO: finish this
