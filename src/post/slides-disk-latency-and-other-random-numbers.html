@@ -1,0 +1,279 @@
+---
+id: "2014-11-12-slides-disk-latency-and-other-random-numbers"
+title: "Slides: Disk Latency and Other Random Numbers"
+abstract: "slides from the South Bay Cassandra Users meetup, Disk Latency and Other Random Numbers"
+tags: ["cassandra", "hard drives", "ssd", "statistics"]
+head: <link type="text/css" rel="stylesheet" href="/css/impress.css"> <meta name="viewport" content="width=1800"/> <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300,400italic' rel='stylesheet' type='text/css'>
+pubdate: 2014-11-12T00:00:00Z
+---
+
+  <div class="datastax-bg-topleft"></div>
+  <div class="impressive-bg-bottom">Copyright 2014 <a href="https://twitter.com/AlTobey">@AlTobey</a></div>
+  <div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+  </div>
+  <div id="impress" data-width="1800" data-height="1000" data-max-scale="2" data-min-scale="1">
+    <div id="intro" class="step" data-x="0" data-y="0">
+       <q>Disk Latency<br/>(and Other Random Numbers)</q>
+       <q><a href="https://twitter.com/AlTobey">@AlTobey</a></q>
+       <q>Open Source Mechanic</q>
+       <q>Datastax</q>
+    </div>
+
+    <div id="disclaimer1" class="step" data-x="0" data-y="5000">
+       <q>Disclaimer</q>
+       <ul>
+          <li>I am not a statistician</li>
+       </ul>
+       <svg width="700" height="400" id="venn-diagram">
+       </svg>
+    </div>
+
+    <div id="disclaimer2" class="step" data-x="0" data-y="10000">
+       <q>Disclaimer</q>
+       <blockquote>This study is not strictly scientific.</blockquote>
+       <ul>
+          <li>Drive diversity</li>
+          <li>Run Time</li>
+          <li>Time limitations</li>
+       </ul>
+    </div>
+
+    <!-- div id="disclaimer3" class="step" data-x="0" data-y="15000">
+       <q>Disclaimer #3</q>
+       <blockquote>
+         All characters appearing in this work are fictitious. Any resemblance to real persons, living or dead, is purely coincidental.
+       </blockquote>
+    </div -->
+
+    <div id="d3" class="step" data-x="5000" data-y="15000">
+      <q>Performance Potential</q>
+      <ul>
+        <li>micro benchmarks show what the hw/sw *can* do</li>
+        <li>NOT what it will do</li>
+        <li>what it will do is almost never as much as it can</li>
+        <li>this is OK</li>
+      </ul>
+    </div>
+
+    <div id="tuning" class="step" data-x="10000" data-y="15000">
+       <h1>The Art of Discovering and Choosing Tradeoffs.</h1>
+       <h2>A.K.A. Tuning &amp; Benchmarking</h2>
+    </div>
+
+
+    <div id="sysfs" class="step" data-x="15000" data-y="15000">
+      <pre style="font-size: 34px;">
+         cd /sys/block/sda/queue
+
+         echo 1 |sudo tee nomerges
+
+         echo 0 |sudo tee read_ahead_kb
+
+         echo noop |sudo tee scheduler
+
+         echo deadline |sudo tee scheduler
+      </pre>
+    </div>
+
+    <div id="507989446386497184" class="step" data-x="20000" data-y="15000">
+       <img src="images/507989446386497184.png"/>
+    </div>
+
+    <!-- div id="imangle" class="step" data-x="25000" data-y="15000">
+      <div id="imessage-container" class="imessage">
+	      <div class="title">
+		      <input type="submit" class="messages-button" value="Messages">
+			    <span class="contact-name">Naggy OS</span>
+		      <input type="submit" class="edit-button" value="Edit">
+	      </div>
+        <div class="conversation">
+        </div>
+        <div class="new-message">
+          <input type="text" name="message" value="" placeholder="Text Message">
+          <input type="submit" value="Send" onclick="sendSMS();" class="disabled">
+          <input type="hidden" name="number" value="">
+        </div>
+      </div>
+    </div -->
+
+    <div id="outliers" class="step" data-x="25000" data-y="20000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
+     <q>Outliers</q>
+     <blockquote>
+       A data point on a graph or in a set of results that is very much bigger or smaller than the next nearest data point.
+     </blockquote>
+    </div>
+
+    <div id="10ksata" class="step" data-x="25000" data-y="25000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
+      <q>WD Velociraptor 10000 RPM (SATA)</q>
+      <img src="images/scatter-by_test-wd_velociraptor_10000_wd3000blfs-rw5050.png"/>
+    </div>
+
+    <div id="15ksas" class="step" data-x="25000" data-y="30000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
+      <q>Seagate Cheetah 15000 RPM (SAS)</q>
+      <img src="images/scatter-by_test-seagate_cheetah_15000_st3300657ss-rw5050.png"/>
+    </div>
+    <div id="fusionio" class="step" data-x="25000" data-y="35000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
+      <q>FusionIO ioDrive II (PCI-Express)</q>
+      <img src="images/scatter-by_test-fusionio_iodriveii-rw5050.png"/>
+    </div>
+
+    <div id="raid0-mixed-bw" class="step" data-x="25000" data-y="40000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
+      <q>RAID0 across 15K SAS, 10K SATA, 7.2K SAS, SSD SATA</q>
+      <img src="images/mixed-media-raid0-bw-scatter.png">
+    </div>
+
+    <div id="raid0-mixed-iops" class="step" data-x="25000" data-y="45000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
+      <q>RAID0 across 15K SAS, 10K SATA, 7.2K SAS, SSD SATA</q>
+      <img src="images/mixed-media-raid0-iops-scatter.png">
+    </div>
+
+    <div id="raid0-mixed-lat" class="step" data-x="25000" data-y="50000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
+      <q>RAID0 across 15K SAS, 10K SATA, 7.2K SAS, SSD SATA</q>
+      <img src="images/mixed-media-raid0-lat-scatter.png">
+    </div>
+
+    <div id="iostat" class="step" data-x="35000" data-y="50000">
+       <h2>iostat -x 5</h2>
+       <pre style="font-size: 16px;">
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           2.72    0.00    1.31   19.93    0.00   76.04
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+sdb               0.00     0.00  185.60    0.00 95027.20     0.00  1024.00     <span style="color:blue;">3.17   17.08   17.08</span>    0.00   2.78  51.54
+sdc               0.00     0.00  185.20    0.00 94822.40     0.00  1024.00    <span style="color:red;">82.46  435.46  435.46</span>    0.00   5.40 100.00
+sda               0.00     0.00  184.40    0.00 94412.80     0.00  1024.00     <span style="color:green;">0.89    4.83    4.83</span>    0.00   1.02  18.80
+sdd               0.00     0.00  186.40    0.00 95436.80     0.00  1024.00     <span style="color:red;">7.46   40.17   40.17</span>    0.00   4.91  91.52
+md0               0.00     0.00  742.40    0.00 380108.80    0.00  1024.00     0.00    0.00    0.00    0.00   0.00   0.00
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           1.58    0.00    1.03   23.29    0.00   74.10
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+sdb               0.00     0.00  184.00    0.00 94208.00     0.00  1024.00     <span style="color:blue;">1.90   10.36   10.36</span>    0.00   2.41  44.40
+sdc               0.00     0.00  185.40    0.00 94924.80     0.00  1024.00    <span style="color:red;">89.72  461.72  461.72</span>    0.00   5.39 100.00
+sda               0.00     0.00  184.00    0.00 94208.00     0.00  1024.00     <span style="color:green;">0.87    4.77    4.77</span>    0.00   1.03  19.00
+sdd               0.00     0.00  184.40    0.00 94209.60     0.00  1021.80     <span style="color:blue;">3.78   20.50   20.50</span>    0.00   4.16  76.74
+md0               0.00     0.00  730.00    0.00 373556.80    0.00  1023.44     0.00    0.00    0.00    0.00   0.00   0.00
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           2.77    0.00    1.71    9.70    0.00   85.81
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+sdb               0.00     0.00  187.60    0.00 96051.20     0.00  1024.00     <span style="color:blue;">2.31   12.24   12.24</span>    0.00   2.58  48.32
+sdc               0.00     0.00  186.60    0.00 95539.20     0.00  1024.00    <span style="color:red;">79.91  457.97  457.97</span>    0.00   5.36 100.00
+sda               0.00     0.00  188.80    0.00 96665.60     0.00  1024.00     <span style="color:green;">0.90    4.74    4.74</span>    0.00   1.02  19.28
+sdd               0.00     0.00  187.80    0.00 95848.80     0.00  1020.75     <span style="color:blue;">5.81   30.84   30.84</span>    0.00   4.73  88.74
+md0               0.00     0.00  755.80    0.00 386664.80    0.00  1023.19     0.00    0.00    0.00    0.00   0.00   0.00
+
+       </pre>
+    </div>
+
+    <div id="graph-intro" class="step" data-x="30000" data-y="50000">
+      <q>How It's Made</q>
+    </div>
+
+    <div id="zorak" class="step" data-x="40000" data-y="50000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
+      <q>Where the magic happens</q>
+      <img src="images/zorak-workstation.jpg">
+    </div>
+
+    <div id="fio_config" class="step" data-x="40000" data-y="55000">
+       <q>fio</q>
+       <pre style="font-size: 24px;">
+[global]
+rw=randread
+blocksize={{ .Device.Blocksize }}
+ioengine=sync
+norandommap=1
+direct=1
+iodepth=1
+iodepth_batch=1
+iodepth_batch_complete=1
+group_reporting=1
+ramp_time=5
+time_based=1
+runtime=600s
+randrepeat=0
+unlink=0
+numjobs=1
+nrfiles=4
+size=100g
+       </pre>
+    </div>
+
+    <div id="d2" class="step" data-x="40000" data-y="60000">
+       <q>181GB of raw data</q>
+       <pre style="font-size: 24px;">
+11G effio/suites/i-c39a1acda-full
+22G effio/suites/ip-172-31-12-247-full-2014-09-07
+51G effio/suites/zorak-full-2014-09-04
+34G effio/suites/moltar-full-2014-09-08
+39G effio/suites/zorak-full-fio-2014-09-09
+14G effio/suites/zorak-full-raijin-2014-09-10
+10G effio/suites/zorak-raid0-hdd-hdd-hdd-ssd
+181G
+      </pre>
+    </div>
+    <div id="d4" class="step" data-x="40000" data-y="65000">
+       <q>Graphs</q>
+    </div>
+  </div>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
+  <script src="/js/jquery.timer.js"></script>
+  <script src="/js/impress.js"></script>
+  <script>
+    var main = function () {
+      d3.select("body").classed({"impress-not-supported": true});
+
+      var api = impress();
+      api.init();
+      var currentSlide;
+
+      $(document).on('impress:stepenter', function(e) {
+        currentSlide = $(e.target).attr('id');
+
+        if (currentSlide === 'disclaimer1') {
+          var g = d3.select("#disclaimer1 svg")
+            .selectAll("circle")
+            .data(["Statisticians", "@AlTobey"])
+            .enter()
+            .append("g")
+              .attr("transform", function (d,i) {
+                if (i===0) { return "translate(0,0)"; }
+                if (i===1) { return "translate(100,0)"; }
+              });
+
+           var circles = g.append("circle")
+              .attr("cx", function (d,i) { return (i+1) * 200; })
+              .attr("cy", 200)
+              .attr("r", 200)
+              .style("fill", "rgba(0,0,0,0)")
+              .style("opacity", 0.0);
+
+            g.append("text")
+              .attr("text-anchor", "middle")
+              .attr("x", function (d,i) { return (i+1) * 200; })
+              .attr("y", 200)
+              .text(function (d) { return d; });
+
+            circles.transition().delay(300).duration(3000)
+              .style("fill", function (d,i) {
+                if (i === 0) { return "green"; }
+                if (i === 1) { return "blue"; }
+              })
+              .style("opacity", function (d,i) {
+                if (i === 0) { return 1.0; }
+                if (i === 1) { return 0.50; }
+              });
+        } else if (currentSlide === 'example') {
+          // do something cool
+        }
+      });
+    };
+
+    $(document).ready(main);
+  </script>
