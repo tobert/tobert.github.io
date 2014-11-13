@@ -8,8 +8,8 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="description" content="Docker entrypoints provide an opportunity to give your users a better UX than they would have without Docker">
     <meta name="keywords" content="docker, cassandra, entrypoint, sprok, ">
-    <meta property="article:published_time" content="2014-11-07"/>
-    <meta property="article:modified_time" content="2014-11-07"/>
+    <meta property="article:published_time" content="2014-11-12"/>
+    <meta property="article:modified_time" content="2014-11-12"/>
 
      <!-- twitter cards -->
      <meta name="twitter:card" content="summary">
@@ -20,7 +20,7 @@
      <meta name="twitter:domain" content="https://tobert.github.io">
 
     <title>Docker Entrypoints and the UX of Containers</title>
-    <link rel="canonical" href="https://tobert.github.io/post/2014-11-07-docker-entrypoints.html">
+    <link rel="canonical" href="https://tobert.github.io/post/2014-11-12-docker-entrypoints.html">
     <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Al Tobey Writes" />
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -80,11 +80,11 @@
       <hr/>
       <h1 style="display: inline;">Docker Entrypoints and the UX of Containers</h1>
       <span class="pull-right">
-        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/post/2014-11-07-docker-entrypoints.html&text=Docker Entrypoints and the UX of Containers&via=AlTobey"
+        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/post/2014-11-12-docker-entrypoints.html&text=Docker Entrypoints and the UX of Containers&via=AlTobey"
            class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
-        <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/post/2014-11-07-docker-entrypoints.html"
+        <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/post/2014-11-12-docker-entrypoints.html"
            class="btn btn-facebook"><i class="fa fa-facebook"></i></a>
-        <a href="https://plus.google.com/share?url=https://tobert.github.io/post/2014-11-07-docker-entrypoints.html"
+        <a href="https://plus.google.com/share?url=https://tobert.github.io/post/2014-11-12-docker-entrypoints.html"
            class="btn btn-google-plus"><i class="fa fa-google-plus"></i></a>
       </span>
       <hr/>
@@ -174,6 +174,27 @@ it didn't work in my older containers because Cassandra is bound on the default 
 <p>Another example is running nodetool. The nodetool shell script appends the JMX port with <code>-p $JMX_PORT</code>
 if the -p option is not used. The entrypoint takes care of this same job but can make more informed
 decisions about what parameters to pass since it's programmed to be &quot;docker aware&quot;.</p>
+
+<h3>Externalizing Mutable State</h3>
+
+<p>One other goal I had for cassandra-docker is to move all mutable state onto a single volume. Since
+a volume in Docker is a simple bind mount -- something a little like a symlink for directories --
+it can be mapped anywhere
+on the host system. The recommendation for Cassandra in Docker is to always use a volume. With the
+configuration for Cassandra also residing on the volume, you get the additional advantage of being
+able to modify all of Cassandra's config from the host rather than having to enter the container.</p>
+
+<pre><code class="sh">docker run --name cass -d -v /srv/cassandra:/data tobert/cassandra:2.1.1 cassandra -name &quot;My Cluster&quot;
+vim /srv/cassandra/conf/cassandra.yml
+</code></pre>
+
+<p>Where the entrypoint really helps Cassandra is with performance tuning. Many tuning options for Cassandra
+require editing shell scripts such as <code>/etc/cassandra/cassandra-env.sh</code>. While this could be easily
+put on the volume just like the sprok configs, it provides too much opportunity for strange behavior
+when related scripts search the filesystem for various configs (take a look at what bin/cassandra does).
+Instead, the cassandra-docker entrypoint uses sprok configuration files to set up the JVM parameters and
+all commands' parameters are now in <code>$VOLUME/conf/sproks/&lt;command&gt;.yaml</code>. Changing the heap or any
+other parameter outside of the usual config files is now declarative and precise.</p>
 
 <h3>Supervisors, Part 2</h3>
 

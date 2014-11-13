@@ -1,9 +1,9 @@
 ---
-id: "2014-11-07-docker-entrypoints"
+id: "2014-11-12-docker-entrypoints"
 title: "Docker Entrypoints and the UX of Containers"
 abstract: "Docker entrypoints provide an opportunity to give your users a better UX than they would have without Docker"
 tags: ["docker", "cassandra", "entrypoint", "sprok"]
-pubdate: 2014-11-07T20:30:00Z
+pubdate: 2014-11-12T00:15:00Z
 ---
 
 ### Entrypoints
@@ -90,6 +90,28 @@ it didn't work in my older containers because Cassandra is bound on the default 
 Another example is running nodetool. The nodetool shell script appends the JMX port with `-p $JMX_PORT`
 if the -p option is not used. The entrypoint takes care of this same job but can make more informed
 decisions about what parameters to pass since it's programmed to be "docker aware".
+
+### Externalizing Mutable State
+
+One other goal I had for cassandra-docker is to move all mutable state onto a single volume. Since
+a volume in Docker is a simple bind mount -- something a little like a symlink for directories --
+it can be mapped anywhere
+on the host system. The recommendation for Cassandra in Docker is to always use a volume. With the
+configuration for Cassandra also residing on the volume, you get the additional advantage of being
+able to modify all of Cassandra's config from the host rather than having to enter the container.
+
+```sh
+docker run --name cass -d -v /srv/cassandra:/data tobert/cassandra:2.1.1 cassandra -name "My Cluster"
+vim /srv/cassandra/conf/cassandra.yml
+```
+
+Where the entrypoint really helps Cassandra is with performance tuning. Many tuning options for Cassandra
+require editing shell scripts such as `/etc/cassandra/cassandra-env.sh`. While this could be easily
+put on the volume just like the sprok configs, it provides too much opportunity for strange behavior
+when related scripts search the filesystem for various configs (take a look at what bin/cassandra does).
+Instead, the cassandra-docker entrypoint uses sprok configuration files to set up the JVM parameters and
+all commands' parameters are now in `$VOLUME/conf/sproks/<command>.yaml`. Changing the heap or any
+other parameter outside of the usual config files is now declarative and precise.
 
 ### Supervisors, Part 2
 
