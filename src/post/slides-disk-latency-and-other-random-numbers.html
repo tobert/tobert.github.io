@@ -7,8 +7,9 @@ head: <link type="text/css" rel="stylesheet" href="/css/impress.css"> <meta name
 pubdate: 2014-11-12T00:00:00Z
 ---
 
+<div class="impress-not-supported">
   <div class="datastax-bg-topleft"></div>
-  <div class="impressive-bg-bottom">Copyright 2014 <a href="https://twitter.com/AlTobey">@AlTobey</a></div>
+  <div class="impressive-bg-bottom"><!-- Copyright 2014 <a href="https://twitter.com/AlTobey">@AlTobey</a> --></div>
   <div class="fallback-message">
     <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
     <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
@@ -37,6 +38,7 @@ pubdate: 2014-11-12T00:00:00Z
           <li>Drive diversity</li>
           <li>Run Time</li>
           <li>Time limitations</li>
+          <li>Hardware Limitations (PCIe lanes, controllers)</li>
        </ul>
     </div>
 
@@ -67,6 +69,8 @@ pubdate: 2014-11-12T00:00:00Z
       <pre style="font-size: 34px;">
          cd /sys/block/sda/queue
 
+         cat rotational
+
          echo 1 |sudo tee nomerges
 
          echo 0 |sudo tee read_ahead_kb
@@ -78,7 +82,7 @@ pubdate: 2014-11-12T00:00:00Z
     </div>
 
     <div id="507989446386497184" class="step" data-x="20000" data-y="15000">
-       <img src="images/507989446386497184.png"/>
+       <img src="/images/507989446386497184.png"/>
     </div>
 
     <!-- div id="imangle" class="step" data-x="25000" data-y="15000">
@@ -107,31 +111,31 @@ pubdate: 2014-11-12T00:00:00Z
 
     <div id="10ksata" class="step" data-x="25000" data-y="25000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
       <q>WD Velociraptor 10000 RPM (SATA)</q>
-      <img src="images/scatter-by_test-wd_velociraptor_10000_wd3000blfs-rw5050.png"/>
+      <img src="/images/scatter-by_test-wd_velociraptor_10000_wd3000blfs-rw5050.png"/>
     </div>
 
     <div id="15ksas" class="step" data-x="25000" data-y="30000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
       <q>Seagate Cheetah 15000 RPM (SAS)</q>
-      <img src="images/scatter-by_test-seagate_cheetah_15000_st3300657ss-rw5050.png"/>
+      <img src="/images/scatter-by_test-seagate_cheetah_15000_st3300657ss-rw5050.png"/>
     </div>
     <div id="fusionio" class="step" data-x="25000" data-y="35000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
       <q>FusionIO ioDrive II (PCI-Express)</q>
-      <img src="images/scatter-by_test-fusionio_iodriveii-rw5050.png"/>
+      <img src="/images/scatter-by_test-fusionio_iodriveii-rw5050.png"/>
     </div>
 
     <div id="raid0-mixed-bw" class="step" data-x="25000" data-y="40000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
       <q>RAID0 across 15K SAS, 10K SATA, 7.2K SAS, SSD SATA</q>
-      <img src="images/mixed-media-raid0-bw-scatter.png">
+      <img src="/images/mixed-media-raid0-bw-scatter.png">
     </div>
 
     <div id="raid0-mixed-iops" class="step" data-x="25000" data-y="45000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
       <q>RAID0 across 15K SAS, 10K SATA, 7.2K SAS, SSD SATA</q>
-      <img src="images/mixed-media-raid0-iops-scatter.png">
+      <img src="/images/mixed-media-raid0-iops-scatter.png">
     </div>
 
     <div id="raid0-mixed-lat" class="step" data-x="25000" data-y="50000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
       <q>RAID0 across 15K SAS, 10K SATA, 7.2K SAS, SSD SATA</q>
-      <img src="images/mixed-media-raid0-lat-scatter.png">
+      <img src="/images/mixed-media-raid0-lat-scatter.png">
     </div>
 
     <div id="iostat" class="step" data-x="35000" data-y="50000">
@@ -176,7 +180,7 @@ md0               0.00     0.00  755.80    0.00 386664.80    0.00  1023.19     0
 
     <div id="zorak" class="step" data-x="40000" data-y="50000" data-z="300" data-rotate-x="-40" data-rotate-y="10" data-scale="2">
       <q>Where the magic happens</q>
-      <img src="images/zorak-workstation.jpg">
+      <img src="/images/zorak-workstation.jpg">
     </div>
 
     <div id="fio_config" class="step" data-x="40000" data-y="55000">
@@ -184,7 +188,7 @@ md0               0.00     0.00  755.80    0.00 386664.80    0.00  1023.19     0
        <pre style="font-size: 24px;">
 [global]
 rw=randread
-blocksize={{ .Device.Blocksize }}
+blocksize=4096
 ioengine=sync
 norandommap=1
 direct=1
@@ -220,15 +224,13 @@ size=100g
        <q>Graphs</q>
     </div>
   </div>
-
+</div>
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js"></script>
   <script src="/js/jquery.timer.js"></script>
   <script src="/js/impress.js"></script>
   <script>
     var main = function () {
-      d3.select("body").classed({"impress-not-supported": true});
-
       var api = impress();
       api.init();
       var currentSlide;
