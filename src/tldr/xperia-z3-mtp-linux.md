@@ -1,8 +1,10 @@
 There are lots of posts on the web about how to make various phones
 work by setting up udev and either mtpfs or go-mtpfs but none of those
-worked on my Sony Xperia Z3 and Arch Linux workstation. It turns out
-that go-mtpfs (and, presumably, mtpfs) use 64-bit extensions to the MTP
-protocol by default that are not supported by the Z3.
+worked on my [Sony Xperia Z3](http://www.sonymobile.com/us/products/phones/xperia-z3-t-mobile/)
+and Arch Linux workstation. It turns out
+that [go-mtpfs](https://github.com/hanwen/go-mtpfs) (and, presumably,
+mtpfs) use 64-bit extensions to the MTP protocol by default that are
+not supported by the Z3.
 
 ```sh
 mkdir ~/phone
