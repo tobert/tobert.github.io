@@ -7,10 +7,28 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2014-11-13</pubDate>
-	<lastBuildDate>2014-11-14</lastBuildDate>
+	<pubDate>2015-01-01</pubDate>
+	<lastBuildDate>2015-01-01</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>TL;DR: Xperia Z3 Mtp Linux</title>
+	  <link>https://tobert.github.io/tldr/xperia-z3-mtp-linux.html</link>
+      <pubDate>Thu, 01 Jan 2015 15:28:05 PST</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>xperia-z3-mtp-linux</guid>
+	  <description>TL;DR: Xperia Z3 Mtp Linux</description>
+    </item>
+    
+    <item>
+      <title>TL;DR: Tldr</title>
+	  <link>https://tobert.github.io/tldr/tldr.html</link>
+      <pubDate>Thu, 01 Jan 2015 15:26:50 PST</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>tldr</guid>
+	  <description>TL;DR: Tldr</description>
+    </item>
     
     <item>
       <title>Slides: Disk Latency and Other Random Numbers</title>
