@@ -23,7 +23,7 @@ autoidx: false
 <div class="container-fluid" id="index-body">
   <div class="col-md-8">
     <ul class="nav nav-sidebar">
-      {{ range $i, $page := .Pages }}{{ if eq $page.Dir "post" }}
+      {{ range $i, $page := .Pages }}{{ if eq $page.AutoIdx true }}
       <li><a href="{{ $page.PubRel }}">{{ if $page.Date }}{{ $page.Date.Format "2006-01-02" }} - {{ end }}{{ $page.Title |html }}</a></li>{{ end }}{{ end }}
     </ul>
   </div>

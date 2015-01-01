@@ -282,35 +282,15 @@ func findPages(c Config) (pages Pages) {
 			return nil
 		}
 
-		src, err := ioutil.ReadFile(fpath)
-		if err != nil {
-			log.Fatalf("Could not read page source file '%s': %s", fpath, err)
-		}
-
-		if src[0] != '-' || src[1] != '-' || src[2] != '-' {
-			log.Fatalf("Source file '%s' must have '---' as the first 3 characters!", fpath)
-		}
-
-		// found the first ---, now find the second one and abstract the YAML for parsing
-		end := bytes.Index(src[3:len(src)], []byte("---"))
-		yamlBytes := src[3 : end+3] // index was offset by 3, so add it back
-		// TODO: possible bug here ... need to check assumption of src offset
-		tmplBytes := src[end+7 : len(src)] // second --- is always followed by \n, so 3 + 4
-
 		page := Page{
-			Type:    ext[1:len(ext)],
 			AutoIdx: true,
-			src:     string(tmplBytes),
-		}
-		err = yaml.Unmarshal(yamlBytes, &page)
-
-		if page.Id == "" {
-			log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\tid: is required!\n", page.PubDate, fpath)
+			Type:    ext[1:len(ext)],
 		}
 
 		// these variables are used below to build paths in the Page struct
 		dname, fname := path.Split(fpath)
 		subpath := strings.TrimPrefix(dname, path.Join(c.SrcRoot, c.PageDir))
+		page.Id = strings.TrimSuffix(fname, ext)
 		fparts := []string{page.Id}
 		// markdown will get rendered to HTML, everything goes as-is
 		if ext == ".md" {
@@ -329,10 +309,44 @@ func findPages(c Config) (pages Pages) {
 			page.Dir = "/"
 		}
 
-		// now convert pubdate -> date, which is required to be RFC3339 format
-		page.Date, err = time.Parse(time.RFC3339, page.PubDate)
+		src, err := ioutil.ReadFile(fpath)
 		if err != nil {
-			log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\t%s\n", page.PubDate, fpath, err)
+			log.Fatalf("Could not read page source file '%s': %s", fpath, err)
+		}
+
+		if subpath == "/tldr/" {
+			// "tldr" posts are shorter and have no required front matter
+			title := strings.Replace(page.Id, "-", " ", -1)
+			page.Title = fmt.Sprintf("TL;DR: %s", strings.Title(title))
+			page.Tags = strings.Split(page.Id, "-")
+
+			// git seems to get modtime mostly right, so let's see how this works out in practice ...
+			page.Date = f.ModTime()
+			page.src = string(src)
+		} else {
+			// all other pages have YAML "front matter" that is parsed for metadata
+			if src[0] != '-' || src[1] != '-' || src[2] != '-' {
+				log.Fatalf("Source file '%s' must have '---' as the first 3 characters!", fpath)
+			}
+
+			// found the first ---, now find the second one and abstract the YAML for parsing
+			end := bytes.Index(src[3:len(src)], []byte("---"))
+			yamlBytes := src[3 : end+3] // index was offset by 3, so add it back
+			// TODO: possible bug here ... need to check assumption of src offset
+			tmplBytes := src[end+7 : len(src)] // second --- is always followed by \n, so 3 + 4
+			page.src = string(tmplBytes)
+
+			// parse the YAML data
+			err = yaml.Unmarshal(yamlBytes, &page)
+			if err != nil {
+				log.Fatalf("Failed to parse YAML front matter from '%s': %s\n", fpath, err)
+			}
+
+			// convert pubdate -> date, which is required to be RFC3339 format
+			page.Date, err = time.Parse(time.RFC3339, page.PubDate)
+			if err != nil {
+				log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\t%s\n", page.PubDate, fpath, err)
+			}
 		}
 
 		pages = append(pages, page)
