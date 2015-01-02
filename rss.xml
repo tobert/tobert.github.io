@@ -7,10 +7,28 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2015-01-01</pubDate>
-	<lastBuildDate>2015-01-01</lastBuildDate>
+	<pubDate>2015-01-02</pubDate>
+	<lastBuildDate>2015-01-02</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</title>
+	  <link>https://tobert.github.io/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.html</link>
+      <pubDate>Fri, 02 Jan 2015 11:37:57 PST</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>isolcpus-workstation-experiment-gkrellm-screenshots</guid>
+	  <description>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</description>
+    </item>
+    
+    <item>
+      <title>TL;DR: Xperia Z3 Mtp Linux</title>
+	  <link>https://tobert.github.io/tldr/xperia-z3-mtp-linux.html</link>
+      <pubDate>Thu, 01 Jan 2015 15:38:07 PST</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>xperia-z3-mtp-linux</guid>
+	  <description>TL;DR: Xperia Z3 Mtp Linux</description>
+    </item>
     
     <item>
       <title>TL;DR: Tldr</title>
@@ -19,15 +37,6 @@
       <author>Albert P Tobey</author>
       <guid>tldr</guid>
 	  <description>TL;DR: Tldr</description>
-    </item>
-    
-    <item>
-      <title>TL;DR: Xperia Z3 Mtp Linux</title>
-	  <link>https://tobert.github.io/tldr/xperia-z3-mtp-linux.html</link>
-      <pubDate>Thu, 01 Jan 2015 15:28:05 PST</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>xperia-z3-mtp-linux</guid>
-	  <description>TL;DR: Xperia Z3 Mtp Linux</description>
     </item>
     
     <item>

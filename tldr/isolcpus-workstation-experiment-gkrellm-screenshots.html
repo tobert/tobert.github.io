@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    
+    <meta name="keywords" content="isolcpus, workstation, experiment, gkrellm, screenshots, ">
+    <meta property="article:published_time" content="2015-01-02"/>
+    <meta property="article:modified_time" content="2015-01-02"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots : Al Tobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     
+     <meta name="twitter:domain" content="https://tobert.github.io">
+
+    <title>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</title>
+    <link rel="canonical" href="https://tobert.github.io/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Al Tobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Al Tobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://twitter.com/AlTobey"><i class="fa fa-twitter"></i> | @AlTobey</a></li>
+              <li><a href="https://plus.google.com/+AlTobey"><i class="fa fa-google-plus"></i> | +AlTobey</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa fa-github"></i> | tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa fa-rss"></i> | RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</h1>
+      <span class="pull-right">
+        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.html&text=TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots&via=AlTobey"
+           class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
+        <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.html"
+           class="btn btn-facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://plus.google.com/share?url=https://tobert.github.io/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.html"
+           class="btn btn-google-plus"><i class="fa fa-google-plus"></i></a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<p>Try booting one of your Linux machines with isolcpus=0 or isolcpus=0,1 if you have
+a hyperthreading (Intel) CPU. On Debian variants you'll want to put it in
+<code>/etc/defaults/grub</code>. I'm running Arch so I have the following in my
+<code>/boot/syslinux/syslinux.cfg</code></p>
+
+<pre><code>LABEL arch
+    MENU LABEL Arch Linux
+    LINUX ../vmlinuz-linux
+    APPEND root=LABEL=NEWROOT rw isolcpus=0,1
+    INITRD ../initramfs-linux.img
+</code></pre>
+
+<p>I've been running with this enabled on my daily driver workstation and I feel like
+system responsiveness is considerably better. This is all seat-of-your-pants performance
+measurement at the moment. I suspect this is something that will be useful in many
+more situations than it's used currently.</p>
+
+<p>Here's what my system load looks like in gkrellm at the moment:</p>
+
+<p><img src="/images/gkrellm-2015-01-02.png" alt="gkrellm" />
+</p>
+
+<p>This is cool because most of the kernel work is happening on the first core. The
+isolcpus=0,1 parameter has instructed the kernel to not schedule <em>userland</em> processes
+on it. It can still schedule kernel threads on it, and lookie there, it's always idle
+so there's rarely any wait for CPU time and the caches aren't constantly bombarded.</p>
+
+<p>And here it is with Team Fortress 2 running, because science! You can also the bouncing
+thread problem in the CPU graphs and my ZFS disks heating up while TF2 loads up its resources.</p>
+
+<p><img src="/images/tf2-gkrellm-2015-01-02.png" alt="tf2" />
+</p>
+
+<p>More to come!</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Albert P. Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
