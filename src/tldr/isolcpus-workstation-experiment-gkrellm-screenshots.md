@@ -25,9 +25,10 @@ isolcpus=0,1 parameter has instructed the kernel to not schedule *userland* proc
 on it. It can still schedule kernel threads on it, and lookie there, it's always idle
 so there's rarely any wait for CPU time and the caches aren't constantly bombarded.
 
-And here it is with Team Fortress 2 running, because science! You can also the bouncing
-thread problem in the CPU graphs and my ZFS disks heating up while TF2 loads up its resources.
+And here it is with Team Fortress 2 running, because science! You can see the bouncing
+thread problem in the CPU graphs. Open the [full screen](/images/tf2-gkrellm-2015-01-02.png)
+image to see my ZFS disks heating up while TF2 loads up its resources.
 
-![tf2](/images/tf2-gkrellm-2015-01-02.png)
+![tf2](/images/tf2-gkrellm-2015-01-02-cpus.png)
 
 More to come!
