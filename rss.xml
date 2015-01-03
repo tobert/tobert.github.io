@@ -13,9 +13,18 @@
 	
     
     <item>
+      <title>TL;DR: My Blog Development Script</title>
+	  <link>https://tobert.github.io/tldr/my-blog-development-script.html</link>
+      <pubDate>Fri, 02 Jan 2015 16:49:58 PST</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>my-blog-development-script</guid>
+	  <description>TL;DR: My Blog Development Script</description>
+    </item>
+    
+    <item>
       <title>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</title>
 	  <link>https://tobert.github.io/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.html</link>
-      <pubDate>Fri, 02 Jan 2015 11:37:57 PST</pubDate>
+      <pubDate>Fri, 02 Jan 2015 11:46:58 PST</pubDate>
       <author>Albert P Tobey</author>
       <guid>isolcpus-workstation-experiment-gkrellm-screenshots</guid>
 	  <description>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</description>
