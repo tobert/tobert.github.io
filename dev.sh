@@ -1,5 +1,9 @@
 #!/bin/bash
-# pacman -S inotify-tools # for inotifywait
+#
+# This script uses inotifywait to watch for changes in my repo's
+# src/ directory and runs build-blog.go each time a file changes.
+#
+# pacman -S inotify-tools # for inotifywait on Arch Linux
 
 while true
 do
