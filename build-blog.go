@@ -66,6 +66,7 @@ type Page struct {
 	PubFull  string    // full permanent path to the doc e.g. https://tobert.github.io/post/2014-01-01-foobar.html
 	Dir      string    // the subdirectory, e.g. / for index.html, 'post' for posts
 	Type     string    // md html txt xml json
+	SyntaxHl bool      // enable syntax highlighting
 	src      string    // raw data
 }
 
@@ -164,7 +165,7 @@ func main() {
 
 		// text/template supports referencing other templates, but that would be silly
 		// since I want this on every html page
-		if page.Type == "html" || page.Type == "md" {
+		if page.Type == "html" || page.Type == "md" || page.Type == "sh" {
 			err = snippets["header"].tmpl.Execute(fd, td)
 			if err != nil {
 				log.Fatalf("Failed to render header template: %s\n", err)
@@ -176,6 +177,15 @@ func main() {
 				err = snippets["container-top"].tmpl.Execute(fd, td)
 				if err != nil {
 					log.Fatalf("Failed to render container-top snippet: %s\n", err)
+				}
+			}
+
+			// .sh files are plain shell scripts that get posted as a page
+			// and follow most of the 'tldr' rules (and code)
+			if page.Type == "sh" {
+				err = snippets["tldr-sh-top"].tmpl.Execute(fd, td)
+				if err != nil {
+					log.Fatalf("Failed to render tldr-sh-top snippet: %s\n", err)
 				}
 			}
 		}
@@ -197,7 +207,11 @@ func main() {
 			log.Fatalf("Error writing content to file '%s': %s'\n", page.PubPath, err)
 		}
 
-		if page.Type == "html" || page.Type == "md" {
+		if page.Type == "html" || page.Type == "md" || page.Type == "sh" {
+			if page.Type == "sh" {
+				err = snippets["tldr-sh-bot"].tmpl.Execute(fd, td)
+			}
+
 			// close the container snippet
 			if path.Base(page.SrcRel) != "index.html" {
 				err = snippets["container-bottom"].tmpl.Execute(fd, td)
@@ -278,7 +292,7 @@ func findPages(c Config) (pages Pages) {
 
 		// only consider files with the following extensions
 		ext := path.Ext(fpath)
-		if ext != ".md" && ext != ".html" && ext != ".txt" && ext != ".xml" {
+		if ext != ".md" && ext != ".html" && ext != ".txt" && ext != ".xml" && ext != ".sh" {
 			return nil
 		}
 
@@ -293,7 +307,7 @@ func findPages(c Config) (pages Pages) {
 		page.Id = strings.TrimSuffix(fname, ext)
 		fparts := []string{page.Id}
 		// markdown will get rendered to HTML, everything goes as-is
-		if ext == ".md" {
+		if ext == ".md" || ext == ".sh" {
 			fparts = append(fparts, ".html")
 		} else {
 			fparts = append(fparts, ext)
@@ -323,6 +337,10 @@ func findPages(c Config) (pages Pages) {
 			// git seems to get modtime mostly right, so let's see how this works out in practice ...
 			page.Date = f.ModTime()
 			page.src = string(src)
+
+			if ext == ".sh" {
+				page.SyntaxHl = true // make sure rainbow js & css get loaded (see snippets)
+			}
 		} else {
 			// all other pages have YAML "front matter" that is parsed for metadata
 			if src[0] != '-' || src[1] != '-' || src[2] != '-' {
