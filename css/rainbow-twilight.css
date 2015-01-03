@@ -13,16 +13,16 @@ pre {
     margin: 0px;
     padding: 10px;
     color: #F8F8F8;
-    font-size: 14px;
+    font-size: 16px;
     margin-bottom: 20px;
 }
 
 pre, code {
-    font-family: 'Monaco', courier, monospace;
+    font-family: 'Source Code Pro', 'Consolas', 'Iconsolata', 'Monaco', monospace;
 }
 
 pre .comment {
-    color: #5F5A60;
+    color: #2bfcff;
 }
 
 pre .constant.numeric {
