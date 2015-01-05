@@ -1,3 +1,8 @@
+isolcpus is a Linux kernel boot parameter that tells the kernel to exclude the
+specified CPUs from consideration for user processes. The kernel still uses it,
+so it's a neat way to reserve CPUs for an application (e.g. latency-sensitive)
+or just the kernel itself (which is interesting on very high IO workloads).
+
 Try booting one of your Linux machines with isolcpus=0 or isolcpus=0,1 if you have
 a hyperthreading (Intel) CPU. On Debian variants you'll want to put it in
 `/etc/defaults/grub`. I'm running Arch so I have the following in my
