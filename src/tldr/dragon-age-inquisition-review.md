@@ -31,3 +31,21 @@ something right over there.
 
 Overall rating: A+, 100/100, it's the best single-player game I've
 played since Dragon Age: Origins.
+
+---
+
+<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/hashtag/PS4share?src=hash">#PS4share</a> <a
+href="http://t.co/tu012WvCms">pic.twitter.com/tu012WvCms</a></p>&mdash; Renice PSN (@renice_psn) <a
+href="https://twitter.com/renice_psn/status/556960739387117568">January 18, 2015</a></blockquote>
+
+<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/hashtag/PS4share?src=hash">#PS4share</a> <a
+href="http://t.co/ecTrrWhg4h">pic.twitter.com/ecTrrWhg4h</a></p>&mdash; Renice PSN (@renice_psn) <a
+href="https://twitter.com/renice_psn/status/556960988851732480">January 18, 2015</a></blockquote>
+
+<blockquote class="twitter-tweet" lang="en"><p><a
+href="https://twitter.com/hashtag/dragonageinquisition?src=hash">#dragonageinquisition</a> <a
+href="https://twitter.com/hashtag/PS4share?src=hash">#PS4share</a> <a
+href="http://t.co/UZkLUO4MP0">pic.twitter.com/UZkLUO4MP0</a></p>&mdash; Renice PSN (@renice_psn) <a
+href="https://twitter.com/renice_psn/status/556960531106381825">January 18, 2015</a></blockquote>
+
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
