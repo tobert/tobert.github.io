@@ -7,10 +7,19 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2015-01-04</pubDate>
-	<lastBuildDate>2012-12-11</lastBuildDate>
+	<pubDate>2015-01-18</pubDate>
+	<lastBuildDate>2015-01-18</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>TL;DR: Dragon Age Inquisition Review</title>
+	  <link>https://tobert.github.io/tldr/dragon-age-inquisition-review.html</link>
+      <pubDate>Sun, 18 Jan 2015 14:57:27 PST</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>dragon-age-inquisition-review</guid>
+	  <description>TL;DR: Dragon Age Inquisition Review</description>
+    </item>
     
     <item>
       <title>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</title>
@@ -289,15 +298,6 @@
       <author>Albert P Tobey</author>
       <guid>2013-10-07-hello-again-world</guid>
 	  <description>Hello (again) World</description>
-    </item>
-    
-    <item>
-      <title>TL;DR: Dragon Age Inquisition Review</title>
-	  <link>https://tobert.github.io/tldr/dragon-age-inquisition-review.html</link>
-      <pubDate>Tue, 11 Dec 2012 06:38:35 PST</pubDate>
-      <author>Albert P Tobey</author>
-      <guid>dragon-age-inquisition-review</guid>
-	  <description>TL;DR: Dragon Age Inquisition Review</description>
     </item>
     
     <item>

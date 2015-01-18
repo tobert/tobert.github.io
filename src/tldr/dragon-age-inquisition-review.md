@@ -20,9 +20,9 @@ of playing as privileged/blessed Herald or a sociopath (or both).
 
 Pro tips:
 
-   1.) use tactical view for bosses, manually set your party's targets
-   2.) save T4 ingredients from dragons for T3 recipes
-   3.) take Dorian and Iron Bull out if you haven't romanced either of them. Trust me.
+1. use tactical view for bosses, manually set your party's targets
+2. save T4 ingredients from dragons for T3 recipes
+3. take Dorian and Iron Bull out if you haven't romanced either of them. Trust me.
 
 As a software engineer, I owe the team at Bioware a standing ovation.
 I only noticed a couple bugs in the 100+ hours I played the game and
