@@ -102,14 +102,14 @@ that <a href="https://github.com/hanwen/go-mtpfs">go-mtpfs</a> (and, presumably,
 mtpfs) use 64-bit extensions to the MTP protocol by default that are
 not supported by the Z3.</p>
 
-<pre><code class="sh">mkdir ~/phone
+<pre><code class="language-sh">mkdir ~/phone
 $GOPATH/bin/go-mtpfs -android=false ~/phone
 </code></pre>
 
 <p>If you don't want to mess with the udev rules, you can manually set
 the permissions on the USB device while messing around.</p>
 
-<pre><code class="sh"># danger! This works on my machines. Might be bad for yours. But probably not.
+<pre><code class="language-sh"># danger! This works on my machines. Might be bad for yours. But probably not.
 sudo chown $USER /dev/bus/usb/*/*
 </code></pre>
 

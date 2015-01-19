@@ -156,7 +156,7 @@ around this problem by providing a consistent experience.</p>
 
 <p>For Cassandra, this is what it looks like in <a href="https://github.com/tobert/cassandra-docker">cassandra-docker</a>:</p>
 
-<pre><code class="sh">docker run --name cass -d -v /srv/cassandra:/data tobert/cassandra:2.1.1 cassandra -name &quot;My Cluster&quot;
+<pre><code class="language-sh">docker run --name cass -d -v /srv/cassandra:/data tobert/cassandra:2.1.1 cassandra -name &quot;My Cluster&quot;
 docker exec cass nodetool status
 docker exec cass cassandra-stress
 docker exec cass cqlsh
@@ -185,7 +185,7 @@ on the host system. The recommendation for Cassandra in Docker is to always use 
 configuration for Cassandra also residing on the volume, you get the additional advantage of being
 able to modify all of Cassandra's config from the host rather than having to enter the container.</p>
 
-<pre><code class="sh">docker run --name cass -d -v /srv/cassandra:/data tobert/cassandra:2.1.1 cassandra -name &quot;My Cluster&quot;
+<pre><code class="language-sh">docker run --name cass -d -v /srv/cassandra:/data tobert/cassandra:2.1.1 cassandra -name &quot;My Cluster&quot;
 vim /srv/cassandra/conf/cassandra.yml
 </code></pre>
 
