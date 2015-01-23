@@ -1,0 +1,365 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="using ioping to observe storage latency">
+    <meta name="keywords" content="performance, ioping, linux, storage, benchmarking, ">
+    <meta property="article:published_time" content="2015-01-23"/>
+    <meta property="article:modified_time" content="2015-01-23"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="ioping : Al Tobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:description" content="using ioping to observe storage latency">
+     <meta name="twitter:domain" content="https://tobert.github.io">
+
+    <title>ioping</title>
+    <link rel="canonical" href="https://tobert.github.io/post/2015-01-22-ioping.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Al Tobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+    
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Al Tobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://twitter.com/AlTobey"><i class="fa fa-twitter"></i> | @AlTobey</a></li>
+              <li><a href="https://plus.google.com/+AlTobey"><i class="fa fa-google-plus"></i> | +AlTobey</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa fa-github"></i> | tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa fa-rss"></i> | RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2015-01-22-ioping.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">ioping</h1>
+      <span class="pull-right">
+        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/post/2015-01-22-ioping.html&text=ioping&via=AlTobey"
+           class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
+        <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/post/2015-01-22-ioping.html"
+           class="btn btn-facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://plus.google.com/share?url=https://tobert.github.io/post/2015-01-22-ioping.html"
+           class="btn btn-google-plus"><i class="fa fa-google-plus"></i></a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<h2>ioping</h2>
+
+<p>If you've been to my blog before, you probably noticed that I spend a lot of time
+dinking around with hard drives and ssds, not to mention Cassandra performance
+tuning. I've done a fair bit of work with <a href="http://tobert.github.io/post/2014-04-17-fio-output-explained.html">fio</a>
+and it works OK, but it's not the kind of thing you want to run on production
+servers and even then, it takes a non-trivial of work to devise a config, run
+a test, then analyze the output. So, I've been looking for a simple tool to
+quickly assess a storage volume's latency. ioping(1) seems to fit the bill.</p>
+
+<p>Like ICMP ping, it's useful for getting a rough idea of what the RTT to
+your storage. It's a single package manager command to install it and it
+provides that 'quick sniff' view of a system's storage that I've been searching
+for.</p>
+
+<h3>Example: 7200RPM SATA</h3>
+
+<p>I grabbed a 7200RPM Seagate Constellation SATA drive off the shelf and plugged
+it into my SAS bay. This model of drive is commonly shipped in enterprise servers.</p>
+
+<p>This experiment took all of 30 seconds to run. About 2/3 of the way down you may
+notice that latency went from ~8ms to 1.58<em>s</em>. I started ioping in screen then
+flipped to another screen and ran one of my favorite read load tricks:</p>
+
+<p><code>sudo find /mnt/sdg -type f -exec cat {} &gt; /dev/null \;</code></p>
+
+<p>This finds every file on the drive and cats it into /dev/null one at a time. For
+greater evil, use xargs -P to cat files in parallel. More on that below.</p>
+
+<pre><code>atobey@brak ~ $ sudo ioping /mnt/sdg
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=9 time=5.35 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=10 time=166 us
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=11 time=11.9 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=12 time=9.55 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=13 time=4.22 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=14 time=3.62 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=15 time=9.62 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=16 time=7.81 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=17 time=9.41 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=18 time=8.10 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=19 time=1.51 s
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=20 time=1.57 s
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=21 time=1.57 s
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=22 time=1.57 s
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=23 time=299.3 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=24 time=1.58 s
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=25 time=1.56 s
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=26 time=1.58 s
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=27 time=1.35 s
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=28 time=5.66 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=29 time=6.75 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=30 time=4.73 ms
+4 KiB from /mnt/sdg (xfs /dev/sdg1): request=31 time=11.3 ms
+^C
+--- /mnt/sdg (xfs /dev/sdg1) ioping statistics ---
+31 requests completed in 42.8 s, 2 iops, 9.73 KiB/s
+min/avg/max/mdev = 166 us / 411.3 ms / 1.58 s / 666.9 ms
+</code></pre>
+
+<h3>Again, now with xargs!</h3>
+
+<p>This next stunt uses few of my favorite shell tools together.</p>
+
+<p>find(1) is being passed the <code>-print0</code> to make it output nul-terminated lines just
+to be extra paranoid about weird file names.</p>
+
+<p>xargs(1) is being used to parallelize this abuse. <code>-0</code> tells it to use nul termination, <code>-P 0</code>
+says to run as many processes as possible, and finally <code>-n 1</code> tells it
+to run one process per input record.</p>
+
+<p>pv(1) is like cat(1) on steroids.  It simply copies a file (or stdin) to stdout. The bonus it provides is
+a progress bar. Pro tip: it also works between pipes so you can use it
+for things like observing compression rates e.g. <code>pv -N read bigfile |gzip -9c |pv -N gzip &gt; bigfile.gz</code>.
+<code>-N &quot;$0&quot;</code> sets the name of the pv instance, which is combined with <code>-c</code> to enable cursor positioning
+in the terminal so all instances can display progress in parallel. Then comes the filename, <code>&quot;$0&quot;</code>, quoted
+to handle whitespace and other filesystem malfeasance.</p>
+
+<pre><code>atobey@brak ~ $ find /mnt/sdg -type f -print0 |sudo xargs -0 -P 0 -n 1 sh -c 'pv -c -N &quot;$0&quot; &quot;$0&quot; &gt; /dev/null'
+/mnt/sdg/file3: 48.4MiB 0:00:02 [20.9MiB/s] [&gt;                 ]  9% ETA 0:00:18
+/mnt/sdg/file2: 42.9MiB 0:00:02 [24.1MiB/s] [&gt;                 ]  8% ETA 0:00:21
+/mnt/sdg/rw5050-sdb.0.0: 57.1MiB 0:00:03 [18.6MiB/s] [&gt;        ]  0% ETA 0:22:21
+/mnt/sdg/file4: 60.5MiB 0:00:03 [26.6MiB/s] [=&gt;                ] 12% ETA 0:00:21
+</code></pre>
+
+<p>With that command line in my clipboard, I drop the page cache, fire up ioping in
+one screen then the find/xargs in another just a moment later.</p>
+
+<pre><code>atobey@brak /mnt/sdg $ echo 1 |sudo tee /proc/sys/vm/drop_caches
+atobey@brak /mnt/sdg $ sudo ioping .
+4 KiB from . (xfs /dev/sdg1): request=1 time=11.8 ms
+4 KiB from . (xfs /dev/sdg1): request=2 time=407.0 ms
+4 KiB from . (xfs /dev/sdg1): request=3 time=389.7 ms
+4 KiB from . (xfs /dev/sdg1): request=4 time=140.0 ms
+4 KiB from . (xfs /dev/sdg1): request=5 time=44.2 ms
+4 KiB from . (xfs /dev/sdg1): request=6 time=6.49 ms
+4 KiB from . (xfs /dev/sdg1): request=7 time=6.55 ms
+4 KiB from . (xfs /dev/sdg1): request=8 time=23.3 ms
+4 KiB from . (xfs /dev/sdg1): request=9 time=121.2 ms
+4 KiB from . (xfs /dev/sdg1): request=10 time=263.1 ms
+4 KiB from . (xfs /dev/sdg1): request=11 time=473.3 ms
+4 KiB from . (xfs /dev/sdg1): request=12 time=12.6 ms
+4 KiB from . (xfs /dev/sdg1): request=13 time=121.4 ms
+4 KiB from . (xfs /dev/sdg1): request=14 time=193.2 ms
+4 KiB from . (xfs /dev/sdg1): request=15 time=213.0 ms
+4 KiB from . (xfs /dev/sdg1): request=16 time=339.3 ms
+</code></pre>
+
+<p>I find it interesting how catting a single file can drive ioping
+latency over a second, but stays below 500ms with 4 files being read.
+In any case, HDDs stink if there's more than one thing happening.</p>
+
+<h3>Example: ZFS</h3>
+
+<p>I have a RAID10 zpool on my workstation. It has 4x 3.5&quot; 7200RPM
+SATA drives on the AHCI HBA and ZIL/L2ARC on the same SSD as my
+root filesystem. <a href="https://gist.github.com/tobert/d583ae84371b851314cf">configuration</a></p>
+
+<pre><code>atobey@brak ~ $ sudo ioping .
+4 KiB from . (zfs tank/atobey): request=1 time=13 us    -- cache
+4 KiB from . (zfs tank/atobey): request=2 time=19 us
+4 KiB from . (zfs tank/atobey): request=3 time=18.5 ms  -- HDD
+4 KiB from . (zfs tank/atobey): request=4 time=1.27 ms  -- cache
+4 KiB from . (zfs tank/atobey): request=5 time=1.52 ms
+4 KiB from . (zfs tank/atobey): request=6 time=9.52 ms
+4 KiB from . (zfs tank/atobey): request=7 time=19.4 ms  -- HDD
+4 KiB from . (zfs tank/atobey): request=8 time=1.53 ms  -- cache
+4 KiB from . (zfs tank/atobey): request=9 time=16.5 ms
+4 KiB from . (zfs tank/atobey): request=10 time=19.4 ms
+4 KiB from . (zfs tank/atobey): request=11 time=709 us  -- cache
+4 KiB from . (zfs tank/atobey): request=12 time=709 us
+4 KiB from . (zfs tank/atobey): request=13 time=708 us
+4 KiB from . (zfs tank/atobey): request=14 time=19.1 ms -- HDD
+4 KiB from . (zfs tank/atobey): request=15 time=740 us  -- cache
+4 KiB from . (zfs tank/atobey): request=16 time=696 us
+4 KiB from . (zfs tank/atobey): request=17 time=723 us
+4 KiB from . (zfs tank/atobey): request=18 time=21.2 ms -- HDD
+4 KiB from . (zfs tank/atobey): request=19 time=11.8 ms
+4 KiB from . (zfs tank/atobey): request=20 time=3.92 ms
+^C
+--- . (zfs tank/atobey) ioping statistics ---
+20 requests completed in 19.7 s, 135 iops, 540.7 KiB/s
+min/avg/max/mdev = 13 us / 7.40 ms / 21.2 ms / 8.19 ms
+</code></pre>
+
+<p>Cache hits/misses are fairly obvious. What's not obvious is which
+cache is in action, since this ZFS setup has many: VFS -&gt; ARC -&gt; L2ARC -&gt; drive cache -&gt; drive.</p>
+
+<h2>3 SSDs and an HDD</h2>
+
+<p><img src="/images/DSC_0409-480x.jpg" alt="picture of drives" />
+</p>
+
+<p>I also had a PNY XLR8 and Samsung 850 Pro in SAS trays already,
+so I put together a silly test that shows striping across drives of different speeds.
+I chose a 1MB chunk size to make it more obvious.</p>
+
+<p>My hypothesis is that ioping won't detect the slow drive unless I get &quot;lucky&quot; and
+the filesystem puts the block created by ioping on that stripe.</p>
+
+<pre><code>atobey@brak ~ $ sudo mdadm --create /dev/md0 --raid-devices=3 --level=0 --chunk=1048576 /dev/sdg1 /dev/sdi1 /dev/sdj1
+atobey@brak ~ $ sudo mkfs.xfs /dev/md0 ; sudo mount /dev/md0 /mnt/tmp
+atobey@brak ~ $ sudo ioping /mnt/tmp
+4 KiB from /mnt/tmp (xfs /dev/md0): request=1 time=2.12 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=2 time=296.4 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=3 time=296.6 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=4 time=296.2 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=5 time=295.8 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=6 time=295.1 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=7 time=296.3 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=8 time=296.8 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=9 time=296.0 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=10 time=295.6 ms
+^C
+--- /mnt/tmp (xfs /dev/md0) ioping statistics ---
+10 requests completed in 12.1 s, 3 iops, 15.0 KiB/s
+min/avg/max/mdev = 2.12 ms / 266.7 ms / 296.8 ms / 88.2 ms
+</code></pre>
+
+<p>OK. That's almost certainly spinning rust. Let's make sure. In order to force
+the filesystem to allocate across different chunks, I'm going to use <code>dd</code> to create
+1MB files in the background while observing latency with ioping.</p>
+
+<p>Sure enough, there it is....</p>
+
+<pre><code>atobey@brak ~ $ sudo mkdir /mnt/tmp/garbage ; sudo chown atobey /mnt/tmp/garbage
+atobey@brak ~ $ for i in $(seq 1 1000); do dd if=/dev/urandom of=/mnt/tmp/garbage/junk.$i bs=1M count=1; done
+atobey@brak ~ $ sudo ioping /mnt/tmp
+4 KiB from /mnt/tmp (xfs /dev/md0): request=1 time=186 us     -- cache?
+4 KiB from /mnt/tmp (xfs /dev/md0): request=2 time=296.0 ms   -- HDD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=3 time=295.4 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=4 time=163 us     -- yeah, it's a cache
+4 KiB from /mnt/tmp (xfs /dev/md0): request=5 time=1.66 ms    -- SSD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=6 time=1.73 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=7 time=1.45 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=8 time=1.75 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=9 time=1.44 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=10 time=296.1 ms  -- HDD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=11 time=1.82 ms   -- SSD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=12 time=1.35 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=13 time=242 us    -- cache hit
+4 KiB from /mnt/tmp (xfs /dev/md0): request=14 time=1.69 ms   -- SSD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=15 time=296.4 ms  -- HDD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=16 time=1.66 ms   -- SSD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=17 time=1.72 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=18 time=281 us    -- cache hit
+4 KiB from /mnt/tmp (xfs /dev/md0): request=19 time=1.58 ms   -- SSD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=20 time=296.5 ms  -- HDD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=21 time=1.74 ms   -- SSD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=22 time=1.43 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=23 time=1.34 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=24 time=68.9 ms   -- ???
+4 KiB from /mnt/tmp (xfs /dev/md0): request=25 time=295.3 ms  -- HDD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=26 time=1.72 ms   -- SSD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=27 time=1.44 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=28 time=1.73 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=29 time=1.42 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=30 time=34.2 ms   -- ???
+4 KiB from /mnt/tmp (xfs /dev/md0): request=31 time=38.4 ms
+4 KiB from /mnt/tmp (xfs /dev/md0): request=32 time=254 us    -- cache hit
+4 KiB from /mnt/tmp (xfs /dev/md0): request=33 time=1.44 ms   -- SSD
+4 KiB from /mnt/tmp (xfs /dev/md0): request=34 time=1.70 ms
+^C
+--- /mnt/tmp (xfs /dev/md0) ioping statistics ---
+34 requests completed in 35.0 s, 17 iops, 69.7 KiB/s
+min/avg/max/mdev = 163 us / 57.4 ms / 296.5 ms / 111.3 ms
+</code></pre>
+
+<h2>Conclusion</h2>
+
+<p>ioping is a great utility for doing a quick check of the latency
+to your storage. The only major flow I've noticed in my short time
+with it is that the bandwidth numbers are silly and probably shouldn't
+exist. I've installed it on a few machines and it was available in my
+default repositories for <code>pacman -S ioping</code> or <code>apt-get install ioping</code>.
+ioping may not provide kind of data you'd use to make million-dollar purchases,
+but serves quite well for observing storage when you don't have the time or
+opportunity to do &quot;proper&quot; benchmarking.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/2015-01-22-ioping.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Albert P. Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
