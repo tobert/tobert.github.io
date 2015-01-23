@@ -7,10 +7,19 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Albert P Tobey</author>
-	<pubDate>2015-01-18</pubDate>
-	<lastBuildDate>2015-01-18</lastBuildDate>
+	<pubDate>2015-01-23</pubDate>
+	<lastBuildDate>2015-01-22</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>ioping</title>
+	  <link>https://tobert.github.io/post/2015-01-22-ioping.html</link>
+      <pubDate>Fri, 23 Jan 2015 04:00:00 UTC</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>2015-01-22-ioping</guid>
+	  <description>using ioping to observe storage latency</description>
+    </item>
     
     <item>
       <title>TL;DR: Dragon Age Inquisition Review</title>
@@ -28,6 +37,15 @@
       <author>Albert P Tobey</author>
       <guid>isolcpus-workstation-experiment-gkrellm-screenshots</guid>
 	  <description>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</description>
+    </item>
+    
+    <item>
+      <title>TL;DR: My Blog Development Script</title>
+	  <link>https://tobert.github.io/tldr/my-blog-development-script.html</link>
+      <pubDate>Sat, 03 Jan 2015 01:04:20 PST</pubDate>
+      <author>Albert P Tobey</author>
+      <guid>my-blog-development-script</guid>
+	  <description>TL;DR: My Blog Development Script</description>
     </item>
     
     <item>

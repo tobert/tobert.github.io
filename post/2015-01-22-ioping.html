@@ -115,7 +115,7 @@ for.</p>
 it into my SAS bay. This model of drive is commonly shipped in enterprise servers.</p>
 
 <p>This experiment took all of 30 seconds to run. About 2/3 of the way down you may
-notice that latency went from ~8ms to 1.58<em>s</em>. I started ioping in screen then
+notice that latency went from ~8ms to 1.58<em>seconds</em>. I started ioping in screen then
 flipped to another screen and ran one of my favorite read load tricks:</p>
 
 <p><code>sudo find /mnt/sdg -type f -exec cat {} &gt; /dev/null \;</code></p>
@@ -211,6 +211,8 @@ In any case, HDDs stink if there's more than one thing happening.</p>
 SATA drives on the AHCI HBA and ZIL/L2ARC on the same SSD as my
 root filesystem. <a href="https://gist.github.com/tobert/d583ae84371b851314cf">configuration</a></p>
 
+<p>The cache / HDD annotations on the right are my (educated) guess.</p>
+
 <pre><code>atobey@brak ~ $ sudo ioping .
 4 KiB from . (zfs tank/atobey): request=1 time=13 us    -- cache
 4 KiB from . (zfs tank/atobey): request=2 time=19 us
@@ -238,7 +240,7 @@ root filesystem. <a href="https://gist.github.com/tobert/d583ae84371b851314cf">c
 min/avg/max/mdev = 13 us / 7.40 ms / 21.2 ms / 8.19 ms
 </code></pre>
 
-<p>Cache hits/misses are fairly obvious. What's not obvious is which
+<p>If you look at the latency deltas between my notations, cache hits/misses are fairly obvious. What's not obvious is which
 cache is in action, since this ZFS setup has many: VFS -&gt; ARC -&gt; L2ARC -&gt; drive cache -&gt; drive.</p>
 
 <h2>3 SSDs and an HDD</h2>
