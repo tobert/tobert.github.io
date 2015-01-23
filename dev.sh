@@ -5,9 +5,19 @@
 #
 # pacman -S inotify-tools # for inotifywait on Arch Linux
 
+if [ ! -x tobert.github.io ] ; then
+  go build -a
+fi
+
+pushcode () {
+  rsync -a js css images /srv/http
+  ./tobert.github.io -pub /srv/http -domain brak.tobert.org -force-idx
+}
+
+pushcode
+
 while true
 do
 	inotifywait -r -e modify -e create -e close .
-	rsync -a js css images /srv/http
-	go run build-blog.go -pub /srv/http -domain brak.tobert.org -force-idx
+	pushcode
 done
