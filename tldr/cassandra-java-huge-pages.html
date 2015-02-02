@@ -1,0 +1,286 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    
+    <meta name="keywords" content="cassandra, java, huge, pages, ">
+    <meta property="article:published_time" content="2015-02-02"/>
+    <meta property="article:modified_time" content="2015-02-02"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@AlTobey">
+     <meta name="twitter:title" content="TL;DR: Cassandra Java Huge Pages : Al Tobey Writes">
+     <meta name="twitter:creator" content="@AlTobey">
+     
+     <meta name="twitter:domain" content="https://tobert.github.io">
+
+    <title>TL;DR: Cassandra Java Huge Pages</title>
+    <link rel="canonical" href="https://tobert.github.io/tldr/cassandra-java-huge-pages.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Al Tobey Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+    
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Al Tobey Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://twitter.com/AlTobey"><i class="fa fa-twitter"></i> | @AlTobey</a></li>
+              <li><a href="https://plus.google.com/+AlTobey"><i class="fa fa-google-plus"></i> | +AlTobey</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa fa-github"></i> | tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa fa-rss"></i> | RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/tldr/cassandra-java-huge-pages.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">TL;DR: Cassandra Java Huge Pages</h1>
+      <span class="pull-right">
+        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/tldr/cassandra-java-huge-pages.html&text=TL;DR: Cassandra Java Huge Pages&via=AlTobey"
+           class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
+        <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/tldr/cassandra-java-huge-pages.html"
+           class="btn btn-facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://plus.google.com/share?url=https://tobert.github.io/tldr/cassandra-java-huge-pages.html"
+           class="btn btn-google-plus"><i class="fa fa-google-plus"></i></a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<p>Many applications seem to be having trouble with a Linux feature called
+&quot;Transparent Hugepages&quot;. When enabled, the Linux kernel will try to allocate
+memory in bigger chunks - typically 2MB - rather than 4K at a time. This can
+impact performance by reducing the load on CPU caches (TLB) used for managing
+ranges of addresses. As you can imagine, managing memory on a 128GB machine in
+4KB pages requires a fair bit of work. Using 2MB pages reduces the number of
+pages being tracked by a factor of 512!</p>
+
+<p>So, with that said, it sounds like huge pages are a Good Thing, but they can
+cause surprises when enabled in the background. Many applications assume the
+page size on Linux is 4096 and allocate memory based on that assumption. That's
+not such a bad thing since the OS still reports a page size of 4096. Where it
+gets ugly is when Linux decides to defrag 4K pages into 2MB pages. In order
+to do so, it has to lock the memory being moved which almost always ends up
+being visible in the applications whose pages are being migrated. On most
+Redhat variants including RHEL and CentOS, THP defrag is enabled by default
+and you probably want to disable it via a setting in sysfs.</p>
+
+<pre><code># require apps to opt into defrag
+echo madvise |sudo tee /sys/kernel/mm/transparent_hugepage/defrag
+
+# disable defrag entirely
+echo never |sudo tee /sys/kernel/mm/transparent_hugepage/defrag
+</code></pre>
+
+<h2>-XX:+AlwaysPreTouch</h2>
+
+<p>I ran some quick tests and it appears that THP and Cassandra get along well
+once defrag is out of the picture. The big problem with Cassandra and THP
+is that while the JVM will happily malloc all of your heap at startup when
+-Xmx == -Xms, the operating system is pessimistic about it and does not
+actually map real memory pagse until those pages are accessed. Fortunately,
+there's an easy way to get the JVM to access all of its memory immediately
+at startup. It's easy to see this works with THP. I suspect it also helps
+in virtualized environments to make sure the heap is allocated in as few
+fragments as possible.</p>
+
+<pre><code>[atobey@moltar ~]$ grep Huge /proc/meminfo
+AnonHugePages:    641024 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+[atobey@moltar ~]$ sudo docker start 889e
+889e
+[atobey@moltar ~]$ grep AnonHuge /proc/meminfo
+AnonHugePages:   1042432 kB
+[atobey@moltar ~]$ grep AnonHuge /proc/meminfo
+AnonHugePages:   1130496 kB
+[atobey@moltar ~]$ grep AnonHuge /proc/meminfo
+AnonHugePages:   1185792 kB
+</code></pre>
+
+<p>As you can see, the kernel is allocating huge pages to Cassandra when I start
+it up in the docker start command. It isn't allocating all 4GB of heap I configured
+because that memory has not been used by the JVM. As you can imagine, running in this
+way may cause some fragmentation over time.</p>
+
+<p>Now here's a similar exercise with -XX:+AlwaysPreTouch added to the JVM parameters.</p>
+
+<pre><code>[atobey@moltar ~]$ grep AnonHuge /proc/meminfo
+AnonHugePages:    665600 kB
+[atobey@moltar ~]$ sudo docker start 889e
+889e
+[atobey@moltar ~]$ grep AnonHuge /proc/meminfo
+AnonHugePages:   4868096 kB
+[atobey@moltar ~]$ ps -eo args |grep java
+/usr/bin/java ... -Xms3941M -Xmx3941M -Xmn800M -XX:+AlwaysPreTouch ...
+</code></pre>
+
+<p>In this case, all of the pages are getting zeroed immediately after the JVM starts,
+forcing the kernel to map them all immediately.  My suspicion is that most JVM
+applications with statically-sized heaps (-Xmx == -Xms) should be enabling
+-XX:+AlwaysPreTouch rather than letting the OS map memory pages on use.</p>
+
+<h2>-XX+UseLargePages -XX:LargePageSizeInBytes=2m</h2>
+
+<p>There is a way to tell the JVM to explicitly use huge pages at startup
+using the -XX:+UseLargePages option. This requires more changes to get
+working but may be preferable for your environment.</p>
+
+<p>First, the kernel has to be instructed to reserve memory for huge pages. Then
+a group ID has to be provided so the kernel can allow non-root processes
+to allocate huge pages.</p>
+
+<p>My Docker image runs cassandra as uid/gid 1337 so I've set hugetlb_shm_group to
+1337. You will need ot set it to a gid that your cassandra system user is in.</p>
+
+<p>The number of pages to reserve can be calculated by dividing your total heap size
+in megabytes by 2. I usually round up for the first try. Once you see how many
+pages Cassandra uses you can reduce the setting on the fly.</p>
+
+<pre><code>cat &gt; /etc/sysctl.d/hugepages.conf &lt;&lt;EOF
+vm.nr_hugepages=3000
+vm.hugetlb_shm_group=1337
+EOF
+sysctl -p /etc/sysctl.d/hugepages.conf
+grep HugePages_Total /proc/meminfo
+</code></pre>
+
+<p>That last grep is important! If Linux can't find space to allocate all of the huge
+pages, the value of HugePages_Total will be lower than you asked for. The safe bet
+at this point is to reboot. If nothing else is running on the system, the memory
+can sometimes be freed up by dropping the VFS caches with <code>echo 1 |sudo tee /proc/sys/vm/drop_caches</code>.</p>
+
+<p>Once hugepages are enabled in the kernel, the JVM has to be instructed to use them. This
+requires adding the two flags to <a href="https://gist.github.com/tobert/24f835809ed3ff3b05c7/revisions">cassandra-env.sh</a>.</p>
+
+<pre><code>@@ -175,6 +175,9 @@ JVM_OPTS=&quot;$JVM_OPTS -ea&quot;
+ # add the jamm javaagent
+ JVM_OPTS=&quot;$JVM_OPTS -javaagent:$CASSANDRA_HOME/lib/jamm-0.2.8.jar&quot;
+
++# enable hugepages - requires some settings in /proc/sys/vm to work, fails gracefully
++JVM_OPTS=&quot;$JVM_OPTS -XX+UseLargePages -XX:LargePageSizeInBytes=2m&quot;
++
+ # some JVMs will fill up their heap when accessed via JMX, see CASSANDRA-6541
+ JVM_OPTS=&quot;$JVM_OPTS -XX:+CMSClassUnloadingEnabled&quot;
+</code></pre>
+
+<p>After making this change, start Cassandra again and then verify it by examining
+/proc/meminfo. I picked 3000 at random. In this case it will fail to allocate
+all 3000 requested but that's fine since my instance of Cassandra is configured
+with a 4GB heap.</p>
+
+<pre><code>[atobey@moltar ~]$ echo 3000 |sudo tee /proc/sys/vm/nr_hugepages
+3000
+[atobey@moltar ~]$ grep Huge /proc/meminfo
+AnonHugePages:    743424 kB
+HugePages_Total:    2604
+HugePages_Free:     2604
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+[atobey@moltar ~]$ sudo docker start 889e
+889e
+[atobey@moltar ~]$ grep Huge /proc/meminfo
+AnonHugePages:    741376 kB
+HugePages_Total:    2604
+HugePages_Free:     2450
+HugePages_Rsvd:     1970
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+</code></pre>
+
+<p>Viola! HugePages_Rsvd is showing 1970 pages in use which adds up to 3940MB of memory, which
+is pretty close to my heap's specified 3941MB of memory.</p>
+
+<h2>Conclusion</h2>
+
+<p>I did some light performance testing on a quad-core Xeon machine and noticed <em>maybe</em> a 1%
+improvement in performance. My suspicion is that it doesn't help a lot unless the machine
+has lots of memory or a really large heap.</p>
+
+<p>Most modern Linux distros ship with transparent hugepages enabled by default, so my recommendation
+is to add -XX:+AlwaysPreTouch since it's a noop after startup and can provide some small performance
+benefit. As usual with modifying JVM options, test on one machine for a while then roll out slowly
+just in case I missed something important.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/tldr/cassandra-java-huge-pages.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Albert P. Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
