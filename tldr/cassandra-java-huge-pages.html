@@ -119,6 +119,15 @@ echo madvise |sudo tee /sys/kernel/mm/transparent_hugepage/defrag
 echo never |sudo tee /sys/kernel/mm/transparent_hugepage/defrag
 </code></pre>
 
+<p>I'm going to continue experimenting with defrag enabled in my
+lab. There are a few knobs in syfs that resemble the ksm (kernel samepage merging -
+a similar feature for deduplicating memory) settings that can be used to
+tune khugepaged.</p>
+
+<pre><code>[atobey@moltar ~]$ ls /sys/kernel/mm/hugepages/hugepages-2048kB/
+free_hugepages  nr_hugepages  nr_hugepages_mempolicy  nr_overcommit_hugepages  resv_hugepages  surplus_hugepages
+</code></pre>
+
 <h2>-XX:+AlwaysPreTouch</h2>
 
 <p>I ran some quick tests and it appears that THP and Cassandra get along well
@@ -267,6 +276,18 @@ is to add -XX:+AlwaysPreTouch since it's a noop after startup and can provide so
 benefit. The -XX:+UseLargePages option is more work to configure and doesn't work as reliably.</p>
 
 <p>As usual with modifying JVM options, test on one machine for a while then roll out slowly to be safe.</p>
+
+<h2>Further Reading</h2>
+
+<p><a href="http://lwn.net/Articles/517465/">http://lwn.net/Articles/517465/</a></p>
+
+<p><a href="https://bugzilla.redhat.com/show_bug.cgi?id=805593">https://bugzilla.redhat.com/show_bug.cgi?id=805593</a></p>
+
+<p><a href="http://structureddata.org/2012/06/18/linux-6-transparent-huge-pages-and-hadoop-workloads/">http://structureddata.org/2012/06/18/linux-6-transparent-huge-pages-and-hadoop-workloads/</a></p>
+
+<p><a href="https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt">https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt</a></p>
+
+<p><a href="https://www.kernel.org/doc/Documentation/vm/transhuge.txt">https://www.kernel.org/doc/Documentation/vm/transhuge.txt</a></p>
 </div><!-- container-bottom -->
 <!-- begin footer.html -->
 <footer class="footer">

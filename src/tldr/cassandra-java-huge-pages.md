@@ -24,6 +24,16 @@ echo madvise |sudo tee /sys/kernel/mm/transparent_hugepage/defrag
 echo never |sudo tee /sys/kernel/mm/transparent_hugepage/defrag
 ```
 
+I'm going to continue experimenting with defrag enabled in my
+lab. There are a few knobs in syfs that resemble the ksm (kernel samepage merging -
+a similar feature for deduplicating memory) settings that can be used to
+tune khugepaged.
+
+```
+[atobey@moltar ~]$ ls /sys/kernel/mm/hugepages/hugepages-2048kB/
+free_hugepages  nr_hugepages  nr_hugepages_mempolicy  nr_overcommit_hugepages  resv_hugepages  surplus_hugepages
+```
+
 ## -XX:+AlwaysPreTouch
 
 I ran some quick tests and it appears that THP and Cassandra get along well
@@ -179,3 +189,14 @@ benefit. The -XX:+UseLargePages option is more work to configure and doesn't wor
 
 As usual with modifying JVM options, test on one machine for a while then roll out slowly to be safe.
 
+## Further Reading
+
+http://lwn.net/Articles/517465/
+
+https://bugzilla.redhat.com/show_bug.cgi?id=805593
+
+http://structureddata.org/2012/06/18/linux-6-transparent-huge-pages-and-hadoop-workloads/
+
+https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
+
+https://www.kernel.org/doc/Documentation/vm/transhuge.txt
