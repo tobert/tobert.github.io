@@ -193,8 +193,6 @@ As usual with modifying JVM options, test on one machine for a while then roll o
 
 http://lwn.net/Articles/517465/
 
-https://bugzilla.redhat.com/show_bug.cgi?id=805593
-
 http://structureddata.org/2012/06/18/linux-6-transparent-huge-pages-and-hadoop-workloads/
 
 https://www.kernel.org/doc/Documentation/vm/hugetlbpage.txt
