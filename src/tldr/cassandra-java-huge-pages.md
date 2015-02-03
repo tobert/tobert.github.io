@@ -54,8 +54,8 @@ HugePages_Free:        0
 HugePages_Rsvd:        0
 HugePages_Surp:        0
 Hugepagesize:       2048 kB
-[atobey@moltar ~]$ sudo docker start 889e
-889e
+[atobey@moltar ~]$ sudo docker start cass01
+cass01
 [atobey@moltar ~]$ grep AnonHuge /proc/meminfo
 AnonHugePages:   1042432 kB
 [atobey@moltar ~]$ grep AnonHuge /proc/meminfo
@@ -74,8 +74,8 @@ Now here's a similar exercise with -XX:+AlwaysPreTouch added to the JVM paramete
 ```
 [atobey@moltar ~]$ grep AnonHuge /proc/meminfo
 AnonHugePages:    665600 kB
-[atobey@moltar ~]$ sudo docker start 889e
-889e
+[atobey@moltar ~]$ sudo docker start cass01
+cass01
 [atobey@moltar ~]$ grep AnonHuge /proc/meminfo
 AnonHugePages:   4868096 kB
 [atobey@moltar ~]$ ps -eo args |grep java
@@ -148,8 +148,8 @@ HugePages_Free:     2604
 HugePages_Rsvd:        0
 HugePages_Surp:        0
 Hugepagesize:       2048 kB
-[atobey@moltar ~]$ sudo docker start 889e
-889e
+[atobey@moltar ~]$ sudo docker start cass01
+cass01
 [atobey@moltar ~]$ grep Huge /proc/meminfo
 AnonHugePages:    741376 kB
 HugePages_Total:    2604
