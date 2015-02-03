@@ -104,7 +104,7 @@ grep HugePages_Total /proc/meminfo
 ```
 
 That last grep is important! If Linux can't find space to allocate all of the huge
-pages, the value of HugePages\_Total will be lower than you asked for. The safe bet
+pages, the value of HugePages\_Total will be lower than you asked for (see below). The safe bet
 at this point is to reboot. If nothing else is running on the system, the memory
 can sometimes be freed up by dropping the VFS caches with `echo 1 |sudo tee /proc/sys/vm/drop_caches`.
 
@@ -149,8 +149,23 @@ HugePages_Surp:        0
 Hugepagesize:       2048 kB
 ```
 
-Viola! HugePages\_Rsvd is showing 1970 pages in use which adds up to 3940MB of memory, which
-is pretty close to my heap's specified 3941MB of memory.
+After getting it working, you'll want to make your nr\_hugepages number more precise. This
+should usually be your heap size in megabytes / 2, in this case, 1970. I set it higher
+at first because after Cassandra gets up and running it may still allocate memory beyond the
+heap for off-heap, which ideally will be in hugepages. I checked my system again after
+letting Cassandra run for a few minutes and the Rsvd pages number did increase slightly.
+
+```
+[atobey@moltar tobert.github.io]$ grep Huge /proc/meminfo
+AnonHugePages:    712704 kB
+HugePages_Total:    2604
+HugePages_Free:     2357
+HugePages_Rsvd:     1877
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+```
+
+So for these settings, I would set nr\_hugepages to 1900 and call it a day.
 
 ## Conclusion
 
@@ -160,6 +175,7 @@ has lots of memory or a really large heap.
 
 Most modern Linux distros ship with transparent hugepages enabled by default, so my recommendation
 is to add -XX:+AlwaysPreTouch since it's a noop after startup and can provide some small performance
-benefit. As usual with modifying JVM options, test on one machine for a while then roll out slowly
-just in case I missed something important.
+benefit. The -XX:+UseLargePages option is more work to configure and doesn't work as reliably.
+
+As usual with modifying JVM options, test on one machine for a while then roll out slowly to be safe.
 
