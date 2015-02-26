@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/url"
+	"net/http"
 	"os"
 	"path"
 	"path/filepath"
@@ -87,7 +88,7 @@ type TmplData struct {
 var (
 	defaultPath, srcFlag, pubFlag, domainFlag string
 	portFlag                                  int
-	forceIdxFlag                              bool
+	forceIdxFlag, serveFlag                   bool
 )
 
 func init() {
@@ -97,11 +98,39 @@ func init() {
 	flag.StringVar(&srcFlag, "src", defaultPath, "where to find the content source")
 	flag.StringVar(&pubFlag, "pub", defaultPath, "where to write generated content")
 	flag.BoolVar(&forceIdxFlag, "force-idx", false, "forces all pages into the automatic index")
+	flag.BoolVar(&serveFlag, "serve", false, "serve content locally, regenerating on each request")
 }
 
 func main() {
 	flag.Parse()
 
+	if serveFlag {
+		serve()
+	} else {
+		generate()
+	}
+}
+
+// for each request, generates content as usual then serves the request
+// this is wasteful at the moment since it regens on every request but
+// should be fine for development for now
+func serve() {
+	fileHandler := http.FileServer(http.Dir(pubFlag))
+
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		generate()
+	    fileHandler.ServeHTTP(w, r)
+	})
+
+	addr := fmt.Sprintf(":%d", portFlag)
+	err := http.ListenAndServe(addr, handler)
+	if err != nil {
+		log.Fatalf("net.http could not listen on port %d: %s\n", portFlag, err)
+	}
+}
+
+// generate the site
+func generate() {
 	baseUrl, err := url.Parse(fmt.Sprintf("https://%s", domainFlag))
 	if err != nil {
 		log.Fatalf("Could not parse base URL 'https://%s': %s", domainFlag, err)
