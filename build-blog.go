@@ -15,10 +15,9 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/russross/blackfriday"
-	"gopkg.in/yaml.v1"
 	"io/ioutil"
 	"log"
 	"net/url"
@@ -29,6 +28,9 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/russross/blackfriday"
+	"gopkg.in/yaml.v1"
 )
 
 type Config struct {
@@ -228,6 +230,17 @@ func main() {
 		}
 
 		log.Printf("OK Wrote %s to %s\n", strings.TrimLeft(page.SrcRel, "/"), strings.TrimLeft(page.PubRel, "/"))
+	}
+
+	js, err := json.MarshalIndent(pages, "", "  ")   //.Marshal(pages)
+	if err != nil {
+		log.Fatalf("JSON marshaling failed: %s\n", err)
+	}
+
+	pagesJson := path.Join(c.PubRoot, "pages.json")
+	err = ioutil.WriteFile(pagesJson, js, 0644)
+	if err != nil {
+		log.Fatalf("Saving %s failed: %s\n", pagesJson, err)
 	}
 }
 
