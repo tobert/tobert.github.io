@@ -20,8 +20,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"net/url"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -119,7 +119,7 @@ func serve() {
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		generate()
-	    fileHandler.ServeHTTP(w, r)
+		fileHandler.ServeHTTP(w, r)
 	})
 
 	addr := fmt.Sprintf(":%d", portFlag)
@@ -261,7 +261,7 @@ func generate() {
 		log.Printf("OK Wrote %s to %s\n", strings.TrimLeft(page.SrcRel, "/"), strings.TrimLeft(page.PubRel, "/"))
 	}
 
-	js, err := json.MarshalIndent(pages, "", "  ")   //.Marshal(pages)
+	js, err := json.MarshalIndent(pages, "", "  ") //.Marshal(pages)
 	if err != nil {
 		log.Fatalf("JSON marshaling failed: %s\n", err)
 	}
