@@ -1,0 +1,124 @@
+---
+id: "packaging"
+title: "Packaging for the Cassandra Ecosystem"
+abstract: ""
+tags: ["cassandra", "datastax", "packaging", "ecosystem"]
+pubdate: 2015-03-10T20:05:19Z
+head: <link type="text/css" rel="stylesheet" href="/css/sitemap.css">
+---
+
+<p>This is something I've thrown together to think through all the complexity involved
+in shipping code to all of Datastax's customers. Just about everything on this list
+exists at one customer site or another. While I don't know of any users in production
+on Docker, there are a few on LXC and even more getting ready to move ahead with it,
+so I've included the few Docker-based deployment models that I know about.</p>
+
+<div id="d3-container"></div>
+
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="/js/d3.v3.min.js"></script>
+
+<script>
+$(document).ready(function() {
+	// tags get linked automatically. tags with 0 links will be ignored, but go ahead and add them
+	var tags = [
+		// targets
+	  { "name": "bare metal",     "tags": [ "host" ] },
+	  { "name": "vm",             "tags": [ "virtualization", "cloud" ] }, // EC2, GCE, Vagrant, Vmware, etc.
+	  { "name": "container",      "tags": [ "host" ] }, // Docker, Rocket ... should LXC be under VM?
+
+		// config managers
+	  { "name": "chef",           "tags": [ "config_management", "orchestration" ] },
+	  { "name": "puppet",         "tags": [ "config_management", "orchestration" ] },
+	  { "name": "cfengine",       "tags": [ "config_management" ] }, // orchestration?
+	  { "name": "ansible",        "tags": [ "config_management", "orchestration" ] },
+	  { "name": "salt",           "tags": [ "config_management", "orchestration" ] },
+	  { "name": "terraform",      "tags": [ "config_management", "orchestration", "hashicorp" ] },
+
+	  // deploy
+	  { "name": "fabric",         "tags": [ "orchestration" ] },
+	  { "name": "capistrano",     "tags": [ "orchestration" ] },
+
+	  // supported JRE/JDKs
+	  { "name": "oracle",         "tags": [ "jre", "jdk" ] },
+	  { "name": "openjdk",        "tags": [ "jre", "jdk" ] },
+	  { "name": "azul",           "tags": [ "jre", "jdk" ] },
+
+		// operating systems / package format
+	  { "name": "unix",           "tags": [ "artifact", "unix", "tgz" ] }, // tgz
+	  { "name": "redhat",         "tags": [ "artifact", "linux", "rpm" ] }, // RHEL/CentOS/Fedora
+	  { "name": "debian",         "tags": [ "artifact", "linux", "deb", "canonical" ] }, // ubuntu
+	  { "name": "coreos",         "tags": [ "artifact", "linux", "docker" ] }, // Docker/Rocket
+	  { "name": "windows",        "tags": [ "artifact", "windows", "msi" ] }, // Windows Server
+
+	  // package & image management tools
+		{ "name": "fpm",            "tags": [ "build tool", "rpm", "deb" ] },
+		{ "name": "packer",         "tags": [ "build tool", "ami", "ova" ] },
+
+	  // orchestration
+		{ "name": "kubernetes",    "tags": [ "orchestration", "docker", "google" ] },
+		{ "name": "knife",         "tags": [ "orchestration", "chef" ] },
+		{ "name": "juju",          "tags": [ "orchestration", "canonical" ] },
+		{ "name": "machine",       "tags": [ "orchestration", "docker" ] },
+
+		// DCOS / PaaS / IaaS *software* (*aaS below)
+	  { "name": "mesos",         "tags": [ "dcos", "docker" ] },
+	  { "name": "YARN",          "tags": [ "dcos", "docker", "hadoop" ] },
+	  { "name": "cloud foundry", "tags": [ "paas", "docker", "pivotal" ] },
+	  { "name": "openstack",     "tags": [ "iaas", "virtualization", "canonical", "cisco", "redhat" ] },
+	  { "name": "cloudstack",    "tags": [ "iaas", "virtualization", "citrix", "apache" ] },
+	  { "name": "vsphere",       "tags": [ "iaas", "virtualization", "vmware" ] },
+
+	  // IaaS
+		{ "name": "azure",         "tags": [ "iaas", "image", "microsoft" ] },
+		{ "name": "ec2",           "tags": [ "iaas", "image", "amazon" ] },
+		{ "name": "gce",           "tags": [ "iaas", "image", "google" ] },
+		{ "name": "digital_ocean", "tags": [ "iaas", "image", "digital ocean" ] },
+
+		// PaaS (some overlap with DOCS/IaaS)
+		{ "name": "openshift",     "tags": [ "paas", "docker" ] },
+		{ "name": "gcs",           "tags": [ "paas", "docker", "google", "container engine" ] },
+		{ "name": "ecs",           "tags": [ "paas", "docker", "amazon", "container engine" ] },
+  ];
+
+	var processes = [
+		// legacy enterprise
+	  {
+			"name": "legacy",
+			"desc": "legacy enterprise deploy",
+			"topology": [
+				[["datastax"], ["msi","rpm","deb","installer"]],
+				[["rpm"], ["redhat"]],
+				[["deb"], ["debian"]],
+				[["msi"], ["windows"]],
+				[["windows","redhat","debian"], ["bare metal","vm"]]
+			]
+		},
+		// devops enterprise - yeah, yeah, I know
+		{
+			"name": "devops",
+			"desc": "modern enterprise, configuration management + CI, etc."
+			"topology": [
+				[["datastax"], ["msi","rpm","deb"]],
+				[["rpm"], ["redhat"]],
+				[["deb"], ["debian"]],
+				[["msi"], ["windows"]],
+				[["windows","redhat","debian"], ["bare metal","vm","container"]]
+		},
+		// golden image, redhat only for the moment to keep it simple. Same everything on other distros.
+	  // also substitute "packer" with "shell script" etc. for now.
+		{
+			"name": "golden image",
+		 	"desc": "where there is some kind of image baking proces for deployment",
+			"topology": [
+				[["datastax"], ["rpm"]],
+				[["rpm"], ["redhat"]],
+				[["redhat"], ["packer"]],
+				[["packer"], ["image"]],
+				[["image"]], ["vsphere"]]
+			]
+		},
+	];
+});
+</script>
+
