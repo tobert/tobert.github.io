@@ -370,6 +370,11 @@ func findPages(c Config) (pages Pages) {
 			log.Fatalf("Could not read page source file '%s': %s", fpath, err)
 		}
 
+		// don't index files in /pages/ by default
+		if subpath == "/pages/" {
+			page.AutoIdx = false
+		}
+
 		if subpath == "/tldr/" {
 			// "tldr" posts are shorter and have no required front matter
 			title := strings.Replace(page.Id, "-", " ", -1)
