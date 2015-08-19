@@ -8,14 +8,14 @@
     <language>en-us</language>
     <author>Albert P Tobey</author>
 	<pubDate>2015-02-03</pubDate>
-	<lastBuildDate>2015-02-03</lastBuildDate>
+	<lastBuildDate>2015-08-19</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
     
     <item>
       <title>TL;DR: Cassandra Java Huge Pages</title>
 	  <link>https://tobert.github.io/tldr/cassandra-java-huge-pages.html</link>
-      <pubDate>Tue, 03 Feb 2015 09:51:44 PST</pubDate>
+      <pubDate>Tue, 03 Feb 2015 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>cassandra-java-huge-pages</guid>
 	  <description>TL;DR: Cassandra Java Huge Pages</description>
@@ -33,7 +33,7 @@
     <item>
       <title>TL;DR: Dragon Age Inquisition Review</title>
 	  <link>https://tobert.github.io/tldr/dragon-age-inquisition-review.html</link>
-      <pubDate>Sun, 18 Jan 2015 15:53:27 PST</pubDate>
+      <pubDate>Sun, 18 Jan 2015 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>dragon-age-inquisition-review</guid>
 	  <description>TL;DR: Dragon Age Inquisition Review</description>
@@ -42,7 +42,7 @@
     <item>
       <title>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</title>
 	  <link>https://tobert.github.io/tldr/isolcpus-workstation-experiment-gkrellm-screenshots.html</link>
-      <pubDate>Sun, 04 Jan 2015 17:38:05 PST</pubDate>
+      <pubDate>Sun, 04 Jan 2015 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>isolcpus-workstation-experiment-gkrellm-screenshots</guid>
 	  <description>TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots</description>
@@ -51,7 +51,7 @@
     <item>
       <title>TL;DR: My Blog Development Script</title>
 	  <link>https://tobert.github.io/tldr/my-blog-development-script.html</link>
-      <pubDate>Sat, 03 Jan 2015 01:04:20 PST</pubDate>
+      <pubDate>Sat, 03 Jan 2015 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>my-blog-development-script</guid>
 	  <description>TL;DR: My Blog Development Script</description>
@@ -60,7 +60,7 @@
     <item>
       <title>TL;DR: Xperia Z3 Mtp Linux</title>
 	  <link>https://tobert.github.io/tldr/xperia-z3-mtp-linux.html</link>
-      <pubDate>Thu, 01 Jan 2015 15:38:07 PST</pubDate>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>xperia-z3-mtp-linux</guid>
 	  <description>TL;DR: Xperia Z3 Mtp Linux</description>
@@ -69,7 +69,7 @@
     <item>
       <title>TL;DR: Tldr</title>
 	  <link>https://tobert.github.io/tldr/tldr.html</link>
-      <pubDate>Thu, 01 Jan 2015 15:34:50 PST</pubDate>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 UTC</pubDate>
       <author>Albert P Tobey</author>
       <guid>tldr</guid>
 	  <description>TL;DR: Tldr</description>
