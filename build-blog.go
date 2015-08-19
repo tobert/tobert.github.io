@@ -25,6 +25,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"text/template"
@@ -323,6 +324,8 @@ func loadSnippets(c Config) Snippets {
 // foo: "bar"
 // ---
 func findPages(c Config) (pages Pages) {
+	tldrDateRe := regexp.MustCompile(`^\d+-\d+-\d+`)
+
 	visitor := func(fpath string, f os.FileInfo, err error) error {
 		if err != nil {
 			log.Fatalf("Encountered an error while loading pages in '%s': %s", fpath, err)
@@ -347,42 +350,32 @@ func findPages(c Config) (pages Pages) {
 		dname, fname := path.Split(fpath)
 		subpath := strings.TrimPrefix(dname, path.Join(c.SrcRoot, c.PageDir))
 		page.Id = strings.TrimSuffix(fname, ext)
-		fparts := []string{page.Id}
-		// markdown will get rendered to HTML, everything goes as-is
-		if ext == ".md" || ext == ".sh" {
-			fparts = append(fparts, ".html")
-		} else {
-			fparts = append(fparts, ext)
-		}
-
-		page.SrcPath = fpath
-		page.SrcRel = path.Join(subpath, fname) // will include leading /
-		page.PubRel = path.Join(subpath, strings.Join(fparts, ""))
-		page.PubFull = fmt.Sprintf("%s%s", c.BaseURL.String(), page.PubRel)
-		page.PubPath = path.Join(c.PubRoot, subpath, strings.Join(fparts, ""))
-		page.Dir = strings.Trim(subpath, "/")
-		if page.Dir == "" {
-			page.Dir = "/"
-		}
 
 		src, err := ioutil.ReadFile(fpath)
 		if err != nil {
 			log.Fatalf("Could not read page source file '%s': %s", fpath, err)
 		}
 
-		// don't index files in /pages/ by default
-		if subpath == "/pages/" {
-			page.AutoIdx = false
-		}
-
 		if subpath == "/tldr/" {
 			// "tldr" posts are shorter and have no required front matter
+			// the dates are expected to be at the front of the filename and are removed
+			// from the title
+			date := tldrDateRe.FindString(page.Id)
+			if date != "" {
+				page.Date, err = time.Parse("2006-01-02", date)
+				if err != nil {
+					log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\t%s\n", date, page.Id, err)
+				}
+				name := tldrDateRe.ReplaceAllString(page.Id, "")
+				page.Id = strings.TrimLeft(name, "-")
+			} else {
+				log.Fatalf("tldr post '%s' does not seem to have a date prefix", page.Id)
+			}
+
 			title := strings.Replace(page.Id, "-", " ", -1)
 			page.Title = fmt.Sprintf("TL;DR: %s", strings.Title(title))
 			page.Tags = strings.Split(page.Id, "-")
 
-			// git seems to get modtime mostly right, so let's see how this works out in practice ...
-			page.Date = f.ModTime()
 			page.src = string(src)
 
 			if ext == ".sh" {
@@ -412,6 +405,31 @@ func findPages(c Config) (pages Pages) {
 			if err != nil {
 				log.Fatalf("Parsing of date '%s' in file '%s' failed:\n\t%s\n", page.PubDate, fpath, err)
 			}
+		}
+
+		fparts := []string{page.Id}
+		// markdown will get rendered to HTML, everything goes as-is
+		if ext == ".md" || ext == ".sh" {
+			fparts = append(fparts, ".html")
+		} else {
+			fparts = append(fparts, ext)
+		}
+
+		page.SrcPath = fpath
+		page.SrcRel = path.Join(subpath, fname) // will include leading /
+		if page.PubRel == "" {
+			page.PubRel = path.Join(subpath, strings.Join(fparts, ""))
+		}
+		page.PubFull = fmt.Sprintf("%s%s", c.BaseURL.String(), page.PubRel)
+		page.PubPath = path.Join(c.PubRoot, subpath, strings.Join(fparts, ""))
+		page.Dir = strings.Trim(subpath, "/")
+		if page.Dir == "" {
+			page.Dir = "/"
+		}
+
+		// don't index files in /pages/ by default
+		if subpath == "/pages/" {
+			page.AutoIdx = false
 		}
 
 		pages = append(pages, page)
