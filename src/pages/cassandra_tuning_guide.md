@@ -9,8 +9,6 @@ autoidx: false
 
 Al's Cassandra 2.1 Tuning Guide (2015)
 
-[[TOC]]
-
 # Assumptions
 
 * Jr. Systems Administrator level Linux CLI skills
