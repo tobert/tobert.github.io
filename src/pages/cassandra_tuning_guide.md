@@ -18,7 +18,7 @@ Al's Cassandra 2.1 Tuning Guide (2015)
 # Errors, Omissions, and Updates
 
 This guide is not intended to be complete and focuses on techniques I've used
-to track down performance issues on customer clusters.
+to track down performance issues on production clusters.
 
 This version of the guide has not had a lot of peer review, so there may be some
 mistakes as well as things I'm just outright wrong about.
@@ -360,7 +360,7 @@ We really need an entire guide like this one for cassandra-stress. For most
 performance tuning, a very simple cassandra-stress configuration is sufficient
 for identifying bottlenecks by pushing a saturation load at the cluster. It is
 important to keep in mind that sustained saturation load should never be used to
-provide guidance to customers; by definition it is unsustainable. It is, on
+determine production throughput; by definition it is unsustainable. It is, on
 occasion, useful to find the max saturation load, then dial it back by 10-20% as
 a starting point for finding a cluster's maximum **sustainable** load.
 
@@ -971,9 +971,9 @@ systems for a few reasons:
 * high capacity is still easier to come by
 
 You already know that SSDs are better, so when do HDDs make sense? Since the
-preferred size of a Cassandra <= 2.1 node is still around 4-5TB, the answer is
+preferred size of a Cassandra &lt;= 2.1 node is still around 4-5TB, the answer is
 usually never. There are exceptions, such as mostly-write workloads + DTCS where
-seeking isn't as big of a problem. Sometimes the customer already bought the
+seeking isn't as big of a problem. Sometimes you already bought the
 machine or are mitigating against drive failures elsewhere, so they have to be
 made to work. The trick to getting HDDs to perform as well as possible is to
 tune things for linear IO wherever possible. Sometimes this means deeper queues
@@ -989,7 +989,7 @@ Most of the drives in production today are either SAS or SATA. SAS
 HBAs are preferred over SATA even when using SATA drives. SATA drives work fine
 on SAS controllers that can scale a little better. That said, in simple machines,
 using the onboard AHCI SATA controller is fine. One important difference that's
-useful to note to customers is that SAS is rated at 1 undetectable error out of
+useful to note is that SAS is rated at 1 undetectable error out of
 10^16 bits while SATA drives are typically in the 10^15 range. While Cassandra has
 multiple levels of mitigation (sstable checksums and replication), this can be a
 useful way to convince people to move to SAS. Since NL-SAS is basically a
@@ -1041,7 +1041,7 @@ page](http://aws.amazon.com/ebs/details/) to see how IO bursting plays out.
 Interestingly, if the volume size exceeds 3.4TB, the volume is automatically
 bumped to 10,000 IOPS which is a great deal compared to io1 volumes and
 especially i2.2xlarge clusters. io1 volumes are also useful but are more expensive so
-consider them for the commit log, but most customers will be best served by gp2.
+consider them for the commit log, but most users will be best served by gp2.
 
 ## SAN/NAS
 
@@ -1218,7 +1218,7 @@ coming in sizes of 512MB or even bigger these days. When a battery backup is
 present on the card, write-back caching can provide incredible speedups. The
 battery is necessary to keep the NVRAM online during a power failure so any
 outstanding IOs can be flushed to stable storage when the power comes back.
-These batteries have to be serviced every few years, so some customers will opt
+These batteries have to be serviced every few years, so some users will opt
 out of the cost and hassle. In that case, it can still be set to write-through
 caching for some additional performance, but most of the time I'd opt for a JBOD
 card + MDRAID to with plenty of RAM keep things simple.
@@ -1242,7 +1242,7 @@ the LVs and PVs. vgscan will scan all the drives in the system looking for LVM
 PV signatures.
 
 LVM also includes mirroring and striping modules based on dm-raid. These can be
-used in place of MDRAID if the customer wishes, but given the complexity in LVM,
+used in place of MDRAID, but given the complexity in LVM,
 my recommendation is to stick with MDRAID. This may change as time marches on
 and dm-cache becomes a little easier to use.
 
@@ -1324,7 +1324,7 @@ especially for ext3. While ext2 is a bit faster than ext4 due to the lack
 of a journal, it is not recommended since it will block reboots on fsck after
 power failures.
 
-Choose ext4 when the customer demands it and follow the same RAID alignment
+Choose ext4 when the local policy demands it and follow the same RAID alignment
 guidance as xfs.
 
 ## ZFS (if you love yourself and don't need commercial support)
@@ -1568,31 +1568,31 @@ comments indicating it.
     # some kernels have trouble with 0 as a value, so stick with 1
     vm.swappiness = 1
 
-On vm.max_map_count:
+On vm.max\_map\_count:
 
 [http://linux-kernel.2935.n7.nabble.com/Programs-die-when-max-map-count-is-too-large-td317670.html](http://linux-kernel.2935.n7.nabble.com/Programs-die-when-max-map-count-is-too-large-td317670.html)
 
-## limits.conf (pam_limits)
+## limits.conf (pam\_limits)
 
 The DSE and DSC packages install an /etc/security/limits.d/ file by default that
-should remove most of the problems around pam_limits(8). Single-user systems
+should remove most of the problems around pam\_limits(8). Single-user systems
 such as database servers have little use for these limitations, so I often turn
 them off globally using the following in /etc/security/limits.conf. Some
-customers may already be customizing this file, in which case change all of the
-asterisks to cassandra or whatever the user DSE/C* is running as.
+users may already be customizing this file, in which case change all of the
+asterisks to cassandra or whatever the user DSE/Cassandra is running as.
 
-* - nofile     1000000
-* - memlock    unlimited
-* - fsize      unlimited
-* - data       unlimited
-* - rss        unlimited
-* - stack      unlimited
-* - cpu        unlimited
-* - nproc      unlimited
-* - as         unlimited
-* - locks      unlimited
-* - sigpending unlimited
-* - msgqueue   unlimited
+    * - nofile     1000000
+    * - memlock    unlimited
+    * - fsize      unlimited
+    * - data       unlimited
+    * - rss        unlimited
+    * - stack      unlimited
+    * - cpu        unlimited
+    * - nproc      unlimited
+    * - as         unlimited
+    * - locks      unlimited
+    * - sigpending unlimited
+    * - msgqueue   unlimited
 
 ## chrt
 
