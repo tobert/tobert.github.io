@@ -1,4 +1,13 @@
-Al's Tuning Guide 2015
+---
+id: "als-cassandra-21-tuning-guide"
+title: "Al's Cassandra 2.1 tuning guide"
+abstract: "Al's Cassandra 2.1 tuning guide"
+tags: ["tuning", "technical", "cassandra", "java"]
+pubdate: 2015-09-24T19:00:00Z
+autoidx: false
+---
+
+Al's Cassandra 2.1 Tuning Guide (2015)
 
 [[TOC]]
 
