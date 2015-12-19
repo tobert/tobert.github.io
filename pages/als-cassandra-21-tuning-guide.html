@@ -593,8 +593,15 @@ on huge machines and go as low as 32 for smaller machines.</p>
 <p>The CPU tradeoff is almost always a net win compared to iowait or the wasted
 space on the drives. Turning compression off is sometimes faster. The main
 tunable is chunk_length_kb in the compression properties of a table. The
-default chunk length is 128K which may be lowered wither at CREATE TABLE time or
+default chunk length is 128K which may be lowered either at CREATE TABLE time or
 with ALTER TABLE.</p>
+
+<p>In 2.1, uncompressed tables will use a reader with 64k buffer. If your
+reads are significantly smaller than 64k, using compression to allow Cassandra
+to lower that buffer size will likely be a significant win for you in terms of
+IO wait, latency, and overall read throughput, even if you don't necessarily care
+about the savings in disk space. In any case, aligning the buffer chunk size to
+be a multiple of the disk block size (ie: xfs 4k blocks) is optimal.</p>
 
 <h2>streaming</h2>
 
