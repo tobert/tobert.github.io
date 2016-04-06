@@ -1,0 +1,68 @@
+==================================================================
+https://keybase.io/tobert
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://tobert.github.io
+  * I am tobert (https://keybase.io/tobert) on keybase.
+  * I have a public key with fingerprint AF40 7321 06AA 750B 287F  5265 A241 73D6 A6B8 5735
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "0101f3a4d9cdbbe43d487addd4d219a63fcde07ec7a041f29a9b64b6e95d11915b9a0a",
+            "fingerprint": "af40732106aa750b287f5265a24173d6a6b85735",
+            "host": "keybase.io",
+            "key_id": "a24173d6a6b85735",
+            "kid": "0101f3a4d9cdbbe43d487addd4d219a63fcde07ec7a041f29a9b64b6e95d11915b9a0a",
+            "uid": "ee257634d3d4a2c41cfd299dbca58b19",
+            "username": "tobert"
+        },
+        "service": {
+            "hostname": "tobert.github.io",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1459923601,
+    "expire_in": 157680000,
+    "prev": "0beb9f3a8a87a5da56d3e9cf3f13931af905a3d1578f00e946a3bee5aca6b04f",
+    "seqno": 5,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.53
+Comment: https://keybase.io/crypto
+
+yMIhAnicrVJtSBRBGL4rSxK0QqkwUdgir7xkd2dm9+b6UJKKiiASM8o4ZnZmzyXd
+Pe/2LDHFQjApoU8osf5WBkFKH/SFlmYS9EMp/xQhfQsiRWhERbNWP4J+Nn+Ged/n
+eeZ5H96+9Jm+NP/ZZQ/72tKl5/7HvWeTvvKUzuP1EnVYnRSul/by6YtXMZ5wI3st
+JoUlWZEVExDIsMEo5RAwGNIJYwwyVcFEA6bBuKxzQycyVEwVE0w1SDWOEVMUrCCK
+iUykoGRadpTHY3HLdoUsMaGsA1WRNUJ0JFM1pJtI1RBRoaIDphGNhpAOkCBWOgmP
+IcxRkuCFliNq4hGZtvcP/H/2nZyW41xFugYgEzpENaBimEzFmFGDoBBVsAdM8LhN
+qrlAuw7lcVdqCEqiVmsZ3IvVm+OvfmHUciuT9NdEsbjjOoZTJbqVrhtLhD22Wxfz
+4Ps4jfwWilDLZiJJwajl8YTl2FJYEUjDtTxlBSKMVaDJSlDi+2NWnEcsDyG8h2Rx
+vH94rRcP5RSLfEJEpIIYQRoDHBsmMBWAgUJMLCMCmCCGTFnmGGoEUM4RMUTSMjQl
+b7Qa25HCSNgkUSGZsKI2cZNxLjXc76lI8fnTfLNnzfA2zJc2Z96fvctrS/1RWH1r
+qtx+GDgHjmRWLMpd5cDPKVk5l64fPdHc1IGaxt7wlIKidxlbZ5/LetQYK85c19z1
+5vVgb9mVifeyXdveRfL7T36rv3Fv8lD5wf5ZdLW/+Nmg7ysd3tb7oO1AS7DYf2d0
+Kdx0eXjlVfXDwnazJK9k84YLuU/WlZ5MXX/+WPfFLYdusWXbewG7NiWVj6W1R+cH
+Rpbs2fkqp7RvYs14c5M1fjCQ/3FEy10xY8U8uPRihbxx+YuJosnvm3YHkgMD83cM
+zW0cP/U0cWzXp44oyC+7u/gwinUuyO7+Mrr2SevNjMmXgZa8DR2h4O2SSHh0yHg7
+mN2aerq1vuDMQA1M7+n7CXoFPAI=
+=cfE5
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/tobert
+
+==================================================================
