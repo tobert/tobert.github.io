@@ -40,7 +40,7 @@ I ran some quick tests and it appears that THP and Cassandra get along well
 once defrag is out of the picture. The big problem with Cassandra and THP
 is that while the JVM will happily malloc all of your heap at startup when
 -Xmx == -Xms, the operating system is pessimistic about it and does not
-actually map real memory pagse until those pages are accessed. Fortunately,
+actually map real memory pages until those pages are accessed. Fortunately,
 there's an easy way to get the JVM to access all of its memory immediately
 at startup. It's easy to see this works with THP. I suspect it also helps
 in virtualized environments to make sure the heap is allocated in as few
