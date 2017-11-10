@@ -87,7 +87,7 @@ forcing the kernel to map them all immediately.  My suspicion is that most JVM
 applications with statically-sized heaps (-Xmx == -Xms) should be enabling
 -XX:+AlwaysPreTouch rather than letting the OS map memory pages on use.
 
-## -XX+UseLargePages -XX:LargePageSizeInBytes=2m
+## -XX:+UseLargePages -XX:LargePageSizeInBytes=2m
 
 There is a way to tell the JVM to explicitly use huge pages at startup
 using the -XX:+UseLargePages option. This requires more changes to get
@@ -127,7 +127,7 @@ requires adding the two flags to [cassandra-env.sh](https://gist.github.com/tobe
  JVM_OPTS="$JVM_OPTS -javaagent:$CASSANDRA_HOME/lib/jamm-0.2.8.jar"
 
 +# enable hugepages - requires some settings in /proc/sys/vm to work, fails gracefully
-+JVM_OPTS="$JVM_OPTS -XX+UseLargePages -XX:LargePageSizeInBytes=2m"
++JVM_OPTS="$JVM_OPTS -XX:+UseLargePages -XX:LargePageSizeInBytes=2m"
 +
  # some JVMs will fill up their heap when accessed via JMX, see CASSANDRA-6541
  JVM_OPTS="$JVM_OPTS -XX:+CMSClassUnloadingEnabled"
