@@ -13,15 +13,15 @@
 
      <!-- twitter cards -->
      <meta name="twitter:card" content="summary">
-     <meta name="twitter:site" content="@AlTobey">
-     <meta name="twitter:title" content="TL;DR: Cassandra Java Huge Pages : Al Tobey Writes">
-     <meta name="twitter:creator" content="@AlTobey">
+     <meta name="twitter:site" content="@MissAmyTobey">
+     <meta name="twitter:title" content="TL;DR: Cassandra Java Huge Pages : Amy Writes">
+     <meta name="twitter:creator" content="@MissAmyTobey">
      
      <meta name="twitter:domain" content="https://tobert.github.io">
 
     <title>TL;DR: Cassandra Java Huge Pages</title>
     <link rel="canonical" href="https://tobert.github.io/tldr/cassandra-java-huge-pages.html">
-    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Al Tobey Writes" />
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
@@ -42,7 +42,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">Al Tobey Writes</a>
+      <a class="navbar-brand" href="/">Amy Writes</a>
     </div>
 
     <div class="navbar-collapse collapse">
@@ -59,7 +59,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="https://twitter.com/AlTobey"><i class="fa fa-twitter"></i> | @AlTobey</a></li>
+              <li><a href="https://twitter.com/MissAmyTobey"><i class="fa fa-twitter"></i> | @MissAmyTobey</a></li>
               <li><a href="https://plus.google.com/+AlTobey"><i class="fa fa-google-plus"></i> | +AlTobey</a></li>
               <li><a href="https://github.com/tobert"><i class="fa fa-github"></i> | tobert</a></li>
               <li><a href="/rss.xml"><i class="fa fa-rss"></i> | RSS</a></li>
@@ -83,7 +83,7 @@
       <hr/>
       <h1 style="display: inline;">TL;DR: Cassandra Java Huge Pages</h1>
       <span class="pull-right">
-        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/tldr/cassandra-java-huge-pages.html&text=TL;DR: Cassandra Java Huge Pages&via=AlTobey"
+        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/tldr/cassandra-java-huge-pages.html&text=TL;DR: Cassandra Java Huge Pages&via=MissAmyTobey"
            class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
         <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/tldr/cassandra-java-huge-pages.html"
            class="btn btn-facebook"><i class="fa fa-facebook"></i></a>
@@ -136,7 +136,7 @@ free_hugepages  nr_hugepages  nr_hugepages_mempolicy  nr_overcommit_hugepages  r
 once defrag is out of the picture. The big problem with Cassandra and THP
 is that while the JVM will happily malloc all of your heap at startup when
 -Xmx == -Xms, the operating system is pessimistic about it and does not
-actually map real memory pagse until those pages are accessed. Fortunately,
+actually map real memory pages until those pages are accessed. Fortunately,
 there's an easy way to get the JVM to access all of its memory immediately
 at startup. It's easy to see this works with THP. I suspect it also helps
 in virtualized environments to make sure the heap is allocated in as few
@@ -181,7 +181,7 @@ forcing the kernel to map them all immediately.  My suspicion is that most JVM
 applications with statically-sized heaps (-Xmx == -Xms) should be enabling
 -XX:+AlwaysPreTouch rather than letting the OS map memory pages on use.</p>
 
-<h2>-XX+UseLargePages -XX:LargePageSizeInBytes=2m</h2>
+<h2>-XX:+UseLargePages -XX:LargePageSizeInBytes=2m</h2>
 
 <p>There is a way to tell the JVM to explicitly use huge pages at startup
 using the -XX:+UseLargePages option. This requires more changes to get
@@ -219,7 +219,7 @@ requires adding the two flags to <a href="https://gist.github.com/tobert/24f8358
  JVM_OPTS=&quot;$JVM_OPTS -javaagent:$CASSANDRA_HOME/lib/jamm-0.2.8.jar&quot;
 
 +# enable hugepages - requires some settings in /proc/sys/vm to work, fails gracefully
-+JVM_OPTS=&quot;$JVM_OPTS -XX+UseLargePages -XX:LargePageSizeInBytes=2m&quot;
++JVM_OPTS=&quot;$JVM_OPTS -XX:+UseLargePages -XX:LargePageSizeInBytes=2m&quot;
 +
  # some JVMs will fill up their heap when accessed via JMX, see CASSANDRA-6541
  JVM_OPTS=&quot;$JVM_OPTS -XX:+CMSClassUnloadingEnabled&quot;
@@ -298,7 +298,7 @@ benefit. The -XX:+UseLargePages option is more work to configure and doesn't wor
         <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/tldr/2015-02-03-cassandra-java-huge-pages.md">ChangeLog</a>
       </div>
       <div class="col-sm-6">
-        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Albert P. Tobey</a></span>
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Amy Tobey</a></span>
       </div>
     </div>
   </div>

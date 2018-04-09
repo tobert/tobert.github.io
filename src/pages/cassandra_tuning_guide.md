@@ -1,13 +1,23 @@
 ---
 id: "als-cassandra-21-tuning-guide"
-title: "Al's Cassandra 2.1 tuning guide"
-abstract: "Al's Cassandra 2.1 tuning guide"
+title: "Amy's Cassandra 2.1 tuning guide"
+abstract: "Amy's Cassandra 2.1 tuning guide"
 tags: ["tuning", "technical", "cassandra", "java"]
 pubdate: 2015-09-24T19:00:00Z
 autoidx: false
 ---
 
-Al's Cassandra 2.1 Tuning Guide (2015)
+Amy's Cassandra 2.1 Tuning Guide (2015)
+
+# Personal Note
+
+I really appreciate all the folks who have told me that this guide helped them
+in some way. I'm happy to hear that.
+
+I've pushed this small update to change my name from Albert to Amy and haven't
+changed anything else at this point. I'm also leaving the URL the same because
+some folks have it bookmarked and I don't mind my old name being around so long
+as folks call me Amy from now on :)
 
 # Assumptions
 
