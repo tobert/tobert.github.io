@@ -1,6 +1,6 @@
 ---
 id: "rss"
-title: "@AlTobey Writes: RSS"
+title: "@MissAmyTobey Writes: RSS"
 abstract: "RSS XML"
 tags: [ "altobey", "rss", "atom" ]
 pubdate: 1970-01-01T00:00:00Z
@@ -11,10 +11,10 @@ autoidx: false
      xmlns:cc="http://creativecommons.org/ns#"
      xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
   <channel>
-    <title>@AlTobey Writes</title>
+    <title>@MissAmyTobey Writes</title>
 	<link>{{ .Config.BaseURL }}{{ .Page.PubRel }}</link>
     <language>en-us</language>
-    <author>Albert P Tobey</author>
+    <author>Amy Tobey</author>
 	{{ with index .Pages 0 }}<pubDate>{{ .Date.Format "2006-01-02" }}</pubDate>{{ end }}
 	<lastBuildDate>{{ .Now.Format "2006-01-02" }}</lastBuildDate>
 	<generator>build-blog.go</generator>
@@ -24,7 +24,7 @@ autoidx: false
       <title>{{ $page.Title |html }}</title>
 	  <link>{{ $baseurl }}{{ $page.PubRel }}</link>
       <pubDate>{{ $page.Date.Format "Mon, 02 Jan 2006 15:04:05 MST" }}</pubDate>
-      <author>Albert P Tobey</author>
+      <author>Amy Tobey</author>
       <guid>{{ $page.Id }}</guid>
 	  <description>{{ with $page.Abstract |html }}{{ . }}{{ else }}{{ $page.Title |html }}{{ end }}</description>
     </item>

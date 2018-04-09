@@ -1,5 +1,5 @@
-@AlTobey Writes
-===============
+@MissAmyTobey Writes
+====================
 
 This is my blog. There are many like it ...
 
@@ -32,5 +32,5 @@ Generating Content
 License
 -------
 
-Content and code by Al Tobey is licensed under a Creative Commons Attribution 4.0 International License.
+Content and code by Amy Tobey is licensed under a Creative Commons Attribution 4.0 International License.
 
