@@ -7,19 +7,10 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Amy Tobey</author>
-	<pubDate>2017-09-05</pubDate>
-	<lastBuildDate>2018-04-09</lastBuildDate>
+	<pubDate>2015-02-03</pubDate>
+	<lastBuildDate>2020-02-18</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
-    
-    <item>
-      <title>Life &amp; Stuff</title>
-	  <link>https://tobert.github.io/post/2017-09-01-life-and-stuff.html</link>
-      <pubDate>Tue, 05 Sep 2017 00:00:00 +0000</pubDate>
-      <author>Amy Tobey</author>
-      <guid>2017-09-01-life-and-stuff</guid>
-	  <description>An update on everything going on.</description>
-    </item>
     
     <item>
       <title>TL;DR: Cassandra Java Huge Pages</title>

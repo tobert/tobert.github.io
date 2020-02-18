@@ -158,8 +158,7 @@ machine. It provides the features of many tools all in one with high-resolution
 
 <p>dstat -lrvn 10</p>
 
-<p><img src="image_1.png" alt="image alt text" />
-</p>
+<p><img src="image_1.png" alt="image alt text" /></p>
 
 <p>That runs dstat with the load average (-l), disk IOPS (-r), vmstats (-v), and
 network throughput (-n). The 10 tells dstat to keep updating the current line
@@ -271,8 +270,7 @@ thread is which and that's where ttop comes in. It's a single jar so it's easy t
 push to a machine and does not require any GUI so it works fine over ssh. So far,
 I've found the following command to be the most useful:</p>
 
-<p><img src="image_2.png" alt="image alt text" />
-</p>
+<p><img src="image_2.png" alt="image alt text" /></p>
 
 <p>Which threads trend towards the top is workload-dependent. Most threads in DSE are
 named except for all the stuff in the shared pool, which is a mess of things
@@ -299,8 +297,7 @@ the legend, hit the 'h' key.</p>
 under Setup (F2) to make things like iowait and steal time visible.
 Without the option, they appear to be unused capacity, which is misleading.</p>
 
-<p><img src="image_3.png" alt="image alt text" />
-</p>
+<p><img src="image_3.png" alt="image alt text" /></p>
 
 <h2>powertop and i7z</h2>
 
@@ -328,8 +325,7 @@ tab to say &quot;Bad!&quot; Power management and high performance are almost alw
 at odds. You can safely ignore devices that aren't in use by Cassandra,
 e.g. USB controllers and sound devices.</p>
 
-<p><img src="image_5.png" alt="image alt text" />
-</p>
+<p><img src="image_5.png" alt="image alt text" /></p>
 
 <p>i7z is an alternative to powertop that was brought to my attention but
 I have not tried it. <a href="https://code.google.com/p/i7z/">https://code.google.com/p/i7z/</a></p>
@@ -346,8 +342,7 @@ for quickly checking things that aren't exported by the usual tools.</p>
 That said, you need to be able to know if your JVM is using them or not,
 so the easy thing to do is:</p>
 
-<p><img src="image_6.png" alt="image alt text" />
-</p>
+<p><img src="image_6.png" alt="image alt text" /></p>
 
 <p>If the AnonHugePages is slightly larger than your heap, you're all set with THP.
 If you thought you disabled it, restart Cassandra again to get back to 4K pages.</p>
@@ -385,16 +380,14 @@ in a given process.</p>
 There are some preset groups of syscalls like &quot;network&quot;, “file”, and o
 hers. Check out the man page.</p>
 
-<p><img src="image_7.png" alt="image alt text" />
-</p>
+<p><img src="image_7.png" alt="image alt text" /></p>
 
 <p>One of the more useful ways to use strace with Cassandra is to see how often
 the futex() syscall is being used. This is interesting because the syscall
 is only called on contended locks. For that, use
 <code>strace -f -c -e futex -p $PID</code>. Let it run for a few seconds then hit Ctrl-C.</p>
 
-<p><img src="image_8.png" alt="image alt text" />
-</p>
+<p><img src="image_8.png" alt="image alt text" /></p>
 
 <h2>smartctl</h2>
 
@@ -416,8 +409,7 @@ especially the TYPE column, which always looks scarier than things really are.</
 This is where you look to find out if flash cells are dying or you suspect
 other kinds of errors.</p>
 
-<p><img src="image_9.png" alt="image alt text" />
-</p>
+<p><img src="image_9.png" alt="image alt text" /></p>
 
 <p>The full smartctl -a output for an HDD and SSD are available as a gist:
 <a href="https://gist.github.com/tobert/c3f8ca20ea3da623d143">https://gist.github.com/tobert/c3f8ca20ea3da623d143</a></p>
@@ -433,11 +425,9 @@ lower than advertised. On bare metal, you should expect to be able to get
 <p>These screenshots show how simple it is to use iperf to find out how much
 bandwidth I can get between my Linux workstation and my Mac over wifi.</p>
 
-<p><img src="image_10.png" alt="image alt text" />
-</p>
+<p><img src="image_10.png" alt="image alt text" /></p>
 
-<p><img src="image_11.png" alt="image alt text" />
-</p>
+<p><img src="image_11.png" alt="image alt text" /></p>
 
 <p>There are a number of switches available, but most of the time you don't need them.
 The most important two to add are --time and --num to set the amount of time to
@@ -455,8 +445,7 @@ will place a pcstat binary in $GOPATH/bin that you can scp to any Linux server.<
 <pre><code>pcstat -bname /var/lib/cassandra/data/*/*/*-Data.db
 </code></pre>
 
-<p><img src="image_12.png" alt="image alt text" />
-</p>
+<p><img src="image_12.png" alt="image alt text" /></p>
 
 <h2>cl-netstat.pl</h2>
 
@@ -466,8 +455,7 @@ a cluster-wide view of network traffic, disk IOPS, and load averages. I use this
 all the time. It's a bit of a pain to install, but it's worth it. By default it
 updates every 2 seconds.</p>
 
-<p><img src="image_13.png" alt="image alt text" />
-</p>
+<p><img src="image_13.png" alt="image alt text" /></p>
 
 <h1>Saturation Testing with cassandra-stress</h1>
 
@@ -1836,8 +1824,7 @@ in Cassandra's JVM arguments, they're there so that compaction can be set to a
 lower priority than other threads in Cassandra. This is visible in the default
 htop configuration in the nice field.</p>
 
-<p><img src="image_14.png" alt="image alt text" />
-</p>
+<p><img src="image_14.png" alt="image alt text" /></p>
 
 <p>Linux has always used a 1:1 threading model and even uses the global pid space
 to assign ids to threads, so they're still visible if you know how to look for
@@ -1856,8 +1843,7 @@ done
 
 <p>After that, your htop will look more like this (load is done but compaction is still going):</p>
 
-<p><img src="image_15.png" alt="image alt text" />
-</p>
+<p><img src="image_15.png" alt="image alt text" /></p>
 
 <p>Note: ionice requires the cfq IO scheduler, which is usually not the case in
 properly tuned systems. It is one of the main reasons for sticking with CFQ
