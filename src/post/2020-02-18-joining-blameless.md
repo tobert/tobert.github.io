@@ -23,7 +23,7 @@ life has taught me in these years is that that ain’t me.
 I will always be thankful for the wonderful people I’ve met and get to have in my
 life. That said, I am furious at the state of things in the tech industry. Devops
 has been around more than a decade and mostly what we have to show for it is
-better CI/CD and velocity numbers. Misogyny and racism are as rampant as ever,
+better CI/CD and *velocity numbers*. Misogyny and racism are as rampant as ever,
 diversity is a marketing tactic, and inclusion is an alien concept to all but a
 precious few leaders. [Glue work is unvalued](https://twitter.com/MissAmyTobey/status/1223680978880581632),
 brilliant jerks are promoted, and incentives favor the heartless.
