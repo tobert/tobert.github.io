@@ -7,10 +7,19 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Amy Tobey</author>
-	<pubDate>2015-02-03</pubDate>
+	<pubDate>2020-02-18</pubDate>
 	<lastBuildDate>2020-02-18</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>Joining Blameless</title>
+	  <link>https://tobert.github.io/post/2020-02-18-joining-blameless.html</link>
+      <pubDate>Tue, 18 Feb 2020 00:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>2020-02-18-joining-blameless</guid>
+	  <description>A personal post about another career change to join Blameless</description>
+    </item>
     
     <item>
       <title>TL;DR: Cassandra Java Huge Pages</title>
