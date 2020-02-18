@@ -25,7 +25,8 @@ life. That said, I am furious at the state of things in the tech industry. Devop
 has been around more than a decade and mostly what we have to show for it is
 better CI/CD and *velocity numbers*. Misogyny and racism are as rampant as ever,
 diversity is a marketing tactic, and inclusion is an alien concept to all but a
-precious few leaders. [Glue work is unvalued](https://twitter.com/MissAmyTobey/status/1223680978880581632),
+precious few leaders. [Glue work](https://noidea.dog/glue) is
+[unvalued](https://twitter.com/MissAmyTobey/status/1223680978880581632),
 brilliant jerks are promoted, and incentives favor the heartless.
 
 I love the operations community that I’ve been part of for more than 20 years.
