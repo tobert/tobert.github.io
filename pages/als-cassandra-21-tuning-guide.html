@@ -1758,7 +1758,7 @@ the current shell's pid. Child processes inherity scheduling policies, so if you
 set the startup shell's policy, the JVM will inherit it. Just add this line to
 one of those files:</p>
 
-<pre><code>chrt --batch 0 --pid $$
+<pre><code>chrt --batch --pid 0 $$
 </code></pre>
 
 <h2>taskset &amp; isolcpus &amp; irqbalance</h2>
