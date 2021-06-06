@@ -14,8 +14,7 @@ or end state (a powerful motivation to achieve an objective). <a href="https://e
 ---
 
 > I left Blameless after only a few months for a range of reasons. I remain
-> passionate about the same things and hope someday they can figure out why
-> it's so important we serve the SRE community first and foremost.
+> passionate about the same things, and found that company was not right for me.
 
 ---
 ---
