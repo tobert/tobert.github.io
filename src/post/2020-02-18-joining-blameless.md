@@ -64,7 +64,7 @@ reaching large audiences. Roles where I could play with shiny tech and automate 
 gnarly distributed systems abound, but few were really aligned with what I want and
 enjoy. Really just one, it seems.
 
-I’ve known the founders of [Blameless](https://www.blameless.com/), Ashar and Lyon,
+I’ve known the founders of Blameless, Ashar and Lyon,
 for a couple years now. Early on, we talked about my work on
 [Scorebot](https://www.usenix.org/conference/srecon16/program/presentation/tobey) and
 then kept talking about SRE work, incident management, and resilience engineering. As
@@ -75,6 +75,6 @@ hybrid of SRE and developer relations, so I can both keep myself grounded and co
 to bring the big ideas of SRE & resilience engineering to our customers and the tech
 world.
 
-I am so excited to have [joined Blameless](https://www.blameless.com/evolving-blameless-sre-practices/)
+I am so excited to have joined Blameless
 and look forward to spending a lot more time with our community.
 
