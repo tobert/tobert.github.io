@@ -10,6 +10,17 @@ autoidx: true
 perseverance of effort combined with the passion for a particular long-term goal
 or end state (a powerful motivation to achieve an objective). <a href="https://en.wikipedia.org/wiki/Grit_(personality_trait)">(Wikipedia)</a></p>*
 
+---
+---
+
+> I left Blameless after only a few months for a range of reasons. I remain
+> passionate about the same things and hope someday they can figure out why
+> it's so important we serve the SRE community first and foremost.
+
+---
+---
+
+
 Over the last few years, I’ve changed jobs a bunch. A bunch more than I’d like.
 As time goes on and resignation letters stack up, interview discussions about
 my history get more difficult. When the discussion inevitably comes to these
