@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    
+    <meta name="keywords" content="btrfs, swapfile, setup, ">
+    <meta property="article:published_time" content="2022-01-02"/>
+    <meta property="article:modified_time" content="2022-01-02"/>
+
+     <!-- twitter cards -->
+     <meta name="twitter:card" content="summary">
+     <meta name="twitter:site" content="@MissAmyTobey">
+     <meta name="twitter:title" content="TL;DR: Btrfs Swapfile Setup : Amy Writes">
+     <meta name="twitter:creator" content="@MissAmyTobey">
+     
+     <meta name="twitter:domain" content="https://tobert.github.io">
+
+    <title>TL;DR: Btrfs Swapfile Setup</title>
+    <link rel="canonical" href="https://tobert.github.io/tldr/btrfs-swapfile-setup.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+    
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Amy Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1"
+								href="/pages/als-cassandra-21-tuning-guide.html">Cassandra 2.1 Tuning Guide</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://twitter.com/MissAmyTobey"><i class="fa fa-twitter"></i> | @MissAmyTobey</a></li>
+              <li><a href="https://plus.google.com/+AlTobey"><i class="fa fa-google-plus"></i> | +AlTobey</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa fa-github"></i> | tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa fa-rss"></i> | RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/tldr/2022-01-02-btrfs-swapfile-setup.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">TL;DR: Btrfs Swapfile Setup</h1>
+      <span class="pull-right">
+        <a href="http://twitter.com/intent/tweet?url=https://tobert.github.io/tldr/btrfs-swapfile-setup.html&text=TL;DR: Btrfs Swapfile Setup&via=MissAmyTobey"
+           class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
+        <a href="http://facebook.com/sharer.php?u=https://tobert.github.io/tldr/btrfs-swapfile-setup.html"
+           class="btn btn-facebook"><i class="fa fa-facebook"></i></a>
+        <a href="https://plus.google.com/share?url=https://tobert.github.io/tldr/btrfs-swapfile-setup.html"
+           class="btn btn-google-plus"><i class="fa fa-google-plus"></i></a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<p>A sidequest of setting up some of my electronic music lab at home is setting up
+the laptop I'm typing this on to run Arch Linux to be dedicated to music production.</p>
+
+<p>A sidequest of the sidequest is that suspend wasn't working right. When I partitioned
+the drive I thought, well, I have 32GB of RAM and an NVMe drive, I probably shouldn't
+be swapping, ever. So I didn't make a swap partition. I also don't feel like repartitioning
+right now instead of hooking up more MIDI devices, so let's try a swapfile. I found
+the existing docs kinda incomplete so here's my take on the process, showing each command
+without further adieu:</p>
+
+<p>Here's my <code>/etc/fstab</code>. Of special note are the mount flags for the btrfs <code>root/swap</code> subvolume. The first two mounts
+are boot and operating system disks. The second two are for the swapfile.</p>
+
+<pre><code># gadget's fstab, by Amy Tobey
+#
+# EFI: /dev/nvme0n1p1, plaintext
+#
+# this system is configured to boot via UEFI, which will directly load the
+# linux kernel from this partition and start it
+UUID=AAAA-AAAA /boot vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+
+# root: /dev/nvme0n1p2, but encrypted
+#
+# luks full-system encryption, one big btrfs filesystem
+# created with plain old cryptsetup, using encrypt hook in initramfs
+/dev/mappper/root / btrfs rw,relatime,ssd,space_cache=v2,subvolid=5,subvol=/ 0 0
+
+# swap
+#
+# btrfs subvolume for the swapfile, which is /swap/file below
+# the nodatacow option is mandatory for swapfile usage
+/dev/mapper/root /swap btrfs rw,nodatacow,nodatasum,subvol=root/swap 0 1
+
+# a plain swapfile, on the btrfs subvolume ^^
+/swap/file none swap defaults 0 0
+</code></pre>
+
+<p>Create the subvolume, create the swapfile, turn it all on:</p>
+
+<pre><code class="language-sh">btrfs subvolume create /root/swap # create the subvolume
+mkdir /swap                       # create the mountpoint directory
+mount /swap                       # mount the subvolume on /swap, reads settings from /etc/fstab
+chmod 0700 /swap                  # tighten up permissions to -rwx------
+touch /swap/file                  # create an empty file
+chmod 0600 /swap/file             # tighten up permissions to -rw-------
+chattr +C /swap/file              # mark the file as ineligible for copy-on-write
+dd if=/dev/zero of=/swap/file bs=4096 count=16777216 # write out 64GB of zeroed pages
+mkswap /swap/file                 # write swap signature to the file
+swapon -a                         # turn it on!
+free                              # display available memory and swap
+</code></pre>
+
+<p>Astute readers will notice I did <code>chattr</code> and the <code>nodatacow</code> mount option. I think the <code>chattr</code>
+probably isn't necessary in this configuration. I tried it without the mount option and had no
+luck, and left it here for completeness since it can't really hurt.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/tldr/2022-01-02-btrfs-swapfile-setup.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Amy Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
