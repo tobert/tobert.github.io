@@ -8,7 +8,7 @@
     <language>en-us</language>
     <author>Amy Tobey</author>
 	<pubDate>2022-01-02</pubDate>
-	<lastBuildDate>2022-01-02</lastBuildDate>
+	<lastBuildDate>2022-12-05</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
     
@@ -76,21 +76,21 @@
     </item>
     
     <item>
-      <title>TL;DR: Xperia Z3 Mtp Linux</title>
-	  <link>https://tobert.github.io/tldr/xperia-z3-mtp-linux.html</link>
-      <pubDate>Thu, 01 Jan 2015 00:00:00 UTC</pubDate>
-      <author>Amy Tobey</author>
-      <guid>xperia-z3-mtp-linux</guid>
-	  <description>TL;DR: Xperia Z3 Mtp Linux</description>
-    </item>
-    
-    <item>
       <title>TL;DR: Tldr</title>
 	  <link>https://tobert.github.io/tldr/tldr.html</link>
       <pubDate>Thu, 01 Jan 2015 00:00:00 UTC</pubDate>
       <author>Amy Tobey</author>
       <guid>tldr</guid>
 	  <description>TL;DR: Tldr</description>
+    </item>
+    
+    <item>
+      <title>TL;DR: Xperia Z3 Mtp Linux</title>
+	  <link>https://tobert.github.io/tldr/xperia-z3-mtp-linux.html</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>xperia-z3-mtp-linux</guid>
+	  <description>TL;DR: Xperia Z3 Mtp Linux</description>
     </item>
     
     <item>
@@ -222,7 +222,7 @@
     <item>
       <title>Benchmarking Disk Latency: Setup</title>
 	  <link>https://tobert.github.io/post/2014-03-29-benchmarking-disk-latency-setup.html</link>
-      <pubDate>Sat, 29 Mar 2014 01:56:59 PDT</pubDate>
+      <pubDate>Sat, 29 Mar 2014 01:56:59 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2014-03-29-benchmarking-disk-latency-setup</guid>
 	  <description>Benchmarking Disk Latency: Setup</description>
@@ -231,7 +231,7 @@
     <item>
       <title>Mirrored FAT32 EFI Boot Partitions</title>
 	  <link>https://tobert.github.io/post/2014-03-25-mirrored-fat32-efi-boot-partitions.html</link>
-      <pubDate>Tue, 25 Mar 2014 04:49:05 PDT</pubDate>
+      <pubDate>Tue, 25 Mar 2014 04:49:05 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2014-03-25-mirrored-fat32-efi-boot-partitions</guid>
 	  <description>Mirrored FAT32 EFI Boot Partitions</description>
@@ -240,7 +240,7 @@
     <item>
       <title>Running at Night</title>
 	  <link>https://tobert.github.io/post/2014-03-22-running-at-night.html</link>
-      <pubDate>Sat, 22 Mar 2014 01:52:58 PDT</pubDate>
+      <pubDate>Sat, 22 Mar 2014 01:52:58 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2014-03-22-running-at-night</guid>
 	  <description>Running at Night</description>
@@ -249,7 +249,7 @@
     <item>
       <title>Primitive Tooling</title>
 	  <link>https://tobert.github.io/post/2014-03-19-primitive-tooling.html</link>
-      <pubDate>Wed, 19 Mar 2014 20:54:14 PDT</pubDate>
+      <pubDate>Wed, 19 Mar 2014 20:54:14 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2014-03-19-primitive-tooling</guid>
 	  <description>Primitive Tooling</description>
@@ -258,7 +258,7 @@
     <item>
       <title>Open Source Video Production</title>
 	  <link>https://tobert.github.io/post/2014-03-10-open-source-video-production.html</link>
-      <pubDate>Mon, 10 Mar 2014 19:52:59 PDT</pubDate>
+      <pubDate>Mon, 10 Mar 2014 19:52:59 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2014-03-10-open-source-video-production</guid>
 	  <description>Open Source Video Production</description>
@@ -330,7 +330,7 @@
     <item>
       <title>Endurance Predation</title>
 	  <link>https://tobert.github.io/post/2013-10-11-endurance-predation.html</link>
-      <pubDate>Fri, 11 Oct 2013 01:42:00 PDT</pubDate>
+      <pubDate>Fri, 11 Oct 2013 01:42:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2013-10-11-endurance-predation</guid>
 	  <description>Endurance Predation</description>
@@ -339,7 +339,7 @@
     <item>
       <title>Hello (again) World</title>
 	  <link>https://tobert.github.io/post/2013-10-07-hello-again-world.html</link>
-      <pubDate>Mon, 07 Oct 2013 19:15:00 PDT</pubDate>
+      <pubDate>Mon, 07 Oct 2013 19:15:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2013-10-07-hello-again-world</guid>
 	  <description>Hello (again) World</description>
@@ -348,7 +348,7 @@
     <item>
       <title>Test &amp; Build Automation with btrfs</title>
 	  <link>https://tobert.github.io/post/2012-05-17-test-build-automation-with-btrfs.html</link>
-      <pubDate>Thu, 17 May 2012 19:08:00 PDT</pubDate>
+      <pubDate>Thu, 17 May 2012 19:08:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2012-05-17-test-build-automation-with-btrfs</guid>
 	  <description>fast testing with btrfs</description>
@@ -357,7 +357,7 @@
     <item>
       <title>New Experiment Language Choices</title>
 	  <link>https://tobert.github.io/post/2011-07-21-new-experiment-language-choices.html</link>
-      <pubDate>Wed, 21 Sep 2011 06:13:25 PDT</pubDate>
+      <pubDate>Wed, 21 Sep 2011 06:13:25 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2011-07-21-new-experiment-language-choices</guid>
 	  <description>Language choices</description>
@@ -366,7 +366,7 @@
     <item>
       <title>Over-breeding &amp; Culling EC2 Instances for IO Performance</title>
 	  <link>https://tobert.github.io/post/2011-09-21-over-breeding-culling-ec2-instances-for.html</link>
-      <pubDate>Wed, 21 Sep 2011 06:06:00 PDT</pubDate>
+      <pubDate>Wed, 21 Sep 2011 06:06:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2011-09-21-over-breeding-culling-ec2-instances-for</guid>
 	  <description>Finding fast(er) instances in EC2</description>
@@ -384,7 +384,7 @@
     <item>
       <title>Ride Report 2010-09-05</title>
 	  <link>https://tobert.github.io/post/2010-09-06-ride-report-2010-09-05.html</link>
-      <pubDate>Mon, 06 Sep 2010 04:49:00 PDT</pubDate>
+      <pubDate>Mon, 06 Sep 2010 04:49:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2010-09-06-ride-report-2010-09-05</guid>
 	  <description>Bicycle Commuting</description>
@@ -393,7 +393,7 @@
     <item>
       <title>Blocking SSH Attacks</title>
 	  <link>https://tobert.github.io/post/2010-08-12-blocking-ssh-attacks.html</link>
-      <pubDate>Thu, 12 Aug 2010 19:12:00 PDT</pubDate>
+      <pubDate>Thu, 12 Aug 2010 19:12:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2010-08-12-blocking-ssh-attacks</guid>
 	  <description>Blocking SSH attacks with nothing but iptables</description>
@@ -402,7 +402,7 @@
     <item>
       <title>Virtualization Madness</title>
 	  <link>https://tobert.github.io/post/2008-04-06-virtualization-madness.html</link>
-      <pubDate>Sun, 06 Apr 2008 18:50:00 PDT</pubDate>
+      <pubDate>Sun, 06 Apr 2008 18:50:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2008-04-06-virtualization-madness</guid>
 	  <description>Virtualization Madness</description>
@@ -411,7 +411,7 @@
     <item>
       <title>Xen Networking</title>
 	  <link>https://tobert.github.io/post/2007-09-07-xen-networking.html</link>
-      <pubDate>Fri, 07 Sep 2007 15:18:00 PDT</pubDate>
+      <pubDate>Fri, 07 Sep 2007 15:18:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2007-09-07-xen-networking</guid>
 	  <description>Xen Networking</description>
@@ -420,7 +420,7 @@
     <item>
       <title>Moving sucks.</title>
 	  <link>https://tobert.github.io/post/2007-05-20-moving-sucks-can-i-have-amen.html</link>
-      <pubDate>Sun, 20 May 2007 03:30:00 PDT</pubDate>
+      <pubDate>Sun, 20 May 2007 03:30:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2007-05-20-moving-sucks-can-i-have-amen</guid>
 	  <description>Moving sucks.</description>
@@ -429,7 +429,7 @@
     <item>
       <title>New Job, New City</title>
 	  <link>https://tobert.github.io/post/2007-04-04-new-job-new-city.html</link>
-      <pubDate>Wed, 04 Apr 2007 14:18:00 PDT</pubDate>
+      <pubDate>Wed, 04 Apr 2007 14:18:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2007-04-04-new-job-new-city</guid>
 	  <description>Moving West</description>
@@ -447,7 +447,7 @@
     <item>
       <title>64-bit perl on HP-UX (PARISC or Itanium)</title>
 	  <link>https://tobert.github.io/post/2005-10-13-64-bit-perl-on-hp-ux-parisc-or-itanium.html</link>
-      <pubDate>Thu, 13 Oct 2005 02:30:00 PDT</pubDate>
+      <pubDate>Thu, 13 Oct 2005 02:30:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2005-10-13-64-bit-perl-on-hp-ux-parisc-or-itanium</guid>
 	  <description>64-bit perl on HP-UX (PARISC or Itanium)</description>
@@ -456,7 +456,7 @@
     <item>
       <title>Building pdksh on HP-UX/Itanium</title>
 	  <link>https://tobert.github.io/post/2005-09-20-pdksh-5.html</link>
-      <pubDate>Tue, 20 Sep 2005 23:00:00 PDT</pubDate>
+      <pubDate>Tue, 20 Sep 2005 23:00:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2005-09-20-pdksh-5</guid>
 	  <description>Building pdksh on HP-UX/Itanium</description>
@@ -465,7 +465,7 @@
     <item>
       <title>root-tail on nautilus/kde/xfdesktop</title>
 	  <link>https://tobert.github.io/post/2004-07-01-i-hacked-root-tail-to-work-with.html</link>
-      <pubDate>Thu, 01 Jul 2004 01:00:00 PDT</pubDate>
+      <pubDate>Thu, 01 Jul 2004 01:00:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2004-07-01-i-hacked-root-tail-to-work-with</guid>
 	  <description>root-tail on nautilus/kde/xfdesktop</description>
@@ -474,7 +474,7 @@
     <item>
       <title>SNMP plugins for Nagios</title>
 	  <link>https://tobert.github.io/post/2004-06-30-i-wrote-couple-snmp-plugins-for-nagios.html</link>
-      <pubDate>Wed, 30 Jun 2004 19:00:00 PDT</pubDate>
+      <pubDate>Wed, 30 Jun 2004 19:00:00 -0700</pubDate>
       <author>Amy Tobey</author>
       <guid>2004-06-30-i-wrote-couple-snmp-plugins-for-nagios</guid>
 	  <description>SNMP plugins for Nagios</description>
