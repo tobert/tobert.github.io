@@ -161,7 +161,7 @@ img.img-left {
   background-color: #cdcdcd \9;
 }
 
-.btn-google-plus {
+.btn-mastodon {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   background-color: #d34332;
@@ -178,19 +178,19 @@ img.img-left {
   filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 }
 
-.btn-google-plus:hover,
-.btn-google-plus:focus,
-.btn-google-plus:active,
-.btn-google-plus.active,
-.btn-google-plus.disabled,
-.btn-google-plus[disabled] {
+.btn-mastodon:hover,
+.btn-mastodon:focus,
+.btn-mastodon:active,
+.btn-mastodon.active,
+.btn-mastodon.disabled,
+.btn-mastodon[disabled] {
   color: #ffffff;
   background-color: #c53727;
   *background-color: #b03123;
 }
 
-.btn-google-plus:active,
-.btn-google-plus.active {
+.btn-mastodon:active,
+.btn-mastodon.active {
   background-color: #9a2b1f \9;
 }
 
