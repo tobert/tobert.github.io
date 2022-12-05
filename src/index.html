@@ -28,8 +28,4 @@ autoidx: false
       <li><a href="{{ $page.PubRel }}">{{ if $page.Date }}{{ $page.Date.Format "2006-01-02" }} - {{ end }}{{ $page.Title |html }}</a></li>{{ end }}{{ end }}
     </ul>
   </div>
-
-  <div class="col-md-4" id="timeline">
-{{ template "timeline.html" . }}
-  </div>
 </div>
