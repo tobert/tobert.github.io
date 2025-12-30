@@ -7,10 +7,28 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Amy Tobey</author>
-	<pubDate>2022-01-02</pubDate>
-	<lastBuildDate>2022-12-05</lastBuildDate>
+	<pubDate>2025-12-30</pubDate>
+	<lastBuildDate>2025-12-30</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>Building sshwarma</title>
+	  <link>https://tobert.github.io/post/2025-12-30-building-sshwarma.html</link>
+      <pubDate>Tue, 30 Dec 2025 21:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>2025-12-30-building-sshwarma</guid>
+	  <description>How a rambling prompt became 15,000 lines of Rust and Lua in six days.</description>
+    </item>
+    
+    <item>
+      <title>TL;DR: Bevy Windows Wsl2</title>
+	  <link>https://tobert.github.io/tldr/bevy-windows-wsl2.html</link>
+      <pubDate>Sun, 07 Sep 2025 00:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>bevy-windows-wsl2</guid>
+	  <description>TL;DR: Bevy Windows Wsl2</description>
+    </item>
     
     <item>
       <title>TL;DR: Btrfs Swapfile Setup</title>
