@@ -18,7 +18,6 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -26,13 +25,15 @@ import (
 	"path"
 	"path/filepath"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 	"text/template"
 	"time"
 
 	"github.com/russross/blackfriday"
-	"gopkg.in/yaml.v1"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
+	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
@@ -90,6 +91,12 @@ var (
 	defaultPath, srcFlag, pubFlag, domainFlag string
 	portFlag                                  int
 	forceIdxFlag, serveFlag                   bool
+
+	// regex for extracting date from tldr post filenames
+	tldrDateRe = regexp.MustCompile(`^\d+-\d+-\d+`)
+
+	// title caser for generating titles
+	titleCaser = cases.Title(language.English)
 )
 
 func init() {
@@ -141,11 +148,26 @@ func generate() {
 		baseUrl.Host = fmt.Sprintf("%s:%d", baseUrl.Host, portFlag)
 	}
 
-	c := Config{srcFlag, pubFlag, baseUrl, "src", "snippets"}
+	c := Config{
+		SrcRoot: srcFlag,
+		PubRoot: pubFlag,
+		BaseURL: baseUrl,
+		PageDir: "src",
+		SnipDir: "snippets",
+	}
 
 	snippets := loadSnippets(c)
 	pages := findPages(c)
-	sort.Sort(pages)
+	slices.SortFunc(pages, func(a, b Page) int {
+		// sort by date descending (newest first)
+		if a.Date.After(b.Date) {
+			return -1
+		}
+		if a.Date.Before(b.Date) {
+			return 1
+		}
+		return 0
+	})
 
 	// create another list that only contains pages for the automatic index
 	pageAutoIdx := Pages{}
@@ -165,101 +187,15 @@ func generate() {
 
 	// render all pages
 	for _, page := range pages {
-		// only pages with autoidx: true are available in the templates' .Pages pipeline
-		td := TmplData{page, c, snippets, pageAutoIdx, tagIdx, time.Now()}
-
-		// parse the page template
-		tmpl, err := template.New(page.Id).Parse(page.src)
-		if err != nil {
-			log.Fatalf("Template parsing of page file '%s' failed: %s", page.SrcPath, err)
+		td := TmplData{
+			Page:     page,
+			Config:   c,
+			Snippets: snippets,
+			Pages:    pageAutoIdx,
+			TagIndex: tagIdx,
+			Now:      time.Now(),
 		}
-
-		// load snippets too, names are basename $file
-		for _, s := range snippets {
-			_, err = tmpl.ParseFiles(s.SrcPath)
-			if err != nil {
-				log.Fatalf("Snippet parsing failed on '%s': %s\n", s.SrcPath, err)
-			}
-		}
-
-		// make sure the target directory exists
-		err = os.MkdirAll(path.Dir(page.PubPath), 0755)
-		if err != nil {
-			log.Fatalf("Could not create target directory '%s': %s\n", path.Dir(page.PubPath), err)
-		}
-
-		// open file for write
-		fd, err := os.OpenFile(page.PubPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
-		if err != nil {
-			log.Fatalf("Could not open '%s' for write: %s\n", page.PubPath, err)
-		}
-		defer fd.Close()
-
-		// text/template supports referencing other templates, but that would be silly
-		// since I want this on every html page
-		if page.Type == "html" || page.Type == "md" || page.Type == "sh" {
-			err = snippets["header"].tmpl.Execute(fd, td)
-			if err != nil {
-				log.Fatalf("Failed to render header template: %s\n", err)
-			}
-
-			// index.html is the only special page, it has its own container
-			// everything else gets a standard container from a snippet
-			if path.Base(page.SrcRel) != "index.html" {
-				err = snippets["container-top"].tmpl.Execute(fd, td)
-				if err != nil {
-					log.Fatalf("Failed to render container-top snippet: %s\n", err)
-				}
-			}
-
-			// .sh files are plain shell scripts that get posted as a page
-			// and follow most of the 'tldr' rules (and code)
-			if page.Type == "sh" {
-				err = snippets["tldr-sh-top"].tmpl.Execute(fd, td)
-				if err != nil {
-					log.Fatalf("Failed to render tldr-sh-top snippet: %s\n", err)
-				}
-			}
-		}
-
-		// everything in the source directory is considered a template
-		var buf bytes.Buffer
-		err = tmpl.Execute(&buf, td)
-		if err != nil {
-			log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
-		}
-
-		if page.Type == "md" {
-			output := markdown([]byte(page.src))
-			_, err = fd.Write(output)
-		} else {
-			_, err = fd.Write(buf.Bytes())
-		}
-		if err != nil {
-			log.Fatalf("Error writing content to file '%s': %s'\n", page.PubPath, err)
-		}
-
-		if page.Type == "html" || page.Type == "md" || page.Type == "sh" {
-			if page.Type == "sh" {
-				err = snippets["tldr-sh-bot"].tmpl.Execute(fd, td)
-			}
-
-			// close the container snippet
-			if path.Base(page.SrcRel) != "index.html" {
-				err = snippets["container-bottom"].tmpl.Execute(fd, td)
-				if err != nil {
-					log.Fatalf("Failed to render container-bottom snippet: %s\n", err)
-				}
-			}
-
-			// add the footer to the file
-			err = snippets["footer"].tmpl.Execute(fd, td)
-			if err != nil {
-				log.Fatalf("Failed to render footer template: %s\n", err)
-			}
-		}
-
-		log.Printf("OK Wrote %s to %s\n", strings.TrimLeft(page.SrcRel, "/"), strings.TrimLeft(page.PubRel, "/"))
+		renderPage(page, td, snippets)
 	}
 
 	js, err := json.MarshalIndent(pages, "", "  ") //.Marshal(pages)
@@ -268,10 +204,109 @@ func generate() {
 	}
 
 	pagesJson := path.Join(c.PubRoot, "pages.json")
-	err = ioutil.WriteFile(pagesJson, js, 0644)
+	err = os.WriteFile(pagesJson, js, 0644)
 	if err != nil {
 		log.Fatalf("Saving %s failed: %s\n", pagesJson, err)
 	}
+}
+
+// renderPage writes a single page to disk, handling all template rendering
+func renderPage(page Page, td TmplData, snippets Snippets) {
+	// parse the page template
+	tmpl, err := template.New(page.Id).Parse(page.src)
+	if err != nil {
+		log.Fatalf("Template parsing of page file '%s' failed: %s", page.SrcPath, err)
+	}
+
+	// load snippets too, names are basename $file
+	for _, s := range snippets {
+		_, err = tmpl.ParseFiles(s.SrcPath)
+		if err != nil {
+			log.Fatalf("Snippet parsing failed on '%s': %s\n", s.SrcPath, err)
+		}
+	}
+
+	// make sure the target directory exists
+	err = os.MkdirAll(path.Dir(page.PubPath), 0755)
+	if err != nil {
+		log.Fatalf("Could not create target directory '%s': %s\n", path.Dir(page.PubPath), err)
+	}
+
+	// open file for write
+	fd, err := os.OpenFile(page.PubPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	if err != nil {
+		log.Fatalf("Could not open '%s' for write: %s\n", page.PubPath, err)
+	}
+	defer fd.Close() // now safe: one file per function call
+
+	// text/template supports referencing other templates, but that would be silly
+	// since I want this on every html page
+	if page.Type == "html" || page.Type == "md" || page.Type == "sh" {
+		err = snippets["header"].tmpl.Execute(fd, td)
+		if err != nil {
+			log.Fatalf("Failed to render header template: %s\n", err)
+		}
+
+		// index.html is the only special page, it has its own container
+		// everything else gets a standard container from a snippet
+		if path.Base(page.SrcRel) != "index.html" {
+			err = snippets["container-top"].tmpl.Execute(fd, td)
+			if err != nil {
+				log.Fatalf("Failed to render container-top snippet: %s\n", err)
+			}
+		}
+
+		// .sh files are plain shell scripts that get posted as a page
+		// and follow most of the 'tldr' rules (and code)
+		if page.Type == "sh" {
+			err = snippets["tldr-sh-top"].tmpl.Execute(fd, td)
+			if err != nil {
+				log.Fatalf("Failed to render tldr-sh-top snippet: %s\n", err)
+			}
+		}
+	}
+
+	// everything in the source directory is considered a template
+	var buf bytes.Buffer
+	err = tmpl.Execute(&buf, td)
+	if err != nil {
+		log.Fatalf("Failed to render template '%s': %s\n", page.SrcRel, err)
+	}
+
+	if page.Type == "md" {
+		output := markdown([]byte(page.src))
+		_, err = fd.Write(output)
+	} else {
+		_, err = fd.Write(buf.Bytes())
+	}
+	if err != nil {
+		log.Fatalf("Error writing content to file '%s': %s'\n", page.PubPath, err)
+	}
+
+	if page.Type == "html" || page.Type == "md" || page.Type == "sh" {
+		if page.Type == "sh" {
+			err = snippets["tldr-sh-bot"].tmpl.Execute(fd, td)
+			if err != nil {
+				log.Fatalf("Failed to render tldr-sh-bot snippet: %s\n", err)
+			}
+		}
+
+		// close the container snippet
+		if path.Base(page.SrcRel) != "index.html" {
+			err = snippets["container-bottom"].tmpl.Execute(fd, td)
+			if err != nil {
+				log.Fatalf("Failed to render container-bottom snippet: %s\n", err)
+			}
+		}
+
+		// add the footer to the file
+		err = snippets["footer"].tmpl.Execute(fd, td)
+		if err != nil {
+			log.Fatalf("Failed to render footer template: %s\n", err)
+		}
+	}
+
+	log.Printf("OK Wrote %s to %s\n", strings.TrimLeft(page.SrcRel, "/"), strings.TrimLeft(page.PubRel, "/"))
 }
 
 // loads all snippet files in Config.SnipSrcPath into memory
@@ -288,7 +323,7 @@ func loadSnippets(c Config) Snippets {
 		if ext == ".md" || ext == ".html" || ext == ".txt" || ext == ".xml" {
 			id := strings.TrimSuffix(fname, ext)
 
-			src, err := ioutil.ReadFile(fpath)
+			src, err := os.ReadFile(fpath)
 			if err != nil {
 				log.Fatalf("Could not read snippet source file '%s': %s", fpath, err)
 			}
@@ -300,9 +335,12 @@ func loadSnippets(c Config) Snippets {
 				log.Fatalf("Error parsing snippet '%s' as template: %s\n", fpath, err)
 			}
 
-			snip := Snippet{id, fpath, srcStr, tmpl}
-
-			snippets[id] = snip
+			snippets[id] = Snippet{
+				Id:      id,
+				SrcPath: fpath,
+				src:     srcStr,
+				tmpl:    tmpl,
+			}
 		}
 
 		return nil
@@ -324,8 +362,6 @@ func loadSnippets(c Config) Snippets {
 // foo: "bar"
 // ---
 func findPages(c Config) (pages Pages) {
-	tldrDateRe := regexp.MustCompile(`^\d+-\d+-\d+`)
-
 	visitor := func(fpath string, f os.FileInfo, err error) error {
 		if err != nil {
 			log.Fatalf("Encountered an error while loading pages in '%s': %s", fpath, err)
@@ -343,7 +379,7 @@ func findPages(c Config) (pages Pages) {
 
 		page := Page{
 			AutoIdx: true,
-			Type:    ext[1:len(ext)],
+			Type:    ext[1:],
 		}
 
 		// these variables are used below to build paths in the Page struct
@@ -351,7 +387,7 @@ func findPages(c Config) (pages Pages) {
 		subpath := strings.TrimPrefix(dname, path.Join(c.SrcRoot, c.PageDir))
 		page.Id = strings.TrimSuffix(fname, ext)
 
-		src, err := ioutil.ReadFile(fpath)
+		src, err := os.ReadFile(fpath)
 		if err != nil {
 			log.Fatalf("Could not read page source file '%s': %s", fpath, err)
 		}
@@ -372,8 +408,8 @@ func findPages(c Config) (pages Pages) {
 				log.Fatalf("tldr post '%s' does not seem to have a date prefix", page.Id)
 			}
 
-			title := strings.Replace(page.Id, "-", " ", -1)
-			page.Title = fmt.Sprintf("TL;DR: %s", strings.Title(title))
+			title := strings.ReplaceAll(page.Id, "-", " ")
+			page.Title = fmt.Sprintf("TL;DR: %s", titleCaser.String(title))
 			page.Tags = strings.Split(page.Id, "-")
 
 			page.src = string(src)
@@ -383,16 +419,26 @@ func findPages(c Config) (pages Pages) {
 			}
 		} else {
 			// all other pages have YAML "front matter" that is parsed for metadata
-			if src[0] != '-' || src[1] != '-' || src[2] != '-' {
-				log.Fatalf("Source file '%s' must have '---' as the first 3 characters!", fpath)
+			if len(src) < 4 || !bytes.HasPrefix(src, []byte("---")) {
+				log.Fatalf("Source file '%s' must start with '---'!", fpath)
 			}
 
-			// found the first ---, now find the second one and abstract the YAML for parsing
-			end := bytes.Index(src[3:len(src)], []byte("---"))
-			yamlBytes := src[3 : end+3] // index was offset by 3, so add it back
-			// TODO: possible bug here ... need to check assumption of src offset
-			tmplBytes := src[end+7 : len(src)] // second --- is always followed by \n, so 3 + 4
-			page.src = string(tmplBytes)
+			// found the first ---, now find the second one and extract the YAML for parsing
+			end := bytes.Index(src[3:], []byte("\n---"))
+			if end == -1 {
+				log.Fatalf("Source file '%s' is missing closing '---' for front matter!", fpath)
+			}
+
+			yamlBytes := src[4 : end+3] // skip opening "---\n", end is relative to src[3:]
+			// find where content starts (after closing --- and its newline)
+			contentStart := end + 3 + 4 // position after "\n---"
+			if contentStart < len(src) && src[contentStart] == '\n' {
+				contentStart++ // skip the newline after closing ---
+			}
+			if contentStart > len(src) {
+				contentStart = len(src)
+			}
+			page.src = string(src[contentStart:])
 
 			// parse the YAML data
 			err = yaml.Unmarshal(yamlBytes, &page)
@@ -462,15 +508,4 @@ func markdown(input []byte) []byte {
 	ext |= blackfriday.EXTENSION_AUTOLINK
 
 	return blackfriday.Markdown(input, r, ext)
-}
-
-// implement the sort interface for Pages
-func (pl Pages) Len() int {
-	return len(pl)
-}
-func (pl Pages) Less(i, j int) bool {
-	return pl[i].Date.After(pl[j].Date)
-}
-func (pl Pages) Swap(i, j int) {
-	pl[i], pl[j] = pl[j], pl[i]
 }

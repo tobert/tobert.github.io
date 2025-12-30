@@ -1,8 +1,9 @@
 module main
 
-go 1.15
+go 1.21
 
 require (
 	github.com/russross/blackfriday v1.6.0
-	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
+	golang.org/x/text v0.21.0
+	gopkg.in/yaml.v3 v3.0.1
 )
