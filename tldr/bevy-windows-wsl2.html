@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    
+    <meta name="keywords" content="bevy, windows, wsl2, ">
+    <meta property="article:published_time" content="2025-09-07"/>
+    <meta property="article:modified_time" content="2025-09-07"/>
+
+    <title>TL;DR: Bevy Windows Wsl2</title>
+    <link rel="canonical" href="https://tobert.github.io/tldr/bevy-windows-wsl2.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />
+    <link href="https://hachyderm.io/@renice" rel="me" />
+    <link rel="icon" type="image/png" href="https://tobert.github.io/images/amy-favicon.png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/tobert.css">
+    
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Amy Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1"
+								href="/pages/als-cassandra-21-tuning-guide.html">Cassandra 2.1 Tuning Guide</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://hachyderm.io/@renice"><i class="fa fa-mastodon"></i> | @renice@hachyderm.io</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa fa-github"></i> | tobert</a></li>
+              <li><a href="https://twitter.com/MissAmyTobey"><i class="fa fa-twitter"></i> | @MissAmyTobey</a></li>
+              <li><a href="/rss.xml"><i class="fa fa-rss"></i> | RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/tldr/2025-09-07-bevy-windows-wsl2.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">TL;DR: Bevy Windows Wsl2</h1>
+      <span class="pull-right">
+        <a href="https://hachyderm.io/@renice"><i class="fa fa-mastodon"></i> | @renice@hachyderm.io</a>
+        <a href="https://github.com/tobert"><i class="fa fa-github"></i></a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<p>Here's a quick setup for cross-compiling Bevy games from WSL2 to Windows with quick iteration cycles.
+My 2020 laptop with Intel graphics compiles and starts both of my bevy demos in a few seconds for quick
+edit / try it turnarounds.</p>
+
+<p>This setup leans into two things: dynamic linking bevy to make development builds quicker, and launching the Windows
+exe from the WSL shell. While WSL2 can do some graphics I find it flaky and this setup gets me the best of both.</p>
+
+<p>Here are some of the steps. I'm assuming you have a WSL2 instance that's already able to build your Bevy 0.16 project.
+The main thing you'll need is xwin, which takes most of the pain out of cross-compiling to Windows.</p>
+
+<pre><code class="language-sh"># Install xwin for Windows SDK access
+cargo install xwin cargo-xwin
+
+# Download Windows CRT/SDK (one-time setup)
+xwin --accept-license splat --output ~/.xwin
+</code></pre>
+
+<p>Ensure your bevy dependencies in Cargo.toml includes <code>dynamic_linking</code>. Mine looks like this.</p>
+
+<pre><code class="language-toml">[dependencies]
+bevy = { version = &quot;0.16&quot;, default-features = false, features = [
+    &quot;bevy_asset&quot;, &quot;bevy_gilrs&quot;, &quot;bevy_scene&quot;, &quot;bevy_winit&quot;, 
+    &quot;bevy_core_pipeline&quot;, &quot;bevy_pbr&quot;, &quot;bevy_gltf&quot;, &quot;bevy_render&quot;,
+    &quot;bevy_sprite&quot;, &quot;bevy_text&quot;, &quot;bevy_ui&quot;, &quot;multi_threaded&quot;, 
+    &quot;dynamic_linking&quot;
+] }
+
+</code></pre>
+
+<p>I use a <code>build-windows.sh</code> script to wrap up the build. This script sets RUSTFLAGS
+to ensure the exe's directory is included in the defaulit DLL search path.</p>
+
+<pre><code class="language-sh">#!/bin/bash
+
+set -e
+
+target=&quot;x86_64-pc-windows-msvc&quot;
+cargo xwin build --target $target
+
+exe_path=&quot;target/$target/debug/bloblins-rust.exe&quot;
+required_dlls=$(objdump -p &quot;$exe_path&quot; | awk '/DLL Name/{print $3}')
+
+sysroot=$(rustc --print sysroot)
+rust_lib_dir=&quot;$sysroot/lib/rustlib/$target/lib&quot;
+
+for dll_name in $required_dlls; do
+    # skip system DLLs
+    if [[ &quot;$dll_name&quot; =~ ^(KERNEL32|USER32|ADVAPI32).*\.dll$ ]]; then
+        continue
+    fi
+    
+    # copy dlls to the exe directory
+    if [[ -f &quot;target/$target/debug/deps/$dll_name&quot; ]]; then
+        cp &quot;target/$target/debug/deps/$dll_name&quot; &quot;target/$target/debug/&quot;
+    elif [[ -f &quot;$rust_lib_dir/$dll_name&quot; ]]; then
+        cp &quot;$rust_lib_dir/$dll_name&quot; &quot;target/$target/debug/&quot;
+    fi
+done
+</code></pre>
+
+<p>And a simple <code>run.sh</code> for launching:</p>
+
+<pre><code class="language-bash">#!/bin/bash
+cd target/x86_64-pc-windows-msvc/debug
+./bloblins-rust.exe &quot;$@&quot;
+</code></pre>
+
+<p>Daily workflow looks like:</p>
+
+<pre><code class="language-bash"># Quick syntax check
+cargo c
+
+# Build with DLL management
+./build.sh
+
+# Run with arguments
+./run.sh --headless --fps 60
+
+# Lint before commit
+cargo clippy
+cargo fmt
+</code></pre>
+
+<p>This gets me sub-10-second iteration cycles for most changes. The key tricks are using <code>cargo c</code> for quick validation, automatic DLL management in the build script, and optimizing dependencies separately from my main code. Dynamic linking on Linux keeps builds fast, while the cross-compilation handles the Windows target without leaving WSL2.</p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/tldr/2025-09-07-bevy-windows-wsl2.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Amy Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46953804-1', 'tobert.github.io');
+  ga('send', 'pageview');
+
+</script>
+
+</body>
+</html>
