@@ -7,10 +7,19 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Amy Tobey</author>
-	<pubDate>2025-12-30</pubDate>
+	<pubDate>2026-02-09</pubDate>
 	<lastBuildDate>2026-02-09</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>Building kaish: 65,000 Lines of Rust in 25 Days</title>
+	  <link>https://tobert.github.io/post/2026-02-09-building-kaish.html</link>
+      <pubDate>Mon, 09 Feb 2026 21:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>2026-02-09-building-kaish</guid>
+	  <description>A shell for AI agents, built with one. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.</description>
+    </item>
     
     <item>
       <title>Building sshwarma</title>

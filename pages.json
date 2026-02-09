@@ -1,5 +1,32 @@
 [
   {
+    "Id": "2026-02-09-building-kaish",
+    "Title": "Building kaish: 65,000 Lines of Rust in 25 Days",
+    "Abstract": "A shell for AI agents, built with one. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.",
+    "Tags": [
+      "rust",
+      "claude",
+      "agents",
+      "shell",
+      "mcp",
+      "collaboration",
+      "kaish"
+    ],
+    "PubDate": "2026-02-09T21:00:00Z",
+    "Head": "",
+    "Date": "2026-02-09T21:00:00Z",
+    "AutoIdx": true,
+    "Script": "",
+    "SrcPath": "/home/atobey/src/tobert.github.io/src/post/2026-02-09-building-kaish.md",
+    "SrcRel": "/post/2026-02-09-building-kaish.md",
+    "PubPath": "/home/atobey/src/tobert.github.io/post/2026-02-09-building-kaish.html",
+    "PubRel": "/post/2026-02-09-building-kaish.html",
+    "PubFull": "https://tobert.github.io/post/2026-02-09-building-kaish.html",
+    "Dir": "post",
+    "Type": "md",
+    "SyntaxHl": false
+  },
+  {
     "Id": "2025-12-30-building-sshwarma",
     "Title": "Building sshwarma",
     "Abstract": "How a rambling prompt became 15,000 lines of Rust and Lua in six days.",
