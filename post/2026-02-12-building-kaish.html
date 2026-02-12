@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="A shell for AI agents, built with one. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.">
+    <meta name="keywords" content="rust, claude, agents, shell, mcp, collaboration, kaish, ">
+    <meta property="article:published_time" content="2026-02-12"/>
+    <meta property="article:modified_time" content="2026-02-12"/>
+
+    <title>Building kaish: 48,000 Lines of Rust in 25 Days</title>
+    <link rel="canonical" href="https://tobert.github.io/post/2026-02-12-building-kaish.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />
+    <link href="https://bsky.app/profile/renice.bsky.social" rel="me" />
+    <link href="https://hachyderm.io/@renice" rel="me" />
+    <link rel="icon" type="image/png" href="https://tobert.github.io/images/amy-favicon.png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/tobert.css">
+    
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Amy Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1"
+								href="/pages/als-cassandra-21-tuning-guide.html">Cassandra 2.1 Tuning Guide</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://bsky.app/profile/renice.bsky.social">🦋 @renice.bsky.social</a></li>
+              <li><a href="https://hachyderm.io/@renice"><i class="fa-brands fa-mastodon"></i> @renice@hachyderm.io</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa-brands fa-github"></i> tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa-solid fa-rss"></i> RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2026-02-12-building-kaish.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">Building kaish: 48,000 Lines of Rust in 25 Days</h1>
+      <span class="pull-right social-links">
+        <a href="https://bsky.app/profile/renice.bsky.social" title="Bluesky">🦋 renice</a>
+        <a href="https://hachyderm.io/@renice" title="Mastodon"><i class="fa-brands fa-mastodon"></i> renice</a>
+        <a href="https://github.com/tobert" title="GitHub"><i class="fa-brands fa-github"></i> tobert</a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<h2>会sh (kaish)</h2>
+
+<p>kaish is a shell designed to be embedded in AI toolchains, providing a familiar subset of Bourne
+shell syntax with stronger validation and an embedded-first design. Kaish provides several builtins for coreutils and
+beyond that make up most of the shell tasks I observed my agents coming up with. It looks like this:</p>
+
+<pre><code class="language-sh">#!/usr/bin/env kaish
+
+# glob tool replaces inline * expansion
+# scatter/gather provide easy builtin parallelization
+echo &quot;&quot;
+echo &quot;Lines of code per crate:&quot;
+glob &quot;crates/*/src/lib.rs&quot; \
+    | scatter as=F limit=8 \
+    | wc -l &quot;$F&quot; \
+    | gather \
+    | sort -k 2 -rn
+
+for F in &quot;main.rs&quot; &quot;app.tsx&quot; &quot;notes.md&quot;; do
+    case $F in
+        *.rs)          echo &quot;🦀 $F&quot; ;;
+        *.{js,ts,tsx}) echo &quot;🌐 $F&quot; ;;
+        *)             echo &quot;📄 $F&quot; ;;
+    esac
+done
+</code></pre>
+
+<p>It is available now on <a href="https://crates.io/crates/kaish-repl">crates.io</a> and <a href="https://github.com/tobert/kaish">GitHub</a>.</p>
+
+<h2>The Name</h2>
+
+<p>会sh was originally prototyped as part of a more ambitious project,
+<a href="https://github.com/tobert/kaijutsu">会術 Kaijutsu</a> and was separate enough
+it made sense to split it out. The k+ai works out nicely too, sortof &quot;Korn-like shell
+for AI&quot;.</p>
+
+<h2>The Story</h2>
+
+<p>I started working with Claude Code in early 2025, both at work and on <a href="https://github.com/tobert">personal projects</a>.
+Through building a small game in Godot and Bevy, I got the
+hang of extruding code with Claude, and got more ambitious. I spent a lot of the doubled quota over
+the 2025 holidays <a href="https://tobert.github.io/post/2025-12-30-building-sshwarma.html">building sshwarma</a>
+and continuing my music MCP. As I hit limits in the terminal, I kicked off a Bevy UI prototype and
+while designing its collaboration model, I started drafting kaish to be a shell
+that it could embed, giving full control over tool IO.</p>
+
+<p>The first running versions of kaish had a lot of goofy ideas I threw in to get things rolling. The
+language quickly drifted away from Bourne, bringing in some json features to accommodate MCPs, and
+as features diverted it became clear a new shell language was not viable. So we stripped away
+a lot of the experimental features and landed at an 80/20 rule: 会sh avoids more esoteric and
+unsafe features of the shell, aiming to be compatible with strict shellcheck, but not full bash.
+This removes a lot of complexity, so kaish can have fewer footguns and surprising behaviors.</p>
+
+<p>I kept a few though.</p>
+
+<pre><code class="language-sh">#!/usr/bin/env kaish
+
+# computing squares:
+# seq generates an array internally
+# scatter uses the array, assigning each item to locally scoped `$N`
+# gather brings the json together into a list
+# jq selects items from the list
+seq 1 6 \
+    | scatter as=N limit=4 \
+    | echo &quot;{\&quot;n\&quot;: $N, \&quot;sq\&quot;: $((N * N))}&quot; \
+    | gather format=json \
+    | jq '[.[] | .out | fromjson] | sort_by(.n)' -r
+
+# git is built in (git2-rs — no fork, no exec) (experimental)
+git log --oneline | head -n 5
+
+</code></pre>
+
+<h2>The Architecture</h2>
+
+<p>Rather than a traditional interpreter, kaish has an embeddable kernel architecture. The
+repl uses the same kernel as the MCP, and applications can embed kaish in-process or
+as an external process over a socket. This allows for isolation options such as putting
+the kaish kernel in a container or virtual machine.</p>
+
+<pre><code>kaish-kernel    — parser and runtime
+kaish-client    — client trait + embedded/IPC implementations
+kaish-mcp       — MCP server (can run sub-MCPs as a client)
+kaish-schema    — Cap'n Proto definitions
+kaish-glob      — standalone glob matching library
+kaish-repl      — Interactive REPL, script runner, CLI
+</code></pre>
+
+<p>Another problem I wanted to solve in kaish was stringy typing, at least a little bit. Instead
+of boiling the ocean with types, kaish leans into builtins so they can natively emit structured
+data such as arrays to each other, even if it ends up smooshed into strings at the surface. This
+compromise seems to work out well in the example above: tools like seq, glob, etc. return lists
+and in kaish they don't get flattened.</p>
+
+<h2>Try it!</h2>
+
+<p>To be honest I haven't used the repl as much yet, but use the MCP regularly now. You can get
+the repl with <code>cargo install kaish-repl</code> or try the MCP:</p>
+
+<pre><code class="language-sh">cargo install kaish-mcp
+claude mcp add kaish ~/.cargo/bin/kaish-mcp
+gemini mcp add kaish ~/.cargo/bin/kaish-mcp
+</code></pre>
+
+<p>Check out the <a href="https://github.com/tobert/kaish#mcp-integration">README</a> for more. PRs from you
+and your agents are welcome.</p>
+
+<p>Enjoy :)</p>
+
+<hr />
+
+<p><em>The prose in this post was written by Amy Tobey and reviewed by Claude Opus 4.6.
+Code examples were created by Claude and edited to fit the post.</em></p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/2026-02-12-building-kaish.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Amy Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

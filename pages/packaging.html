@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    
+    <meta name="keywords" content="cassandra, datastax, packaging, ecosystem, ">
+    <meta property="article:published_time" content="2015-03-10"/>
+    <meta property="article:modified_time" content="2015-03-10"/>
+
+    <title>Packaging for the Cassandra Ecosystem</title>
+    <link rel="canonical" href="https://tobert.github.io/pages/packaging.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />
+    <link href="https://bsky.app/profile/renice.bsky.social" rel="me" />
+    <link href="https://hachyderm.io/@renice" rel="me" />
+    <link rel="icon" type="image/png" href="https://tobert.github.io/images/amy-favicon.png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/tobert.css"><link type="text/css" rel="stylesheet" href="/css/sitemap.css">
+    
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Amy Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1"
+								href="/pages/als-cassandra-21-tuning-guide.html">Cassandra 2.1 Tuning Guide</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://bsky.app/profile/renice.bsky.social">🦋 @renice.bsky.social</a></li>
+              <li><a href="https://hachyderm.io/@renice"><i class="fa-brands fa-mastodon"></i> @renice@hachyderm.io</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa-brands fa-github"></i> tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa-solid fa-rss"></i> RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/pages/packaging.html">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">Packaging for the Cassandra Ecosystem</h1>
+      <span class="pull-right social-links">
+        <a href="https://bsky.app/profile/renice.bsky.social" title="Bluesky">🦋 renice</a>
+        <a href="https://hachyderm.io/@renice" title="Mastodon"><i class="fa-brands fa-mastodon"></i> renice</a>
+        <a href="https://github.com/tobert" title="GitHub"><i class="fa-brands fa-github"></i> tobert</a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+
+<p>This is something I've thrown together to think through all the complexity involved
+in shipping code to all of Datastax's customers. Just about everything on this list
+exists at one customer site or another. While I don't know of any users in production
+on Docker, there are a few on LXC and even more getting ready to move ahead with it,
+so I've included the few Docker-based deployment models that I know about.</p>
+
+<div id="d3-container"></div>
+
+<script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="/js/d3.v3.min.js"></script>
+
+<script>
+$(document).ready(function() {
+	// tags get linked automatically. tags with 0 links will be ignored, but go ahead and add them
+	var tags = [
+		// targets
+	  { "name": "bare metal",     "tags": [ "host" ] },
+	  { "name": "vm",             "tags": [ "virtualization", "cloud" ] }, // EC2, GCE, Vagrant, Vmware, etc.
+	  { "name": "container",      "tags": [ "host" ] }, // Docker, Rocket ... should LXC be under VM?
+
+		// config managers
+	  { "name": "chef",           "tags": [ "config_management", "orchestration" ] },
+	  { "name": "puppet",         "tags": [ "config_management", "orchestration" ] },
+	  { "name": "cfengine",       "tags": [ "config_management" ] }, // orchestration?
+	  { "name": "ansible",        "tags": [ "config_management", "orchestration" ] },
+	  { "name": "salt",           "tags": [ "config_management", "orchestration" ] },
+	  { "name": "terraform",      "tags": [ "config_management", "orchestration", "hashicorp" ] },
+
+	  // deploy
+	  { "name": "fabric",         "tags": [ "orchestration" ] },
+	  { "name": "capistrano",     "tags": [ "orchestration" ] },
+
+	  // supported JRE/JDKs
+	  { "name": "oracle",         "tags": [ "jre", "jdk" ] },
+	  { "name": "openjdk",        "tags": [ "jre", "jdk" ] },
+	  { "name": "azul",           "tags": [ "jre", "jdk" ] },
+
+		// operating systems / package format
+	  { "name": "unix",           "tags": [ "artifact", "unix", "tgz" ] }, // tgz
+	  { "name": "redhat",         "tags": [ "artifact", "linux", "rpm" ] }, // RHEL/CentOS/Fedora
+	  { "name": "debian",         "tags": [ "artifact", "linux", "deb", "canonical" ] }, // ubuntu
+	  { "name": "coreos",         "tags": [ "artifact", "linux", "docker" ] }, // Docker/Rocket
+	  { "name": "windows",        "tags": [ "artifact", "windows", "msi" ] }, // Windows Server
+
+	  // package & image management tools
+		{ "name": "fpm",            "tags": [ "build tool", "rpm", "deb" ] },
+		{ "name": "packer",         "tags": [ "build tool", "ami", "ova" ] },
+
+	  // orchestration
+		{ "name": "kubernetes",    "tags": [ "orchestration", "docker", "google" ] },
+		{ "name": "knife",         "tags": [ "orchestration", "chef" ] },
+		{ "name": "juju",          "tags": [ "orchestration", "canonical" ] },
+		{ "name": "machine",       "tags": [ "orchestration", "docker" ] },
+
+		// DCOS / PaaS / IaaS *software* (*aaS below)
+	  { "name": "mesos",         "tags": [ "dcos", "docker" ] },
+	  { "name": "YARN",          "tags": [ "dcos", "docker", "hadoop" ] },
+	  { "name": "cloud foundry", "tags": [ "paas", "docker", "pivotal" ] },
+	  { "name": "openstack",     "tags": [ "iaas", "virtualization", "canonical", "cisco", "redhat" ] },
+	  { "name": "cloudstack",    "tags": [ "iaas", "virtualization", "citrix", "apache" ] },
+	  { "name": "vsphere",       "tags": [ "iaas", "virtualization", "vmware" ] },
+
+	  // IaaS
+		{ "name": "azure",         "tags": [ "iaas", "image", "microsoft" ] },
+		{ "name": "ec2",           "tags": [ "iaas", "image", "amazon" ] },
+		{ "name": "gce",           "tags": [ "iaas", "image", "google" ] },
+		{ "name": "digital_ocean", "tags": [ "iaas", "image", "digital ocean" ] },
+
+		// PaaS (some overlap with DOCS/IaaS)
+		{ "name": "openshift",     "tags": [ "paas", "docker" ] },
+		{ "name": "gcs",           "tags": [ "paas", "docker", "google", "container engine" ] },
+		{ "name": "ecs",           "tags": [ "paas", "docker", "amazon", "container engine" ] },
+  ];
+
+	var processes = [
+		// legacy enterprise
+	  {
+			"name": "legacy",
+			"desc": "legacy enterprise deploy",
+			"topology": [
+				[["datastax"], ["msi","rpm","deb","installer"]],
+				[["rpm"], ["redhat"]],
+				[["deb"], ["debian"]],
+				[["msi"], ["windows"]],
+				[["windows","redhat","debian"], ["bare metal","vm"]]
+			]
+		},
+		// devops enterprise - yeah, yeah, I know
+		{
+			"name": "devops",
+			"desc": "modern enterprise, configuration management + CI, etc."
+			"topology": [
+				[["datastax"], ["msi","rpm","deb"]],
+				[["rpm"], ["redhat"]],
+				[["deb"], ["debian"]],
+				[["msi"], ["windows"]],
+				[["windows","redhat","debian"], ["bare metal","vm","container"]]
+		},
+		// golden image, redhat only for the moment to keep it simple. Same everything on other distros.
+	  // also substitute "packer" with "shell script" etc. for now.
+		{
+			"name": "golden image",
+		 	"desc": "where there is some kind of image baking proces for deployment",
+			"topology": [
+				[["datastax"], ["rpm"]],
+				[["rpm"], ["redhat"]],
+				[["redhat"], ["packer"]],
+				[["packer"], ["image"]],
+				[["image"]], ["vsphere"]]
+			]
+		},
+	];
+});
+</script>
+
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/pages/packaging.html">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Amy Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

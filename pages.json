@@ -1,7 +1,7 @@
 [
   {
-    "Id": "2026-02-09-building-kaish",
-    "Title": "Building kaish: 65,000 Lines of Rust in 25 Days",
+    "Id": "2026-02-12-building-kaish",
+    "Title": "Building kaish: 48,000 Lines of Rust in 25 Days",
     "Abstract": "A shell for AI agents, built with one. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.",
     "Tags": [
       "rust",
@@ -12,16 +12,16 @@
       "collaboration",
       "kaish"
     ],
-    "PubDate": "2026-02-09T21:00:00Z",
+    "PubDate": "2026-02-12T21:00:00Z",
     "Head": "",
-    "Date": "2026-02-09T21:00:00Z",
+    "Date": "2026-02-12T21:00:00Z",
     "AutoIdx": true,
     "Script": "",
-    "SrcPath": "/home/atobey/src/tobert.github.io/src/post/2026-02-09-building-kaish.md",
-    "SrcRel": "/post/2026-02-09-building-kaish.md",
-    "PubPath": "/home/atobey/src/tobert.github.io/post/2026-02-09-building-kaish.html",
-    "PubRel": "/post/2026-02-09-building-kaish.html",
-    "PubFull": "https://tobert.github.io/post/2026-02-09-building-kaish.html",
+    "SrcPath": "/home/atobey/src/tobert.github.io/src/post/2026-02-12-building-kaish.md",
+    "SrcRel": "/post/2026-02-12-building-kaish.md",
+    "PubPath": "/home/atobey/src/tobert.github.io/post/2026-02-12-building-kaish.html",
+    "PubRel": "/post/2026-02-12-building-kaish.html",
+    "PubFull": "https://tobert.github.io/post/2026-02-12-building-kaish.html",
     "Dir": "post",
     "Type": "md",
     "SyntaxHl": false
