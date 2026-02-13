@@ -118,6 +118,13 @@ gemini mcp add kaish ~/.cargo/bin/kaish-mcp
 Check out the [README](https://github.com/tobert/kaish#mcp-integration) for more. PRs from you
 and your agents are welcome.
 
+One last example before I :wq. kaish has a `tokens` builtin for estimating token counts.
+
+```sh
+cat ~/src/tobert.github.io/src/post/2026-02-12-building-kaish.md | tokens
+1314
+```
+
 Enjoy :)
 
 ---
