@@ -97,6 +97,7 @@ hr {
 
 .navbar-default {
   background-color: var(--bg-deep);
+  background-image: none;
   border-color: var(--bg-surface);
 }
 
@@ -122,13 +123,20 @@ hr {
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
   color: var(--fg);
+  background-color: var(--bg-surface);
+  background-image: none;
 }
 
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus,
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus {
   background-color: var(--bg-surface);
+  background-image: none;
   color: var(--fg);
+  box-shadow: none;
 }
 
 .navbar-default .navbar-toggle {
@@ -171,7 +179,33 @@ hr {
 .dropdown-menu > li > a:hover,
 .dropdown-menu > li > a:focus {
   background-color: var(--bg-highlight);
+  background-image: none;
   color: var(--fg);
+}
+
+/* ===========================
+ * Nav lists & article index
+ * =========================== */
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: var(--bg-surface);
+  color: var(--link-hover);
+}
+
+.nav > li > a {
+  color: var(--link);
+}
+
+.nav-sidebar > li > a {
+  padding: 0.4em 1em;
+  border-radius: 4px;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.nav-sidebar > li > a:hover {
+  background-color: var(--bg-surface);
+  color: var(--link-hover);
 }
 
 /* ===========================
@@ -250,6 +284,19 @@ blockquote p:last-child {
  * Code — inline & blocks
  * =========================== */
 
+pre {
+  background-color: var(--bg-deep);
+  color: var(--fg);
+  font-family: "Cascadia Code", "Consolas", "Source Code Pro", "Monaco", monospace;
+  padding: 1em;
+  margin: 0 0 1.5em;
+  border-radius: 4px;
+  border-left: 3px solid var(--blue);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
 code {
   font-family: "Cascadia Code", "Consolas", "Source Code Pro", "Monaco", monospace;
   background-color: var(--bg-surface);
@@ -257,6 +304,7 @@ code {
   padding: 0.15em 0.4em;
   border-radius: 3px;
   font-size: 0.9em;
+  border: none;
 }
 
 pre code {
@@ -264,6 +312,7 @@ pre code {
   padding: 0;
   color: inherit;
   font-size: inherit;
+  border: none;
 }
 
 code.json {
@@ -359,6 +408,43 @@ i {
 .btn-linkedin:hover, .btn-linkedin:focus {
   background-color: var(--blue);
   color: var(--bg-deep);
+}
+
+/* ===========================
+ * Bootstrap dark overrides — catch-all
+ * =========================== */
+
+.well {
+  background-color: var(--bg-surface);
+  border-color: var(--border);
+  color: var(--fg);
+}
+
+.panel {
+  background-color: var(--bg-surface);
+  border-color: var(--border);
+}
+
+.panel-default > .panel-heading {
+  background-color: var(--bg-deep);
+  background-image: none;
+  border-color: var(--border);
+  color: var(--fg);
+}
+
+.list-group-item {
+  background-color: var(--bg);
+  border-color: var(--border);
+  color: var(--fg);
+}
+
+.list-group-item:hover {
+  background-color: var(--bg-surface);
+  color: var(--fg);
+}
+
+.container-fluid {
+  background-color: var(--bg);
 }
 
 /* ===========================
