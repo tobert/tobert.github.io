@@ -1,6 +1,6 @@
 ---
 id: "rss"
-title: "@MissAmyTobey Writes: RSS"
+title: "Amy Writes: RSS"
 abstract: "RSS XML"
 tags: [ "altobey", "rss", "atom" ]
 pubdate: 1970-01-01T00:00:00Z
@@ -11,7 +11,7 @@ autoidx: false
      xmlns:cc="http://creativecommons.org/ns#"
      xmlns:xapRights="http://ns.adobe.com/xap/1.0/rights/">
   <channel>
-    <title>@MissAmyTobey Writes</title>
+    <title>Amy Writes</title>
 	<link>{{ .Config.BaseURL }}{{ .Page.PubRel }}</link>
     <language>en-us</language>
     <author>Amy Tobey</author>

@@ -1,7 +1,7 @@
 package main
 
 /* build-blog.go
- * A simple bespoke static content processor by @MissAmyTobey.
+ * A simple bespoke static content processor by Amy Tobey.
  *
  * This is tailored to my workflow and I do not expect it to be useful
  * to anybody else.

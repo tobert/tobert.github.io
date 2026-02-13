@@ -690,7 +690,7 @@
   },
   {
     "Id": "index",
-    "Title": "@MissAmyTobey Writes",
+    "Title": "Amy Writes",
     "Abstract": "The Blog of Amy Tobey",
     "Tags": [
       "altobey",
@@ -1409,7 +1409,7 @@
   },
   {
     "Id": "rss",
-    "Title": "@MissAmyTobey Writes: RSS",
+    "Title": "Amy Writes: RSS",
     "Abstract": "RSS XML",
     "Tags": [
       "altobey",

@@ -1,5 +1,5 @@
-@MissAmyTobey Writes
-====================
+Amy Writes
+==========
 
 This is my blog. There are many like it ...
 
