@@ -11,7 +11,7 @@
     <meta property="article:published_time" content="2026-02-12"/>
     <meta property="article:modified_time" content="2026-02-12"/>
 
-    <title>Building kaish: 48,000 Lines of Rust in 25 Days</title>
+    <title>Building kaish: 64,000 Lines of Rust in 25 Days</title>
     <link rel="canonical" href="https://tobert.github.io/post/2026-02-12-building-kaish.html">
     <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />
     <link href="https://bsky.app/profile/renice.bsky.social" rel="me" />
@@ -78,7 +78,7 @@
   <div class="row">
     <div class="col-xs-12">
       <hr/>
-      <h1 style="display: inline;">Building kaish: 48,000 Lines of Rust in 25 Days</h1>
+      <h1 style="display: inline;">Building kaish: 64,000 Lines of Rust in 25 Days</h1>
       <span class="pull-right social-links">
         <a href="https://bsky.app/profile/renice.bsky.social" title="Bluesky">🦋 renice</a>
         <a href="https://hachyderm.io/@renice" title="Mastodon"><i class="fa-brands fa-mastodon"></i> renice</a>
@@ -197,10 +197,22 @@ gemini mcp add kaish ~/.cargo/bin/kaish-mcp
 <p>Check out the <a href="https://github.com/tobert/kaish#mcp-integration">README</a> for more. PRs from you
 and your agents are welcome.</p>
 
-<p>One last example before I :wq. kaish has a <code>tokens</code> builtin for estimating token counts.</p>
+<p>One last example before I :wq — here's how we verified the line count in the title.
+kaish has <code>find</code>, <code>wc</code>, and <code>tokens</code> as builtins so the whole thing runs in-process:</p>
 
-<pre><code class="language-sh">cat ~/src/tobert.github.io/src/post/2026-02-12-building-kaish.md | tokens
-1314
+<pre><code class="language-sh">#!/usr/bin/env kaish
+
+# count hand-written Rust (exclude generated capnp + snapshots)
+find crates -name &quot;*.rs&quot; -not -name &quot;*capnp*&quot; -not -path &quot;*snapshots*&quot; \
+    | scatter as=F limit=8 \
+    | wc -l &quot;$F&quot; \
+    | gather \
+    | awk '{s += $1} END {print s}'
+# 63673
+
+# how many tokens is this post?
+cat ~/src/tobert.github.io/src/post/2026-02-12-building-kaish.md | tokens
+# 1380
 </code></pre>
 
 <p>Enjoy :)</p>

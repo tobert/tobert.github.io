@@ -1,6 +1,6 @@
 ---
 id: "2026-02-12-building-kaish"
-title: "Building kaish: 48,000 Lines of Rust in 25 Days"
+title: "Building kaish: 64,000 Lines of Rust in 25 Days"
 abstract: "A shell for AI agents, built with one. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration."
 tags: ["rust", "claude", "agents", "shell", "mcp", "collaboration", "kaish"]
 pubdate: 2026-02-12T21:00:00Z
@@ -118,11 +118,23 @@ gemini mcp add kaish ~/.cargo/bin/kaish-mcp
 Check out the [README](https://github.com/tobert/kaish#mcp-integration) for more. PRs from you
 and your agents are welcome.
 
-One last example before I :wq. kaish has a `tokens` builtin for estimating token counts.
+One last example before I :wq — here's how we verified the line count in the title.
+kaish has `find`, `wc`, and `tokens` as builtins so the whole thing runs in-process:
 
 ```sh
+#!/usr/bin/env kaish
+
+# count hand-written Rust (exclude generated capnp + snapshots)
+find crates -name "*.rs" -not -name "*capnp*" -not -path "*snapshots*" \
+    | scatter as=F limit=8 \
+    | wc -l "$F" \
+    | gather \
+    | awk '{s += $1} END {print s}'
+# 63673
+
+# how many tokens is this post?
 cat ~/src/tobert.github.io/src/post/2026-02-12-building-kaish.md | tokens
-1314
+# 1380
 ```
 
 Enjoy :)

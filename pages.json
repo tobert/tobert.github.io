@@ -1,7 +1,7 @@
 [
   {
     "Id": "2026-02-12-building-kaish",
-    "Title": "Building kaish: 48,000 Lines of Rust in 25 Days",
+    "Title": "Building kaish: 64,000 Lines of Rust in 25 Days",
     "Abstract": "A shell for AI agents, built with one. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.",
     "Tags": [
       "rust",
