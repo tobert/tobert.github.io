@@ -61,7 +61,7 @@ a lot of the experimental features and landed at an 80/20 rule: 会sh avoids mor
 unsafe features of the shell, aiming to be compatible with strict shellcheck, but not full bash.
 This removes a lot of complexity, so kaish can have fewer footguns and surprising behaviors.
 
-I kept a few though.
+I kept a few fun features though.
 
 ```sh
 #!/usr/bin/env kaish
