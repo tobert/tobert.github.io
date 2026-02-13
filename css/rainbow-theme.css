@@ -1,82 +1,86 @@
 /**
- * Twilight theme
+ * Tokyo Night syntax theme for Rainbow.js
  *
- * Adapted from Michael Sheets' TextMate theme of the same name
- *
- * @author Michael Sheets
- * @author Jesse Farmer <jesse@20bits.com>
- * @version 1.0.1
+ * Colors from Amy's WezTerm config (Tokyo Night variant)
  */
+
 pre {
-    background: #141414;
-    word-wrap: break-word;
-    margin: 0px;
-    padding: 10px;
-    color: #F8F8F8;
-    font-size: 16px;
-    margin-bottom: 20px;
+  background: var(--bg-deep, #15161e);
+  word-wrap: break-word;
+  margin: 0 0 1.5em;
+  padding: 1em;
+  color: var(--fg, #e5e5e5);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  border-radius: 4px;
+  border-left: 3px solid var(--blue, #7aa2f7);
 }
 
 pre, code {
-    font-family: 'Source Code Pro', 'Consolas', 'Iconsolata', 'Monaco', monospace;
+  font-family: "Cascadia Code", "Consolas", "Source Code Pro", "Monaco", monospace;
 }
 
 pre .comment {
-    color: #2bfcff;
+  color: #565f89;
+  font-style: italic;
 }
 
 pre .constant.numeric {
-    color: #D87D50;
+  color: #ff9e64;
 }
 
 pre .constant {
-    color: #889AB4;
+  color: #e0af68;
 }
 
-pre .constant.symbol, pre .constant.language {
-    color: #D87D50;
+pre .constant.symbol,
+pre .constant.language {
+  color: #ff9e64;
 }
 
 pre .storage {
-    color: #F9EE98;
+  color: #bb9af7;
 }
 
 pre .string {
-    color: #8F9D6A;
+  color: #9ece6a;
 }
 
 pre .string.regexp {
-    color: #E9C062;
+  color: #e0af68;
 }
 
-pre .keyword, pre .selector, pre .storage {
-    color: #CDA869;
+pre .keyword,
+pre .selector {
+  color: #bb9af7;
 }
 
 pre .inherited-class {
-    color: #9B5C2E;
+  color: #7dcfff;
 }
 
 pre .entity {
-    color: #FF6400;
+  color: #7aa2f7;
 }
 
 pre .support {
-    color: #9B859D;
+  color: #f7768e;
 }
 
 pre .support.magic {
-    color: #DAD69A;
+  color: #ffc777;
 }
 
 pre .variable {
-    color: #7587A6;
+  color: #7dcfff;
 }
 
-pre .function, pre .entity.class {
-    color: #9B703F;
+pre .function,
+pre .entity.class {
+  color: #7aa2f7;
 }
 
-pre .support.class-name, pre .support.type {
-    color: #AB99AC;
+pre .support.class-name,
+pre .support.type {
+  color: #c099ff;
 }
