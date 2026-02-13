@@ -1,0 +1,1054 @@
+<html>
+<head>
+<title>root-tail.c</title>
+<meta name="generator" content="c2html 0.9.5">
+<meta name="date" content="2003-08-12T18:15:18+00:00">
+</head>
+<body bgcolor="#FFFFFF">
+<pre width="80"><font color="#B22222">/*
+ * Copyright 2001 by Marco d'Itri &lt;md@linux.it&gt;
+ *
+ * Original version by Mike Baker, then maintained by pcg@goof.com.
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+ */</font>
+<font color="#A020F0">#include </font><font color="#666666">"config.h"</font><font color="#A020F0"></font>
+<font color="#A020F0">#include &lt;stdlib.h&gt;</font>
+<font color="#A020F0">#include &lt;stdio.h&gt;</font>
+<font color="#A020F0">#include &lt;unistd.h&gt;</font>
+<font color="#A020F0">#include &lt;string.h&gt;</font>
+<font color="#A020F0">#include &lt;signal.h&gt;</font>
+<font color="#A020F0">#include &lt;time.h&gt;</font>
+<font color="#A020F0">#include &lt;fcntl.h&gt;</font>
+<font color="#A020F0">#include &lt;errno.h&gt;</font>
+<font color="#A020F0">#include &lt;sys/time.h&gt;</font>
+<font color="#A020F0">#include &lt;sys/stat.h&gt;</font>
+<font color="#A020F0">#include &lt;sys/types.h&gt;</font>
+<font color="#A020F0">#if HAS_REGEX</font>
+<font color="#A020F0">#include &lt;regex.h&gt;</font>
+<font color="#A020F0">#endif</font>
+<font color="#A020F0">#include &lt;X11/Xlib.h&gt;</font>
+<font color="#A020F0">#include &lt;X11/Xutil.h&gt;</font>
+<font color="#B22222">/* data structures */</font>
+<font color="#4169E1"><a name="logfile_entry"></a>struct logfile_entry </font>{
+    char *fname;                <font color="#B22222">/* name of file                         */</font>
+    char *desc;                        <font color="#B22222">/* alternative description              */</font>
+    FILE *fp;                        <font color="#B22222">/* FILE struct associated with file     */</font>
+    ino_t inode;                <font color="#B22222">/* inode of the file opened                */</font>
+    off_t last_size;                <font color="#B22222">/* file size at the last check                */</font>
+    unsigned long color;        <font color="#B22222">/* color to be used for printing        */</font>
+    <font color="#4169E1">struct logfile_entry</font> *next;
+};
+<font color="#4169E1"><a name="linematrix"></a>struct linematrix </font>{
+    char *line;
+    unsigned long color;
+};
+<font color="#B22222">/* global variables */</font>
+unsigned int width = STD_WIDTH, listlen = STD_HEIGHT;
+int win_x = LOC_X, win_y = LOC_Y;
+int w = -1, h = -1, font_width, font_height, font_descent;
+int do_reopen;
+<font color="#4169E1"><a name="timeval"></a>struct timeval </font>interval = { 2, 400000 };        <font color="#B22222">/* see Knuth */</font>
+<font color="#B22222">/* command line options */</font>
+int opt_noinitial, opt_shade, opt_frame, opt_reverse, opt_nofilename,
+    geom_mask, reload = 3600;
+const char *command = NULL,
+    *fontname = USE_FONT, *dispname = NULL, *def_color = DEF_COLOR;
+<font color="#4169E1"><a name="logfile_entry"></a>struct logfile_entry </font>*loglist = NULL, *loglist_tail = NULL;
+Display *disp;
+Window new_root, real_root;
+GC WinGC;
+<font color="#A020F0">#if HAS_REGEX</font>
+<font color="#4169E1"><a name="re_list"></a>struct re_list </font>{
+    regex_t from;
+    const char *to;
+    <font color="#4169E1">struct re_list</font> *next;
+};
+<font color="#4169E1"><a name="re_list"></a>struct re_list </font>*re_head, *re_tail;
+<font color="#A020F0">#endif</font>
+<font color="#B22222">/* prototypes */</font>
+<strong><font color="#4169E1">void list_files(int)</font></strong>;
+<strong><font color="#4169E1">void force_reopen(int)</font></strong>;
+<strong><font color="#4169E1">void force_refresh(int)</font></strong>;
+<strong><font color="#4169E1">void blank_window(int)</font></strong>;
+<strong><font color="#4169E1">Window ToonGetRootWindow(Display *, int, Window *)</font></strong>;
+<strong><font color="#4169E1">void InitWindow(void)</font></strong>;
+<strong><font color="#4169E1">unsigned long GetColor(const char *)</font></strong>;
+<strong><font color="#4169E1">void redraw(void)</font></strong>;
+<strong><font color="#4169E1">void refresh(struct linematrix *, int, int)</font></strong>;
+<strong><font color="#4169E1">void transform_line(char *s)</font></strong>;
+<strong><font color="#4169E1">int lineinput(char *, int, FILE *)</font></strong>;
+<strong><font color="#4169E1">void reopen(void)</font></strong>;
+<strong><font color="#4169E1">void check_open_files(void)</font></strong>;
+<strong><font color="#4169E1">FILE *openlog(struct logfile_entry *)</font></strong>;
+<strong><font color="#4169E1">void main_loop(void)</font></strong>;
+<strong><font color="#4169E1">void display_version(void)</font></strong>;
+<strong><font color="#4169E1">void display_help(char *)</font></strong>;
+<strong><font color="#4169E1"><a name="install_signal"></a>void install_signal(int, void (*)(int)</font></strong>);
+<strong><font color="#4169E1">void *xstrdup(const char *)</font></strong>;
+<strong><font color="#4169E1">void *xmalloc(size_t)</font></strong>;
+<strong><font color="#4169E1">int daemonize(void)</font></strong>;
+<font color="#B22222">/* signal handlers */</font>
+<strong><font color="#4169E1"><a name="list_files"></a>void list_files(int dummy)</font></strong>
+{
+    <font color="#4169E1">struct logfile_entry</font> *e;
+    fprintf(stderr, <font color="#666666">"Files opened:\n"</font>);
+    <font color="#4169E1">for</font> (e = loglist; e; e = e-&gt;next)
+        fprintf(stderr, <font color="#666666">"\t%s (%s)\n"</font>, e-&gt;fname, e-&gt;desc);
+}
+<strong><font color="#4169E1"><a name="force_reopen"></a>void force_reopen(int dummy)</font></strong>
+{
+    do_reopen = 1;
+}
+<strong><font color="#4169E1"><a name="force_refresh"></a>void force_refresh(int dummy)</font></strong>
+{
+    XClearWindow(disp, new_root);
+    redraw();
+}
+<strong><font color="#4169E1"><a name="blank_window"></a>void blank_window(int dummy)</font></strong>
+{
+    XClearWindow(disp, new_root);
+    XFlush(disp);
+    exit(0);
+}
+<font color="#B22222">/* X related functions */</font>
+<strong><font color="#4169E1"><a name="GetColor"></a>unsigned long GetColor(const char *ColorName)</font></strong>
+{
+    XColor Color;
+    XWindowAttributes Attributes;
+    XGetWindowAttributes(disp, real_root, &amp;Attributes);
+    Color.pixel = 0;
+    <font color="#4169E1">if</font> (!XParseColor(disp, Attributes.colormap, ColorName, &amp;Color))
+        fprintf(stderr, <font color="#666666">"can't parse %s\n"</font>, ColorName);
+    <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!XAllocColor(disp, Attributes.colormap, &amp;Color))
+        fprintf(stderr, <font color="#666666">"can't allocate %s\n"</font>, ColorName);
+    <font color="#4169E1">return</font> Color.pixel;
+}
+<strong><font color="#4169E1"><a name="InitWindow"></a>void InitWindow(void)</font></strong>
+{
+    XGCValues gcv;
+    Font font;
+    unsigned long gcm;
+    XFontStruct *info;
+    int screen, ScreenWidth, ScreenHeight;
+    <font color="#4169E1">if</font> (!(disp = XOpenDisplay(dispname))) {
+        fprintf(stderr, <font color="#666666">"Can't open display %s.\n"</font>, dispname);
+        exit(1);
+    }
+    screen = DefaultScreen(disp);
+    ScreenHeight = DisplayHeight(disp, screen);
+    ScreenWidth = DisplayWidth(disp, screen);
+    real_root = RootWindow(disp, screen);
+    new_root = ToonGetRootWindow( disp, screen, &amp;real_root );
+    gcm = GCBackground;
+    gcv.graphics_exposures = True;
+    WinGC = XCreateGC(disp, new_root, gcm, &amp;gcv);
+    XMapWindow(disp, new_root);
+    XSetForeground(disp, WinGC, GetColor(DEF_COLOR));
+    font = XLoadFont(disp, fontname);
+    XSetFont(disp, WinGC, font);
+    info = XQueryFont(disp, font);
+    font_width = info-&gt;max_bounds.width;
+    font_descent = info-&gt;max_bounds.descent;
+    font_height = info-&gt;max_bounds.ascent + font_descent;
+    w = width * font_width;
+    h = listlen * font_height;
+    <font color="#4169E1">if</font> (geom_mask &amp; XNegative)
+        win_x = win_x + ScreenWidth - w;
+    <font color="#4169E1">if</font> (geom_mask &amp; YNegative)
+        win_y = win_y + ScreenHeight - h;
+    XSelectInput(disp, new_root, ExposureMask|FocusChangeMask);
+}
+<strong><font color="#4169E1"><a name="detabificate"></a>char * 
+detabificate (char *s)</font></strong>
+{
+  char * out;
+  int i, j;
+  out = malloc (8 * strlen (s) + 1);
+  <font color="#4169E1">for</font>(i = 0, j = 0; s[i]; i++) 
+    {
+      <font color="#4169E1">if</font> (s[i] == '\t') 
+        <font color="#4169E1">do</font> 
+          out[j++] = ' ';
+        <font color="#4169E1">while</font> (j % 8);      
+      <font color="#4169E1">else</font>
+        out[j++] = s[i];
+    }
+  out[j] = '\0';
+  <font color="#4169E1">return</font> out;
+}
+<font color="#B22222">/*
+ * redraw does a complete redraw, rather than an update (i.e. the area
+ * gets cleared first)
+ * the rest is handled by regular refresh()'es
+ */</font>
+<strong><font color="#4169E1"><a name="redraw"></a>void redraw(void)</font></strong>
+{
+    XClearArea(disp, new_root, win_x, win_y, w, h + font_descent + 2, True);
+}
+<font color="#B22222">/* Just redraw everything without clearing (i.e. after an EXPOSE event) */</font>
+<strong><font color="#4169E1"><a name="refresh"></a>void refresh(struct linematrix *lines, int miny, int maxy)</font></strong>
+{
+    int lin;
+    int offset = (listlen + 1) * font_height;
+    unsigned long black_color = GetColor(<font color="#666666">"black"</font>);
+    miny -= win_y + font_height;
+    maxy -= win_y - font_height;
+    <font color="#4169E1">for</font> (lin = listlen; lin--;)
+      {
+        char *temp;
+        offset -= font_height;
+        <font color="#4169E1">if</font> (offset &lt; miny || offset &gt; maxy)
+          <font color="#4169E1">continue</font>;
+<strong><font color="#228B22">#define LIN ((opt_reverse)?(listlen-lin-1):(lin))</font></strong>
+        temp = detabificate (lines[LIN].line);
+        <font color="#4169E1">if</font> (opt_shade)
+          {
+            XSetForeground (disp, WinGC, black_color);
+            XDrawString (disp, new_root, WinGC, win_x + 2, win_y + offset + 2,
+                         temp, strlen (temp));
+          }
+        XSetForeground (disp, WinGC, lines[LIN].color);
+        XDrawString (disp, new_root, WinGC, win_x, win_y + offset,
+                     temp, strlen (temp));
+        free (temp);
+    }
+    <font color="#4169E1">if</font> (opt_frame) {
+        int bot_y = win_y + h + font_descent + 2;
+        XDrawLine(disp, new_root, WinGC, win_x, win_y, win_x + w, win_y);
+        XDrawLine(disp, new_root, WinGC, win_x + w, win_y, win_x + w, bot_y);
+        XDrawLine(disp, new_root, WinGC, win_x + w, bot_y, win_x, bot_y);
+        XDrawLine(disp, new_root, WinGC, win_x, bot_y, win_x, win_y);
+    }
+}
+<font color="#A020F0">#if HAS_REGEX</font>
+<strong><font color="#4169E1"><a name="transform_line"></a>void transform_line(char *s)</font></strong>
+{
+<font color="#A020F0">#ifdef I_AM_Md</font>
+    int i;
+    <font color="#4169E1">if</font> (1) {
+        <font color="#4169E1">for</font> (i = 16; s[i]; i++)
+            s[i] = s[i + 11];
+    }
+    s[i + 1] = '\0';
+<font color="#A020F0">#endif</font>
+    <font color="#4169E1">if</font> (transformre) {
+        int i;
+        regmatch_t matched[16];
+        i = regexec(&amp;transformre, string, 16, matched, 0);
+        <font color="#4169E1">if</font> (i == 0) {                        <font color="#B22222">/* matched */</font>
+        }
+    }
+}
+<font color="#A020F0">#endif</font>
+<font color="#B22222">/*
+ * This routine should read 'width' characters and not more. However,
+ * we really want to read width + 1 charachters if the last char is a '\n',
+ * which we should remove afterwards. So, read width+1 chars and ungetc
+ * the last character if it's not a newline. This means 'string' must be
+ * width + 2 wide!
+ */</font>
+<strong><font color="#4169E1"><a name="lineinput"></a>int lineinput(char *string, int slen, FILE *f)</font></strong>
+{
+    int len;
+    <font color="#4169E1">do</font> {
+        <font color="#4169E1">if</font> (fgets(string, slen, f) == NULL)        <font color="#B22222">/* EOF or Error */</font>
+            <font color="#4169E1">return</font> 0;
+        len = strlen(string);
+    } <font color="#4169E1">while</font> (len == 0);
+    <font color="#4169E1">if</font> (string[len - 1] == '\n')
+        string[len - 1] = '\0';                        <font color="#B22222">/* erase newline */</font>
+    <font color="#4169E1">else</font> <font color="#4169E1">if</font> (len &gt;= slen - 1) {
+        ungetc(string[len - 1], f);
+        string[len - 1] = '\0';
+    }
+<font color="#A020F0">#if HAS_REGEX</font>
+    transform_line(string);
+<font color="#A020F0">#endif</font>
+    <font color="#4169E1">return</font> len;
+}
+<font color="#B22222">/* input: reads file-&gt;fname
+ * output: fills file-&gt;fp, file-&gt;inode
+ * returns file-&gt;fp
+ * in case of error, file-&gt;fp is NULL
+ */</font>
+<strong><font color="#4169E1"><a name="openlog"></a>FILE *openlog(struct logfile_entry *file)</font></strong>
+{
+    <font color="#4169E1">struct stat</font> stats;
+    <font color="#4169E1">if</font> ((file-&gt;fp = fopen(file-&gt;fname, <font color="#666666">"r"</font>)) == NULL) {
+        file-&gt;fp = NULL;
+        <font color="#4169E1">return</font> NULL;
+    }
+    fstat(fileno(file-&gt;fp), &amp;stats);
+    <font color="#4169E1">if</font> (S_ISFIFO(stats.st_mode)) {
+        <font color="#4169E1">if</font> (fcntl(fileno(file-&gt;fp), F_SETFL, O_NONBLOCK) &lt; 0)
+            perror(<font color="#666666">"fcntl"</font>), exit(1);
+        file-&gt;inode = 0;
+    } <font color="#4169E1">else</font>
+        file-&gt;inode = stats.st_ino;
+    <font color="#4169E1">if</font> (opt_noinitial)
+      fseek (file-&gt;fp, 0, SEEK_END);
+    <font color="#4169E1">else</font> <font color="#4169E1">if</font> (stats.st_size &gt; (listlen + 1) * width)
+      {
+        char dummy[255];
+        fseek(file-&gt;fp, -((listlen + 2) * width), SEEK_END);
+        <font color="#B22222">/* the pointer might point halfway some line. Let's
+           be nice and skip this damaged line */</font>
+        lineinput(dummy, <font color="#4169E1">sizeof</font>(dummy), file-&gt;fp);
+      }
+    file-&gt;last_size = stats.st_size;
+    <font color="#4169E1">return</font> file-&gt;fp;
+}
+<strong><font color="#4169E1"><a name="reopen"></a>void reopen(void)</font></strong>
+{
+    <font color="#4169E1">struct logfile_entry</font> *e;
+    <font color="#4169E1">for</font> (e = loglist; e; e = e-&gt;next) {
+        <font color="#4169E1">if</font> (!e-&gt;inode)
+            <font color="#4169E1">continue</font>;                        <font color="#B22222">/* skip stdin */</font>
+        <font color="#4169E1">if</font> (e-&gt;fp)
+            fclose(e-&gt;fp);
+        <font color="#B22222">/* if fp is NULL we will try again later */</font>
+        openlog(e);
+    }
+    do_reopen = 0;
+}
+<strong><font color="#4169E1"><a name="check_open_files"></a>void check_open_files(void)</font></strong>
+{
+    <font color="#4169E1">struct logfile_entry</font> *e;
+    <font color="#4169E1">struct stat</font> stats;
+    <font color="#4169E1">for</font> (e = loglist; e; e = e-&gt;next) {
+        <font color="#4169E1">if</font> (!e-&gt;inode)
+            <font color="#4169E1">continue</font>;                                <font color="#B22222">/* skip stdin */</font>
+        <font color="#4169E1">if</font> (stat(e-&gt;fname, &amp;stats) &lt; 0) {        <font color="#B22222">/* file missing? */</font>
+            sleep(1);
+            <font color="#4169E1">if</font> (e-&gt;fp)
+                fclose(e-&gt;fp);
+            <font color="#4169E1">if</font> (openlog(e) == NULL)
+                <font color="#4169E1">break</font>;
+        }
+        <font color="#4169E1">if</font> (stats.st_ino != e-&gt;inode)        {        <font color="#B22222">/* file renamed? */</font>
+            <font color="#4169E1">if</font> (e-&gt;fp)
+                fclose(e-&gt;fp);
+            <font color="#4169E1">if</font> (openlog(e) == NULL)
+                <font color="#4169E1">break</font>;
+        }
+        <font color="#4169E1">if</font> (stats.st_size &lt; e-&gt;last_size) {        <font color="#B22222">/* file truncated? */</font>
+            fseek(e-&gt;fp, 0, SEEK_SET);
+            e-&gt;last_size = stats.st_size;
+        }
+    }
+}
+<strong><font color="#228B22">#define SCROLL_UP(lines, listlen)                                \
+{                                                                \
+    int cur_line;                                                \
+    for (cur_line = 0; cur_line &lt; (listlen - 1); cur_line++) {        \
+        strcpy(lines[cur_line].line, lines[cur_line + 1].line);        \
+        lines[cur_line].color = lines[cur_line + 1].color;        \
+    }                                                                \
+}</font></strong>
+<strong><font color="#4169E1"><a name="main_loop"></a>void main_loop(void)</font></strong>
+{
+    <font color="#4169E1">struct linematrix</font> *lines = xmalloc(<font color="#4169E1">sizeof</font>(<font color="#4169E1">struct linematrix</font>) * listlen);
+    int lin, miny, maxy, buflen;
+    char *buf;
+    time_t lastreload;
+    Region region = XCreateRegion();
+    XEvent xev;
+    maxy = 0;
+    miny = win_y + h;
+    buflen = width + 2;
+    buf = xmalloc(buflen);
+    lastreload = time(NULL);
+    <font color="#B22222">/* Initialize linematrix */</font>
+    <font color="#4169E1">for</font> (lin = 0; lin &lt; listlen; lin++) {
+        lines[lin].line = xmalloc(buflen);
+        strcpy(lines[lin].line, <font color="#666666">"~"</font>);
+        lines[lin].color = GetColor(def_color);
+    }
+    <font color="#4169E1">if</font> (!opt_noinitial)
+        <font color="#4169E1">while</font> (lineinput(buf, buflen, loglist-&gt;fp) != 0) {
+            SCROLL_UP(lines, listlen);
+            <font color="#B22222">/* print the next line */</font>
+            strcpy(lines[listlen - 1].line, buf);
+        }
+    <font color="#4169E1">for</font> (;;) {
+        int need_update = 0;
+        <font color="#4169E1">struct logfile_entry</font> *current;
+        static <font color="#4169E1">struct logfile_entry</font> *lastprinted = NULL;
+        <font color="#B22222">/* read logs */</font>
+        <font color="#4169E1">for</font> (current = loglist; current; current = current-&gt;next) {
+            <font color="#4169E1">if</font> (!current-&gt;fp)
+                <font color="#4169E1">continue</font>;                <font color="#B22222">/* skip missing files */</font>
+            clearerr(current-&gt;fp);
+            <font color="#4169E1">while</font> (lineinput(buf, buflen, current-&gt;fp) != 0) {
+                <font color="#B22222">/* print filename if any, and if last line was from
+                   different file */</font>
+                <font color="#4169E1">if</font> (!opt_nofilename &amp;&amp;
+                        !(lastprinted &amp;&amp; lastprinted == current) &amp;&amp;
+                        current-&gt;desc[0]) {
+                    SCROLL_UP(lines, listlen);
+                    sprintf(lines[listlen - 1].line, <font color="#666666">"[%s]"</font>, current-&gt;desc);
+                    lines[listlen - 1].color = current-&gt;color;
+                }
+                SCROLL_UP(lines, listlen);
+                strcpy(lines[listlen - 1].line, buf);
+                lines[listlen - 1].color = current-&gt;color;
+                lastprinted = current;
+                need_update = 1;
+            }
+        }
+        <font color="#4169E1">if</font> (need_update)
+            redraw();
+        <font color="#4169E1">else</font> {
+            XFlush(disp);
+            <font color="#4169E1">if</font> (!XPending(disp)) {
+                fd_set fdr;
+                <font color="#4169E1">struct timeval</font> to = interval;
+                FD_ZERO(&amp;fdr);
+                FD_SET(ConnectionNumber(disp), &amp;fdr);
+                select(ConnectionNumber(disp) + 1, &amp;fdr, 0, 0, &amp;to);
+            }
+        }
+        check_open_files();
+        <font color="#4169E1">if</font> (do_reopen)
+            reopen();
+        <font color="#B22222">/* we ignore possible errors due to window resizing &amp;c */</font>
+        <font color="#4169E1">while</font> (XPending(disp)) {
+            XNextEvent(disp, &amp;xev);
+            <font color="#4169E1">switch</font> (xev.type) {
+            <font color="#4169E1">case</font> Expose:
+                {
+                    XRectangle r;
+                    r.x = xev.xexpose.x;
+                    r.y = xev.xexpose.y;
+                    r.width = xev.xexpose.width;
+                    r.height = xev.xexpose.height;
+                    XUnionRectWithRegion(&amp;r, region, region);
+                    <font color="#4169E1">if</font> (miny &gt; r.y)
+                        miny = r.y;
+                    <font color="#4169E1">if</font> (maxy &lt; r.y + r.height)
+                        maxy = r.y + r.height;
+                }
+                <font color="#4169E1">break</font>;
+<strong><font color="#FF0000">            default:</font></strong>
+<font color="#A020F0">#ifdef DEBUGMODE</font>
+                fprintf(stderr, <font color="#666666">"PANIC! Unknown event %d\n"</font>, xev.type);
+<font color="#A020F0">#endif</font>
+                <font color="#4169E1">break</font>;
+            }
+        }
+        <font color="#B22222">/* reload if requested */</font>
+        <font color="#4169E1">if</font> (reload &amp;&amp; lastreload + reload &lt; time(NULL)) {
+            <font color="#4169E1">if</font> (command)
+                system(command);
+            reopen();
+            lastreload = time(NULL);
+        }
+        <font color="#4169E1">if</font> (!XEmptyRegion(region)) {
+            XSetRegion(disp, WinGC, region);
+            refresh(lines, miny, maxy);
+            XDestroyRegion(region);
+            region = XCreateRegion();
+            maxy = 0;
+            miny = win_y + h;
+        }
+    }
+}
+<strong><font color="#4169E1"><a name="main"></a>int main(int argc, char *argv[])</font></strong>
+{
+    int i;
+    int opt_daemonize = 0;
+<font color="#A020F0">#if HAS_REGEX</font>
+    char *transform = NULL;
+<font color="#A020F0">#endif</font>
+    <font color="#B22222">/* window needs to be initialized before colorlookups can be done */</font>
+    <font color="#B22222">/* just a dummy to get the color lookups right */</font>
+    geom_mask = NoValue;
+    InitWindow();
+    <font color="#4169E1">for</font> (i = 1; i &lt; argc; i++) {
+        <font color="#4169E1">if</font> (argv[i][0] == '-' &amp;&amp; argv[i][1] != '\0' &amp;&amp; argv[i][1] != ',') {
+            <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"--?"</font>) ||
+                !strcmp(argv[i], <font color="#666666">"--help"</font>) || !strcmp(argv[i], <font color="#666666">"-h"</font>))
+                display_help(argv[0]);
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-V"</font>))
+                display_version();
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-g"</font>) || !strcmp(argv[i], <font color="#666666">"-geometry"</font>))
+                geom_mask = XParseGeometry(argv[++i],
+                        &amp;win_x, &amp;win_y, &amp;width, &amp;listlen);
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-display"</font>))
+                dispname = argv[++i];
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-font"</font>) || !strcmp(argv[i], <font color="#666666">"-fn"</font>))
+                fontname = argv[++i];
+<font color="#A020F0">#if HAS_REGEX</font>
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-t"</font>))
+                transform = argv[++i];
+<font color="#A020F0">#endif</font>
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-fork"</font>) || !strcmp(argv[i], <font color="#666666">"-f"</font>))
+                opt_daemonize = 1;
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-reload"</font>)) {
+                reload = atoi(argv[++i]);
+                command = argv[++i];
+            }
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-shade"</font>))
+                opt_shade = 1;
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-frame"</font>))
+                opt_frame = 1;
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-no-filename"</font>))
+                opt_nofilename = 1;
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-reverse"</font>))
+                opt_reverse = 1;
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-color"</font>))
+                def_color = argv[++i];
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-noinitial"</font>))
+                opt_noinitial = 1;
+            <font color="#4169E1">else</font> <font color="#4169E1">if</font> (!strcmp(argv[i], <font color="#666666">"-interval"</font>) || !strcmp(argv[i], <font color="#666666">"-i"</font>)) {
+                double iv = atof(argv[++i]);
+                interval.tv_sec = (int) iv;
+                interval.tv_usec = (iv - interval.tv_sec) * 1e6;
+            } <font color="#4169E1">else</font> {
+                fprintf(stderr, <font color="#666666">"Unknown option '%s'.\n"</font>
+                        <font color="#666666">"Try --help for more information.\n"</font>, argv[i]);
+                exit(1);
+            }
+        } <font color="#4169E1">else</font> {                <font color="#B22222">/* it must be a filename */</font>
+            <font color="#4169E1">struct logfile_entry</font> *e;
+            const char *fname, *desc, *fcolor = def_color;
+            char *p;
+            <font color="#B22222">/* this is not foolproof yet (',' in filenames are not allowed) */</font>
+            fname = desc = argv[i];
+            <font color="#4169E1">if</font> ((p = strchr(argv[i], ','))) {
+                *p = '\0';
+                fcolor = p + 1;
+                <font color="#4169E1">if</font> ((p = strchr(fcolor, ','))) {
+                    *p = '\0';
+                    desc = p + 1;
+                }
+            }
+            e = xmalloc(<font color="#4169E1">sizeof</font>(<font color="#4169E1">struct logfile_entry</font>));
+            <font color="#4169E1">if</font> (argv[i][0] == '-' &amp;&amp; argv[i][1] == '\0') {
+                <font color="#4169E1">if</font> ((e-&gt;fp = fdopen(0, <font color="#666666">"r"</font>)) == NULL)
+                    perror(<font color="#666666">"fdopen"</font>), exit(1);
+                <font color="#4169E1">if</font> (fcntl(0, F_SETFL, O_NONBLOCK) &lt; 0)
+                    perror(<font color="#666666">"fcntl"</font>), exit(1);
+                e-&gt;fname = NULL;
+                e-&gt;inode = 0;
+                e-&gt;desc = xstrdup(<font color="#666666">"stdin"</font>);
+            } <font color="#4169E1">else</font> {
+                int l;
+                e-&gt;fname = xstrdup(fname);
+                <font color="#4169E1">if</font> (openlog(e) == NULL)
+                    perror(fname), exit(1);
+                l = strlen(desc);
+                <font color="#4169E1">if</font> (l &gt; width - 2)                <font color="#B22222">/* must account for [ ] */</font>
+                    l = width - 2;
+                e-&gt;desc = xmalloc(l + 1);
+                memcpy(e-&gt;desc, desc, l);
+                *(e-&gt;desc + l) = '\0';
+            }
+            e-&gt;color = GetColor(fcolor);
+            e-&gt;next = NULL;
+            <font color="#4169E1">if</font> (!loglist)
+                loglist = e;
+            <font color="#4169E1">if</font> (loglist_tail)
+                loglist_tail-&gt;next = e;
+            loglist_tail = e;
+        }
+    }
+    <font color="#4169E1">if</font> (!loglist) {
+        fprintf(stderr, <font color="#666666">"You did not specify any files to tail\n"</font>
+                <font color="#666666">"use %s --help for help\n"</font>, argv[0]);
+        exit(1);
+    }
+<font color="#A020F0">#if HAS_REGEX</font>
+    <font color="#4169E1">if</font> (transform) {
+        int i;
+        transformre = xmalloc(<font color="#4169E1">sizeof</font>(transformre));
+        i = regcomp(&amp;transformre, transform, REG_EXTENDED);
+        <font color="#4169E1">if</font> (i != 0) {
+            char buf[512];
+            regerror(i, &amp;transformre, buf, <font color="#4169E1">sizeof</font>(buf));
+            fprintf(stderr, <font color="#666666">"Cannot compile regular expression: %s\n"</font>, buf);
+        }
+    }
+<font color="#A020F0">#endif</font>
+    InitWindow();
+    install_signal(SIGINT, blank_window);
+    install_signal(SIGQUIT, blank_window);
+    install_signal(SIGTERM, blank_window);
+    install_signal(SIGHUP, force_reopen);
+    install_signal(SIGUSR1, list_files);
+    install_signal(SIGUSR2, force_refresh);
+    <font color="#4169E1">if</font> (opt_daemonize)
+        daemonize();
+    main_loop();
+    exit(1);                        <font color="#B22222">/* to make gcc -Wall stop complaining */</font>
+}
+<strong><font color="#4169E1"><a name="install_signal"></a>void install_signal(int sig, void (*handler)(int))</font></strong>
+{
+    <font color="#4169E1">struct sigaction</font> action;
+    action.sa_handler = handler;
+    sigemptyset(&amp;action.sa_mask);
+    action.sa_flags = SA_RESTART;
+    <font color="#4169E1">if</font> (sigaction(sig, &amp;action, NULL) &lt; 0)
+        fprintf(stderr, <font color="#666666">"sigaction(%d): %s\n"</font>, sig, strerror(errno)), exit(1);
+}
+<strong><font color="#4169E1"><a name="xstrdup"></a>void *xstrdup(const char *string)</font></strong>
+{
+    void *p;
+    <font color="#4169E1">while</font> ((p = strdup(string)) == NULL) {
+        fprintf(stderr, <font color="#666666">"Memory exausted."</font>);
+        sleep(10);
+    }
+    <font color="#4169E1">return</font> p;
+}
+<strong><font color="#4169E1"><a name="xmalloc"></a>void *xmalloc(size_t size)</font></strong>
+{
+    void *p;
+    <font color="#4169E1">while</font> ((p = malloc(size)) == NULL) {
+        fprintf(stderr, <font color="#666666">"Memory exausted."</font>);
+        sleep(10);
+    }
+    <font color="#4169E1">return</font> p;
+}
+<strong><font color="#4169E1"><a name="display_help"></a>void display_help(char *myname)</font></strong>
+{
+    printf(<font color="#666666">"Usage: %s [options] file1[,color[,desc]] "</font>
+           <font color="#666666">"[file2[,color[,desc]] ...]\n"</font>, myname);
+    printf(<font color="#666666">" -g | -geometry geometry   -g WIDTHxHEIGHT+X+Y\n"</font>
+            <font color="#666666">" -color    color           use color $color as default\n"</font>
+            <font color="#666666">" -reload sec command       reload after $sec and run command\n"</font>
+            <font color="#666666">"                           by default -- 3 mins\n"</font>
+            <font color="#666666">" -font FONTSPEC            (-fn) font to use\n"</font>
+            <font color="#666666">" -f | -fork                fork into background\n"</font>
+            <font color="#666666">" -reverse                  print new lines at the top\n"</font>
+            <font color="#666666">" -shade                    add shading to font\n"</font>
+            <font color="#666666">" -noinitial                don't display the last file lines on\n"</font>
+            <font color="#666666">"                           startup\n"</font>
+            <font color="#666666">" -i | -interval seconds    interval between checks (fractional\n"</font>
+            <font color="#666666">"                           values o.k.). Default 3\n"</font>
+            <font color="#666666">" -V                        display version information and exit\n"</font>
+            <font color="#666666">"\n"</font>);
+    printf(<font color="#666666">"Example:\n%s -g 80x25+100+50 -font fixed /var/log/messages,green "</font>
+         <font color="#666666">"/var/log/secure,red,'ALERT'\n"</font>, myname);
+    exit(0);
+}
+<strong><font color="#4169E1"><a name="display_version"></a>void display_version(void)</font></strong> {
+    printf(<font color="#666666">"root-tail version "</font> VERSION <font color="#666666">"\n"</font>);
+    exit(0);
+}
+<strong><font color="#4169E1"><a name="daemonize"></a>int daemonize(void)</font></strong> {
+    <font color="#4169E1">switch</font> (fork()) {
+    <font color="#4169E1">case</font> -1:
+        <font color="#4169E1">return</font> -1;
+    <font color="#4169E1">case</font> 0:
+        <font color="#4169E1">break</font>;
+<strong><font color="#FF0000">    default:</font></strong>
+        _exit(0);
+    }
+    <font color="#4169E1">if</font> (setsid() == -1)
+        <font color="#4169E1">return</font> -1;
+    <font color="#4169E1">return</font> 0;
+}
+<font color="#B22222">/* toon_root.c - finding the correct background window / virtual root
+ * Copyright (C) 1999-2001  Robin Hogan
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */</font>
+<font color="#B22222">/* Since xpenguins version 2.1, the ToonGetRootWindow() function
+ * attempts to find the window IDs of
+ *
+ * 1) The background window that is behind the toplevel client
+ *    windows; this is the window that we draw the toons on.
+ *
+ * 2) The parent window of the toplevel client windows; this is used
+ *    by ToonLocateWindows() to build up a map of the space that the
+ *    toons can occupy.
+ * 
+ * In simple (sensible?) window managers (e.g. blackbox, sawfish, fvwm
+ * and countless others), both of these are the root window. The other
+ * more complex scenarios that ToonGetRootWindow() attempts to cope
+ * with are:
+ *
+ * Some `virtual' window managers (e.g. amiwm, swm and tvtwm) that
+ * reparent all client windows to a desktop window that sits on top of
+ * the root window. This desktop window is easy to find - we just look
+ * for a property __SWM_VROOT in the immediate children of the root
+ * window that contains the window ID of this desktop window. The
+ * desktop plays both roles (1 and 2 above). This functionality was
+ * detected in xpenguins 1.x with the vroot.h header file.
+ *
+ * Enlightenment (0.16) can have a number of desktops with different
+ * backgrounds; client windows on these are reparented, except for
+ * Desktop 0 which is the root window. Therefore versions less than
+ * 2.1 of xpenguins worked on Desktop 0 but not on any others. To fix
+ * this we look for a root-window property _WIN_WORKSPACE which
+ * contains the numerical index of the currently active desktop. The
+ * active desktop is then simply the immediate child of the root
+ * window that has a property ENLIGHTENMENT_DESKTOP set to this value.
+ *
+ * KDE 2.0: Oh dear. The kdesktop is a program separate from the
+ * window manager that launches a window which sits behind all the
+ * other client windows and has all the icons on it. Thus the other
+ * client windows are still children of the root window, but we want
+ * to draw to the uppermost window of the kdesktop. This is difficult
+ * to find - it is the great-great-grandchild of the root window and
+ * in KDE 2.0 has nothing to identify it from its siblings other than
+ * its size. KDE 2.1+ usefully implements the __SWM_VROOT property in
+ * a child of the root window, but the client windows are still
+ * children of the root window. A problem is that the penguins erase
+ * the desktop icons when they walk which is a bit messy. The icons
+ * are not lost - they reappear when the desktop window gets an expose
+ * event (i.e. move some windows over where they were and back again).
+ *
+ * Nautilus (GNOME 1.4+): Creates a background window to draw icons
+ * on, but does not reparent the client windows. The toplevel window
+ * of the desktop is indicated by the root window property
+ * NAUTILUS_DESKTOP_WINDOW_ID, but then we must descend down the tree
+ * from this toplevel window looking for subwindows that are the same
+ * size as the screen. The bottom one is the one to draw to. Hopefully
+ * one day Nautilus will implement __SWM_VROOT in exactly the same way
+ * as KDE 2.1+.
+ *
+ * Other cases: CDE, the common desktop environment. This is a
+ * commercial product that has been packaged with Sun (and other)
+ * workstations. It typically implements four virtual desktops but
+ * provides NO properties at all for apps such as xpenguins to use to
+ * work out where to draw to. Seeing as Sun are moving over to GNOME,
+ * CDE use is on the decline so I don't have any current plans to try
+ * and get xpenguins to work with it.
+ *
+ * As a note to developers of window managers and big screen hoggers
+ * like kdesktop, please visit www.freedesktop.org and implement their
+ * Extended Window Manager Hints spec that help pagers and apps like
+ * xpenguins and xearth to find their way around. In particular,
+ * please use the _NET_CURRENT_DESKTOP and _NET_VIRTUAL_ROOTS
+ * properties if you reparent any windows (e.g. Enlightenment). Since
+ * no window managers that I know yet use these particular hints, I
+ * haven't yet added any code to parse them.  */</font>
+// #include <font color="#666666">"toon.h"</font>
+<font color="#A020F0">#include &lt;X11/Xlib.h&gt;</font>
+<font color="#A020F0">#include &lt;X11/Xatom.h&gt;</font>
+<font color="#A020F0">#include &lt;X11/Xproto.h&gt;</font>
+<font color="#A020F0">#include &lt;stdio.h&gt;</font>
+<font color="#A020F0">#include &lt;string.h&gt;</font>
+<font color="#B22222">/* Time to throw up. Here is a kludgey function that recursively calls
+ * itself (up to a limit) to find the window ID of the KDE desktop to
+ * draw on. It works with KDE 2.0, but since KDE 2.0 is less stable
+ * than Windows 95, I don't expect many people to remain using it now
+ * that 2.1 is available, which implements __SWM_VROOT and makes this
+ * function redundant. This is the hierarchy we're trying to traverse:
+ *
+ * -&gt; The root window
+ * 0 -&gt; window with name="KDE Desktop"
+ * 1   -&gt; window with no name
+ * 2     -&gt; window with name="KDE Desktop" &amp; _NET_WM_WINDOW_TYPE_DESKTOP
+ * 3       -&gt; window with no name and width &gt;= width of screen
+ * 
+ * The last window in the hierarchy is the one to draw to.  The
+ * numbers show the value of the `depth' argument.  */</font>
+<strong><font color="#4169E1"><a name="__ToonGetKDEDesktop"></a>static
+Window
+__ToonGetKDEDesktop(Display *display, int screen, Window window,
+                    Atom atom, char *atomname, int depth)</font></strong>
+{
+  char *name = NULL;
+  Atom *wintype = NULL;
+  Window winreturn = 0;
+  unsigned long nitems, bytesafter;
+  Atom actual_type;
+  int actual_format;
+  Window rootReturn, parentReturn, *children;
+  unsigned int nChildren;
+  char go_deeper = 0;
+  <font color="#4169E1">if</font> (XFetchName(display, window, &amp;name)) {
+    <font color="#4169E1">if</font> (strcasecmp(name, <font color="#666666">"KDE Desktop"</font>) == 0) {
+      <font color="#B22222">/* Presumably either at depth 0 or 2 */</font>
+      <font color="#4169E1">if</font> (XGetWindowProperty(display, window, atom, 0, 1,
+                             False, XA_ATOM,
+                             &amp;actual_type, &amp;actual_format,
+                             &amp;nitems, &amp;bytesafter,
+                             (unsigned char **) &amp;wintype) == Success
+          &amp;&amp; wintype) {
+        char *tmpatomname = XGetAtomName(display, *wintype);
+        <font color="#4169E1">if</font> (tmpatomname) {
+          <font color="#4169E1">if</font> (strcmp(atomname, tmpatomname) == 0 &amp;&amp; depth == 2) {
+            <font color="#B22222">/* OK, at depth 2 */</font>
+            go_deeper = 1;
+          }
+          XFree((char *) tmpatomname);
+        }
+      }
+      <font color="#4169E1">else</font> <font color="#4169E1">if</font> (depth &lt; 2) {
+        go_deeper = 1;
+      }
+    }
+    <font color="#4169E1">else</font> <font color="#4169E1">if</font> (depth == 1) {
+      go_deeper = 1;
+    }
+    XFree((char *) name);
+  }
+  <font color="#4169E1">else</font> <font color="#4169E1">if</font> (depth == 1) {
+    go_deeper = 1;
+  }
+  <font color="#B22222">/* If go_deeper is 1 then there is a possibility that the background
+   * window is a descendant of the current window; otherwise we're
+   * barking up the wrong tree. */</font>
+  <font color="#4169E1">if</font> (go_deeper &amp;&amp; XQueryTree(display, window, &amp;rootReturn,
+                              &amp;parentReturn, &amp;children,
+                              &amp;nChildren)) {
+    int i;
+    <font color="#4169E1">for</font> (i = 0; i &lt; nChildren; ++i) {
+      <font color="#B22222">/* children[i] is now at depth 3 */</font>
+      <font color="#4169E1">if</font> (depth == 2) {
+        XWindowAttributes attributes;
+        <font color="#4169E1">if</font> (XGetWindowAttributes(display, children[i], &amp;attributes)) {
+          <font color="#4169E1">if</font> (attributes.width &gt;= DisplayWidth(display, screen)/2
+              &amp;&amp; attributes.height &gt; 0) {
+            <font color="#B22222">/* Found it! */</font>
+            winreturn = children[i];
+            <font color="#4169E1">break</font>;
+          }
+        }
+      }
+      <font color="#4169E1">else</font> <font color="#4169E1">if</font> ((winreturn = __ToonGetKDEDesktop(display, screen,
+                                                children[i],
+                                                atom, atomname,
+                                                depth+1))) {
+        <font color="#4169E1">break</font>;
+      }
+    }
+    XFree((char *) children);
+  }
+  <font color="#4169E1">return</font> winreturn;
+}
+<font color="#B22222">/* Look for the Nautilus desktop window to draw to, given the toplevel
+ * window of the Nautilus desktop. Basically recursively calls itself
+ * looking for subwindows the same size as the root window. */</font>
+<strong><font color="#4169E1"><a name="__ToonGetNautilusDesktop"></a>static
+Window
+__ToonGetNautilusDesktop(Display *display, int screen, Window window,
+                         int depth)</font></strong>
+{
+  Window rootReturn, parentReturn, *children;
+  Window winreturn = window;
+  unsigned int nChildren;
+  <font color="#4169E1">if</font> (depth &gt; 5) {
+    <font color="#4169E1">return</font> ((Window) 0);
+  }
+  <font color="#4169E1">else</font> <font color="#4169E1">if</font> (XQueryTree(display, window, &amp;rootReturn, &amp;parentReturn,
+                 &amp;children, &amp;nChildren)) {
+    int i;
+    <font color="#4169E1">for</font> (i = 0; i &lt; nChildren; ++i) {
+      XWindowAttributes attributes;
+      <font color="#4169E1">if</font> (XGetWindowAttributes(display, children[i], &amp;attributes)) {
+        <font color="#4169E1">if</font> (attributes.width == DisplayWidth(display, screen)
+            &amp;&amp; attributes.height == DisplayHeight(display, screen)) {
+          <font color="#B22222">/* Found a possible desktop window */</font>
+          winreturn = __ToonGetNautilusDesktop(display, screen,
+                                               children[i], depth+1);
+        }
+      }  
+    }
+    XFree((char *) children);
+  }
+  <font color="#4169E1">return</font> winreturn;
+}
+<font color="#B22222">/* 
+ * Returns the window ID of the `background' window on to which the
+ * toons should be drawn. Also returned (in clientparent) is the ID of
+ * the parent of all the client windows, since this may not be the
+ * same as the background window. If no recognised virtual window
+ * manager or desktop environment is found then the root window is
+ * returned in both cases. The string toon_message contains
+ * information about the window manager that was found.
+ */</font>
+<strong><font color="#4169E1"><a name="ToonGetRootWindow"></a>Window
+ToonGetRootWindow(Display *display, int screen, Window *clientparent)</font></strong>
+{
+  Window background = 0; <font color="#B22222">/* The return value */</font>
+  Window root = RootWindow(display, screen);
+  Window rootReturn, parentReturn, *children;
+  Window *toplevel = (Window *) 0;
+  unsigned int nChildren;
+  unsigned long nitems, bytesafter;
+  Atom actual_type;
+  int actual_format;
+  unsigned long *workspace = NULL;
+  unsigned long *desktop = NULL;
+  Atom NAUTILUS_DESKTOP_WINDOW_ID = XInternAtom(display,
+                           <font color="#666666">"NAUTILUS_DESKTOP_WINDOW_ID"</font>,
+                                                False);
+  *clientparent = root;
+  <font color="#4169E1">if</font> (XGetWindowProperty(display, root,
+                         NAUTILUS_DESKTOP_WINDOW_ID,
+                         0, 1, False, XA_WINDOW,
+                         &amp;actual_type, &amp;actual_format,
+                         &amp;nitems, &amp;bytesafter,
+                         (unsigned char **) &amp;toplevel) == Success
+      &amp;&amp; toplevel) {
+    <font color="#B22222">/* Nautilus is running */</font>
+    background = __ToonGetNautilusDesktop(display, screen,
+                                          *toplevel, 0);
+    XFree((char *) toplevel);
+    <font color="#4169E1">if</font> (background) {
+      printf(<font color="#666666">"Drawing to Nautilus Desktop"</font>);
+    }
+  }
+  <font color="#B22222">/* Next look for a virtual root or a KDE Desktop */</font>
+  <font color="#4169E1">if</font> (!background
+      &amp;&amp; XQueryTree(display, root, &amp;rootReturn, &amp;parentReturn,
+                    &amp;children, &amp;nChildren)) {
+    int i;
+    Atom _NET_WM_WINDOW_TYPE = XInternAtom(display, 
+                             <font color="#666666">"_NET_WM_WINDOW_TYPE"</font>,
+                                           False);
+    Atom __SWM_VROOT = XInternAtom(display, <font color="#666666">"__SWM_VROOT"</font>, False);
+    <font color="#4169E1">for</font> (i = 0; i &lt; nChildren &amp;&amp; !background; ++i) {
+      Window *newroot = (Window *) 0;
+      <font color="#4169E1">if</font> (XGetWindowProperty(display, children[i],
+                             __SWM_VROOT, 0, 1, False, XA_WINDOW,
+                             &amp;actual_type, &amp;actual_format,
+                             &amp;nitems, &amp;bytesafter,
+                             (unsigned char **) &amp;newroot) == Success
+          &amp;&amp; newroot) {
+        <font color="#B22222">/* Found a window with a __SWM_VROOT property that contains
+         * the window ID of the virtual root. Now we must check
+         * whether it is KDE (2.1+) or not. If it is KDE then it does
+         * not reparent the clients. If the root window has the
+         * _NET_SUPPORTED property but not the _NET_VIRTUAL_ROOTS
+         * property then we assume it is KDE. */</font>
+        Atom _NET_SUPPORTED = XInternAtom(display,
+                                          <font color="#666666">"_NET_SUPPORTED"</font>,
+                                          False);
+        Atom *tmpatom;
+        <font color="#4169E1">if</font> (XGetWindowProperty(display, root,
+                               _NET_SUPPORTED, 0, 1, False,
+                               XA_ATOM, &amp;actual_type, &amp;actual_format,
+                               &amp;nitems, &amp;bytesafter,
+                               (unsigned char **) &amp;tmpatom) == Success
+            &amp;&amp; tmpatom) {
+          Window *tmpwindow = (Window *) 0;
+          Atom _NET_VIRTUAL_ROOTS = XInternAtom(display,
+                                                <font color="#666666">"_NET_VIRTUAL_ROOTS"</font>,
+                                                False);
+          XFree((char *) tmpatom);
+          <font color="#4169E1">if</font> (XGetWindowProperty(display, root,
+                                 _NET_VIRTUAL_ROOTS, 0, 1, False,
+                                 XA_WINDOW, &amp;actual_type, &amp;actual_format,
+                                 &amp;nitems, &amp;bytesafter,
+                                 (unsigned char **) &amp;tmpwindow) != Success
+              || !tmpwindow) {
+            <font color="#B22222">/* Must be KDE 2.1+ */</font>
+            printf(<font color="#666666">"Drawing to KDE Desktop"</font>);
+            background = *newroot;
+          }
+          <font color="#4169E1">else</font> <font color="#4169E1">if</font> (tmpwindow) {
+            XFree((char *) tmpwindow);
+          }
+        }
+        <font color="#4169E1">if</font> (!background) {  
+          <font color="#B22222">/* Not KDE: assume windows are reparented */</font>
+          printf(<font color="#666666">"Drawing to virtual root window"</font>);
+          background = *clientparent = *newroot;
+        }
+        XFree((char *) newroot);
+      }
+      <font color="#4169E1">else</font> <font color="#4169E1">if</font> ((background = __ToonGetKDEDesktop(display, screen, children[i],
+                                                 _NET_WM_WINDOW_TYPE,
+                                                 <font color="#666666">"_NET_WM_WINDOW_TYPE_DESKTOP"</font>,
+                                                 0))) {
+        <font color="#B22222">/* Found a KDE 2.0 desktop and located the background window */</font>
+        <font color="#B22222">/* Note that the clientparent is still the root window */</font>
+        printf( <font color="#666666">"Drawing to KDE desktop"</font>);
+      }
+    }
+    XFree((char *) children);
+  }
+  <font color="#4169E1">if</font> (!background) {
+    <font color="#B22222">/* Look for a _WIN_WORKSPACE property, used by Enlightenment */</font>
+    Atom _WIN_WORKSPACE = XInternAtom(display, <font color="#666666">"_WIN_WORKSPACE"</font>, False);
+    <font color="#4169E1">if</font> (XGetWindowProperty(display, root, _WIN_WORKSPACE,
+                           0, 1, False, XA_CARDINAL,
+                           &amp;actual_type, &amp;actual_format,
+                           &amp;nitems, &amp;bytesafter,
+                           (unsigned char **) &amp;workspace) == Success
+        &amp;&amp; workspace) {
+      <font color="#B22222">/* Found a _WIN_WORKSPACE property - this is the desktop to look for.
+       * For now assume that this is Enlightenment.
+       * We're looking for a child of the root window that has an
+       * ENLIGHTENMENT_DESKTOP atom with a value equal to the root window's
+       * _WIN_WORKSPACE atom. */</font>
+      Atom ENLIGHTENMENT_DESKTOP = XInternAtom(display, 
+                                               <font color="#666666">"ENLIGHTENMENT_DESKTOP"</font>,
+                                               False);
+      <font color="#B22222">/* First check to see if the root window is the current desktop... */</font>
+      <font color="#4169E1">if</font> (XGetWindowProperty(display, root,
+                             ENLIGHTENMENT_DESKTOP, 0, 1,
+                             False, XA_CARDINAL,
+                             &amp;actual_type, &amp;actual_format,
+                             &amp;nitems, &amp;bytesafter,
+                             (unsigned char **) &amp;desktop) == Success
+          &amp;&amp; desktop &amp;&amp; *desktop == *workspace) {
+        <font color="#B22222">/* The root window is the current Enlightenment desktop */</font>
+        printf( <font color="#666666">"Drawing to Enlightenment Desktop %lu (the root window)"</font>);
+        background = root;
+        XFree((char *) desktop);
+      }
+      <font color="#B22222">/* Now look at each immediate child window of root to see if it is
+       * the current desktop */</font>
+      <font color="#4169E1">else</font> <font color="#4169E1">if</font> (XQueryTree(display, root, &amp;rootReturn, &amp;parentReturn,
+                          &amp;children, &amp;nChildren)) {
+        int i;
+        <font color="#4169E1">for</font> (i = 0; i &lt; nChildren; ++i) {
+          <font color="#4169E1">if</font> (XGetWindowProperty(display, children[i],
+                                 ENLIGHTENMENT_DESKTOP, 0, 1,
+                                 False, XA_CARDINAL,
+                                 &amp;actual_type, &amp;actual_format,
+                                 &amp;nitems, &amp;bytesafter,
+                                 (unsigned char **) &amp;desktop) == Success
+              &amp;&amp; desktop &amp;&amp; *desktop == *workspace) {
+            <font color="#B22222">/* Found current Enlightenment desktop */</font>
+            printf(<font color="#666666">"Drawing to Enlightenment Desktop %lu"</font>);
+            background = *clientparent = children[i];
+            XFree((char *) desktop);
+          }
+        }
+        XFree((char *) children);
+      }
+      XFree((char *) workspace);
+    }
+  }
+  <font color="#4169E1">if</font> (background) {
+    <font color="#4169E1">return</font> background;
+  }
+  <font color="#4169E1">else</font> {
+    <font color="#4169E1">return</font> root;
+  }
+}
+</pre>
+</body>
+</html>
