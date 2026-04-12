@@ -1,6 +1,6 @@
 ---
 id: "2026-04-12-amys-user-prompt"
-title: "A Breakdown of Amy's User Prompts"
+title: "A Breakdown of Amy's User Prompt"
 abstract: "A breakdown of the user-level prompt I use with Claude Code, covering cybernetics, kaizen, TDD, and mechanical sympathy."
 tags: ["claude", "agents", "context engineering", "prompts", "vibe coding"]
 pubdate: 2026-04-12T21:00:00Z

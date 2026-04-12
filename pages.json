@@ -1,7 +1,7 @@
 [
   {
     "Id": "2026-04-12-amys-user-prompt",
-    "Title": "A Breakdown of Amy's User Prompts",
+    "Title": "A Breakdown of Amy's User Prompt",
     "Abstract": "A breakdown of the user-level prompt I use with Claude Code, covering cybernetics, kaizen, TDD, and mechanical sympathy.",
     "Tags": [
       "claude",
