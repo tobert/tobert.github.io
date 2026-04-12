@@ -32,9 +32,9 @@ models.
 > 
 > Note problems we can fix later — in auto memory or the current plan.
 
-改善 (kaizen) has been in my CLAUDE.md for a few months now. It's how I worked before models
-and is how I do everything from making tea to building agents. Kaizen is the Japanese word
-for continuous improvement. The second phrase is
+[改善](https://jisho.org/word/%E6%94%B9%E5%96%84) (kaizen) has been in my CLAUDE.md for a few months now.
+It's how I worked before models and is how I do everything from making tea to building agents.
+Kaizen is the Japanese word for continuous improvement. The second phrase is
 [The standard you walk by is the standard you accept](https://youtu.be/s_TfZdIhIgg?si=xga0dIQWK3Vnl_ng&t=105).
 The linked video is where I picked up the phrase, and it stuck. Claude can't walk, but it
 understands the metaphor.
