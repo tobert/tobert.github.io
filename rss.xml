@@ -7,18 +7,27 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Amy Tobey</author>
-	<pubDate>2026-02-12</pubDate>
-	<lastBuildDate>2026-02-13</lastBuildDate>
+	<pubDate>2026-04-12</pubDate>
+	<lastBuildDate>2026-04-12</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
     
     <item>
-      <title>Building kaish: 64,000 Lines of Rust in 25 Days</title>
+      <title>A Breakdown of Amy&#39;s User Prompts</title>
+	  <link>https://tobert.github.io/post/2026-04-12-amys-user-prompt.html</link>
+      <pubDate>Sun, 12 Apr 2026 21:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>2026-04-12-amys-user-prompt</guid>
+	  <description>A breakdown of the user-level prompt I use with Claude Code, covering cybernetics, kaizen, TDD, and mechanical sympathy.</description>
+    </item>
+    
+    <item>
+      <title>Building kaish</title>
 	  <link>https://tobert.github.io/post/2026-02-12-building-kaish.html</link>
       <pubDate>Thu, 12 Feb 2026 21:00:00 UTC</pubDate>
       <author>Amy Tobey</author>
       <guid>2026-02-12-building-kaish</guid>
-	  <description>A shell for AI agents, built with one. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.</description>
+	  <description>Looking back at building a shell for agents. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.</description>
     </item>
     
     <item>
@@ -94,21 +103,21 @@
     </item>
     
     <item>
-      <title>TL;DR: Tldr</title>
-	  <link>https://tobert.github.io/tldr/tldr.html</link>
-      <pubDate>Thu, 01 Jan 2015 00:00:00 UTC</pubDate>
-      <author>Amy Tobey</author>
-      <guid>tldr</guid>
-	  <description>TL;DR: Tldr</description>
-    </item>
-    
-    <item>
       <title>TL;DR: Xperia Z3 Mtp Linux</title>
 	  <link>https://tobert.github.io/tldr/xperia-z3-mtp-linux.html</link>
       <pubDate>Thu, 01 Jan 2015 00:00:00 UTC</pubDate>
       <author>Amy Tobey</author>
       <guid>xperia-z3-mtp-linux</guid>
 	  <description>TL;DR: Xperia Z3 Mtp Linux</description>
+    </item>
+    
+    <item>
+      <title>TL;DR: Tldr</title>
+	  <link>https://tobert.github.io/tldr/tldr.html</link>
+      <pubDate>Thu, 01 Jan 2015 00:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>tldr</guid>
+	  <description>TL;DR: Tldr</description>
     </item>
     
     <item>

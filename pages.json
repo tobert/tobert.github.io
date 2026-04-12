@@ -1,8 +1,33 @@
 [
   {
+    "Id": "2026-04-12-amys-user-prompt",
+    "Title": "A Breakdown of Amy's User Prompts",
+    "Abstract": "A breakdown of the user-level prompt I use with Claude Code, covering cybernetics, kaizen, TDD, and mechanical sympathy.",
+    "Tags": [
+      "claude",
+      "agents",
+      "context engineering",
+      "prompts",
+      "vibe coding"
+    ],
+    "PubDate": "2026-04-12T21:00:00Z",
+    "Head": "",
+    "Date": "2026-04-12T21:00:00Z",
+    "AutoIdx": true,
+    "Script": "",
+    "SrcPath": "/home/atobey/src/tobert.github.io/src/post/2026-04-12-amys-user-prompt.md",
+    "SrcRel": "/post/2026-04-12-amys-user-prompt.md",
+    "PubPath": "/home/atobey/src/tobert.github.io/post/2026-04-12-amys-user-prompt.html",
+    "PubRel": "/post/2026-04-12-amys-user-prompt.html",
+    "PubFull": "https://tobert.github.io/post/2026-04-12-amys-user-prompt.html",
+    "Dir": "post",
+    "Type": "md",
+    "SyntaxHl": false
+  },
+  {
     "Id": "2026-02-12-building-kaish",
-    "Title": "Building kaish: 64,000 Lines of Rust in 25 Days",
-    "Abstract": "A shell for AI agents, built with one. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.",
+    "Title": "Building kaish",
+    "Abstract": "Looking back at building a shell for agents. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.",
     "Tags": [
       "rust",
       "claude",
@@ -289,27 +314,6 @@
     "SyntaxHl": true
   },
   {
-    "Id": "tldr",
-    "Title": "TL;DR: Tldr",
-    "Abstract": "",
-    "Tags": [
-      "tldr"
-    ],
-    "PubDate": "",
-    "Head": "",
-    "Date": "2015-01-01T00:00:00Z",
-    "AutoIdx": true,
-    "Script": "",
-    "SrcPath": "/home/atobey/src/tobert.github.io/src/tldr/2015-01-01-tldr.md",
-    "SrcRel": "/tldr/2015-01-01-tldr.md",
-    "PubPath": "/home/atobey/src/tobert.github.io/tldr/tldr.html",
-    "PubRel": "/tldr/tldr.html",
-    "PubFull": "https://tobert.github.io/tldr/tldr.html",
-    "Dir": "tldr",
-    "Type": "md",
-    "SyntaxHl": false
-  },
-  {
     "Id": "xperia-z3-mtp-linux",
     "Title": "TL;DR: Xperia Z3 Mtp Linux",
     "Abstract": "",
@@ -329,6 +333,27 @@
     "PubPath": "/home/atobey/src/tobert.github.io/tldr/xperia-z3-mtp-linux.html",
     "PubRel": "/tldr/xperia-z3-mtp-linux.html",
     "PubFull": "https://tobert.github.io/tldr/xperia-z3-mtp-linux.html",
+    "Dir": "tldr",
+    "Type": "md",
+    "SyntaxHl": false
+  },
+  {
+    "Id": "tldr",
+    "Title": "TL;DR: Tldr",
+    "Abstract": "",
+    "Tags": [
+      "tldr"
+    ],
+    "PubDate": "",
+    "Head": "",
+    "Date": "2015-01-01T00:00:00Z",
+    "AutoIdx": true,
+    "Script": "",
+    "SrcPath": "/home/atobey/src/tobert.github.io/src/tldr/2015-01-01-tldr.md",
+    "SrcRel": "/tldr/2015-01-01-tldr.md",
+    "PubPath": "/home/atobey/src/tobert.github.io/tldr/tldr.html",
+    "PubRel": "/tldr/tldr.html",
+    "PubFull": "https://tobert.github.io/tldr/tldr.html",
     "Dir": "tldr",
     "Type": "md",
     "SyntaxHl": false

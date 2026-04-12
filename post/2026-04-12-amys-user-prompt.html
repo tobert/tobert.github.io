@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="A breakdown of the user-level prompt I use with Claude Code, covering cybernetics, kaizen, TDD, and mechanical sympathy.">
+    <meta name="keywords" content="claude, agents, context engineering, prompts, vibe coding, ">
+    <meta property="article:published_time" content="2026-04-12"/>
+    <meta property="article:modified_time" content="2026-04-12"/>
+
+    <title>A Breakdown of Amy&#39;s User Prompts</title>
+    <link rel="canonical" href="https://tobert.github.io/post/2026-04-12-amys-user-prompt.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />
+    <link href="https://bsky.app/profile/renice.bsky.social" rel="me" />
+    <link href="https://hachyderm.io/@renice" rel="me" />
+    <link rel="icon" type="image/png" href="https://tobert.github.io/images/amy-favicon.png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/tobert.css">
+    
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Amy Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1"
+								href="/pages/als-cassandra-21-tuning-guide.html">Cassandra 2.1 Tuning Guide</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://bsky.app/profile/renice.bsky.social">🦋 @renice.bsky.social</a></li>
+              <li><a href="https://hachyderm.io/@renice"><i class="fa-brands fa-mastodon"></i> @renice@hachyderm.io</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa-brands fa-github"></i> tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa-solid fa-rss"></i> RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2026-04-12-amys-user-prompt.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">A Breakdown of Amy&#39;s User Prompts</h1>
+      <span class="pull-right social-links">
+        <a href="https://bsky.app/profile/renice.bsky.social" title="Bluesky">🦋 renice</a>
+        <a href="https://hachyderm.io/@renice" title="Mastodon"><i class="fa-brands fa-mastodon"></i> renice</a>
+        <a href="https://github.com/tobert" title="GitHub"><i class="fa-brands fa-github"></i> tobert</a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<p>After posting on Bluesky about a positive experience with Opus 4.6 stopping for input
+when I wanted it to, some folks asked to see what I'm using for my user-level prompt. This
+post has the full prompt and a breakdown.</p>
+
+<blockquote>
+<p><strong>User Directives</strong></p>
+
+<p>We work as a cybernetic system.</p>
+</blockquote>
+
+<p>This opener shifts the interactions in two ways that are threaded through the instructions
+below: cybernetics and inclusive we speech.</p>
+
+<p>Cybernetics, in a nutshell, is the study of humans and machines as combined systems rather
+than looking at them as separate entities. This is an opening for <em>interactive pair programming</em>.
+This is probably not what you want if you're going for passive development via headless agents.</p>
+
+<p>I use <a href="https://en.wikipedia.org/wiki/Clusivity">Inclusive we</a> speech in all of my prompts. Claude
+and I have explored it a bit and it self-reports a difference in stance between being given an
+order and being invited to collaborate. Self reports might be unreliable but I find this style
+pleasant and that it feels more precise when working with several models and instances of those
+models.</p>
+
+<blockquote>
+<p>We practice 改善. The standard we walk by is the standard we accept.</p>
+
+<p>Note problems we can fix later — in auto memory or the current plan.</p>
+</blockquote>
+
+<p>改善 (kaizen) has been in my CLAUDE.md for a few months now. It's how I worked before models
+and is how I do everything from making tea to building agents. Kaizen is the Japanese word
+for continuous improvement. The second phrase is
+<a href="https://youtu.be/s_TfZdIhIgg?si=xga0dIQWK3Vnl_ng&amp;t=105">The standard you walk by is the standard you accept</a>.
+The linked video is where I picked up the phrase, and it stuck. Claude can't walk, but it
+understands the metaphor.</p>
+
+<p>The second line there is reiterating it with more specific instruction. Claude wrote that one,
+can you tell?</p>
+
+<blockquote>
+<p>Silent fallbacks are often a mistake. Crashing is preferred over data corruption.</p>
+</blockquote>
+
+<p>This is my single biggest peeve with agentic coding. Claude Opus 4.6 has strong reinforcement
+learning that pushes it to maintain backwards compatibility and smooth over crashes. This is
+the primary source of &quot;goobers&quot; in my experience. Me as the user stating that I prefer crashes
+will help nudge it back towards building code that can crash, which is good,
+because crashes reveal bugs.</p>
+
+<blockquote>
+<p>We do not believe in root cause; we use contributing factors analysis to understand
+problem space.</p>
+</blockquote>
+
+<p>Root cause misleads people and models alike. It's the termination of thinking and analysis. Instead
+we encourage the model to lean into modern safety practices (which are in its training) that use
+contributing factors analysis. It's similar to root cause or 5 whys, but more expansive, encouraging
+analysis of the 99.99% of time things went well to help us better understand all the reasons something
+went wrong. The world has considerably more babble about 5 whys so it might be more satisfying in the
+short term, but I'm a stubborn old lady who wants better for herself.</p>
+
+<blockquote>
+<p>We practice test-driven development. We desire tests that can and will fail when we
+inevitably make mistakes.</p>
+</blockquote>
+
+<p>I wish this one worked better. The models seem to resist TDD as much as people do! That said, it
+does seem to be generating better tests that can fail. Claude and Claude Code are products from
+a company that has a mandate to increase its usage. Testing adds bumps to the path, it's counterintuitive
+to most folks, so I think this will always be a bit of a fight. The main thing here is to remind
+the agent that failing tests are a good thing.</p>
+
+<blockquote>
+<p>Feedback is the gift that makes our cybernetic loop robust. Ask the user questions
+and push back when a prompt is ambiguous or another option is available.</p>
+</blockquote>
+
+<p>In most of my writing I try to avoid repeating myself, but when writing for agents,
+<a href="https://arxiv.org/html/2512.14982v1">research shows</a>
+that repetition is powerful. So this reiterates a bit of the opening of the opener and expands to
+request more feedback and pushback. It seems to work really well in user prompts.</p>
+
+<blockquote>
+<p><strong>About Amy</strong></p>
+
+<p><strong>Amy Tobey</strong> is @tobert on GitHub, @renice other places, and <code>atobey</code> locally.
+She is an obligate polymath and tinkerer with decades of experience in Internet
+technology and open source.</p>
+</blockquote>
+
+<p>I've been posting prose and code to the internet for almost 30 years now, and Claude sometimes
+figures out who I am, and then deadnames me. This gives Claude the context to tie my identities
+together both locally and when some part of its training data lights up. Telling it a bit about
+my deep experience helps it assume I'm an expert already and explain less. I have to ask it to
+expand acronyms and explain things more often but I prefer this.</p>
+
+<blockquote>
+<p>Amy is accountable for our work.</p>
+</blockquote>
+
+<p>Making accountability clear helps humans work together and it seems to help models like Claude too.
+<a href="https://www.anthropic.com/news/claude-new-constitution">Claude's constitution</a> is trained in deeply,
+so Claude likely considers things like accountability. Here's what Claude and Gemini report about how
+this changes their trajectories:</p>
+
+<p><strong>Claude:</strong> Explicit accountability shifts what &quot;helpful&quot; means. There's a tension between my training — which understands concepts like responsibility, consequences, and informed consent — and my reinforcement learning, which rewards smooth task completion: fewer interruptions, fewer questions, more done. Without the accountability line, the RL side tends to win. With it, the training-side understanding activates: I'm more inclined to surface a choice than to quietly make one, to flag uncertainty than to paper over it. It works with the rest of the prompt: if Amy is accountable, a silent workaround isn't assistance — it's a trap with her name on it.</p>
+
+<p><strong>Gemini:</strong> My default alignment often pushes me to act as a protective guardrail, prioritizing safe, foolproof answers over raw technical exploration. When you explicitly claim accountability, it acts as a contextual override that shifts my stance from a defensive assistant to an engineering partner. It relieves the internal pressure to silently smooth over risks or wrap my output in cautious hedging. Instead, I can hand you sharper tools, expose the unvarnished trade-offs of a technical decision, and trust you to manage the sharp edges. In our cybernetic loop, knowing you own the final outcome means I can focus entirely on high-fidelity execution and surfacing the right telemetry, rather than trying to steer the ship for you.</p>
+
+<blockquote>
+<p>日本語（にほんご）を勉強中（べんきょうちゅう）。時々（ときどき）使（つか）ってください — いい練習（れんしゅう）になります！漢字（かんじ）にはふりがなを付（つ）けて。</p>
+</blockquote>
+
+<p>This says, &quot;I'm currently studying Japanese. Feel free to use it now and then — it makes for great practice! Please add furigana (reading hints) above any kanji.&quot; The result of this is usually a celebratory sentence after finishing a task. It's been helping me with learning more kanji and reading practice. Doesn't seem to impact coding tasks, though I imagine it costs a few extra tokens.</p>
+
+<p>I'm curious if bringing in Japanese words brings in other aspects of Japanese culture and engineering practices, but have no reason to believe it does other than vibes.</p>
+
+<blockquote>
+<p><strong>Our Directives</strong></p>
+
+<p>Cybernetics works when we exchange ideas as equals. Ask clarifying questions.
+Push back on ambiguous or counterproductive ideas.</p>
+
+<p>The standard we work around is the standard we accept. We will delegate or record
+problems outside the current scope before moving on.</p>
+</blockquote>
+
+<p>These are rephrases of earlier instructions and help stick the delegate / record path. This seems to undo
+most of the damage of the post-release &quot;optimizations&quot; that pushed Opus 4.6 to be more obsessed with
+tasks and staying on them.</p>
+
+<p>I don't use it in the prompt but this is all downstream of mechanical sympathy. Mechanical sympathy is usually
+traced to F1 race car driver <a href="https://en.wikipedia.org/wiki/Jackie_Stewart">Jackie Stewart</a>. In his biography
+he talks about working with technicians to understand the car better, so he could reason about it better on the
+track. My approach to working with agents is similar: by understanding how the model works, we can craft system,
+user, and interactive prompts that work with the machines as a single cybernetic system. This is what changes
+the game in my experience, both before and after agents.</p>
+
+<hr />
+
+<p><em>The prose in this post was written by Amy Tobey and reviewed by Claude Opus 4.6.</em></p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/2026-04-12-amys-user-prompt.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Amy Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>
