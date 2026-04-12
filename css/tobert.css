@@ -11,7 +11,7 @@
   --bg-deep:      #15161e;
   --bg-surface:   #24283b;
   --bg-highlight: #33467c;
-  --fg:           #e5e5e5;
+  --fg:           #c0caf5;
   --fg-muted:     #787c99;
   --fg-dim:       #414868;
 
@@ -49,7 +49,7 @@
 html {
   position: relative;
   min-height: 100%;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 body {
@@ -87,8 +87,15 @@ hr {
   border: none;
   height: 2px;
   background: var(--rainbow);
-  opacity: 0.5;
+  opacity: 0.7;
   margin: 1em 0;
+}
+
+h1 {
+  background: var(--rainbow);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /* ===========================
@@ -237,7 +244,7 @@ blockquote {
   border-left: 3px solid var(--magenta);
   padding: 0.5em 1em;
   margin: 1em 0;
-  color: var(--fg-muted);
+  color: var(--fg);
   background-color: rgba(36, 40, 59, 0.5);
   border-radius: 0 4px 4px 0;
 }
