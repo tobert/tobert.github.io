@@ -7,10 +7,28 @@
 	<link>https://tobert.github.io/rss.xml</link>
     <language>en-us</language>
     <author>Amy Tobey</author>
-	<pubDate>2026-04-12</pubDate>
-	<lastBuildDate>2026-04-12</lastBuildDate>
+	<pubDate>2026-07-13</pubDate>
+	<lastBuildDate>2026-07-15</lastBuildDate>
 	<generator>build-blog.go</generator>
 	
+    
+    <item>
+      <title>The Endgame of SRE</title>
+	  <link>https://tobert.github.io/post/2026-07-13-endgame-of-sre-rust.html</link>
+      <pubDate>Mon, 13 Jul 2026 23:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>2026-07-13-endgame-of-sre-rust</guid>
+	  <description>The Endgaame of SRE port to Rust from RPGMaker</description>
+    </item>
+    
+    <item>
+      <title></title>
+	  <link>https://tobert.github.io/post/2026-06-24-issues-devlog-signoff-md.html</link>
+      <pubDate>Wed, 24 Jun 2026 21:00:00 UTC</pubDate>
+      <author>Amy Tobey</author>
+      <guid>2026-06-24-issues-devlog-signoff-md</guid>
+	  <description>Using signoff.md, issues.md, and devlog.md to organize agent workflow and share it.</description>
+    </item>
     
     <item>
       <title>A Breakdown of Amy&#39;s User Prompt</title>

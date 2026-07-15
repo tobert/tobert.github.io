@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="description" content="The Endgaame of SRE port to Rust from RPGMaker">
+    <meta name="keywords" content="sre, rust, bevy, srecon, ">
+    <meta property="article:published_time" content="2026-07-13"/>
+    <meta property="article:modified_time" content="2026-07-13"/>
+
+    <title>The Endgame of SRE</title>
+    <link rel="canonical" href="https://tobert.github.io/post/2026-07-13-endgame-of-sre-rust.html">
+    <link href="https://tobert.github.io/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />
+    <link href="https://bsky.app/profile/renice.bsky.social" rel="me" />
+    <link href="https://hachyderm.io/@renice" rel="me" />
+    <link rel="icon" type="image/png" href="https://tobert.github.io/images/amy-favicon.png">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/tobert.css">
+    
+  </head>
+<body>
+
+<a href="#content" class="sr-only">Skip to main content</a>
+
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Amy Writes</a>
+    </div>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <b class="caret"></b></a>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="page_menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1"
+								href="/pages/als-cassandra-21-tuning-guide.html">Cassandra 2.1 Tuning Guide</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/pages/japanese-tech-terms.html">Japanese Technical Terms</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Follow <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="https://bsky.app/profile/renice.bsky.social">🦋 @renice.bsky.social</a></li>
+              <li><a href="https://hachyderm.io/@renice"><i class="fa-brands fa-mastodon"></i> @renice@hachyderm.io</a></li>
+              <li><a href="https://github.com/tobert"><i class="fa-brands fa-github"></i> tobert</a></li>
+              <li><a href="/rss.xml"><i class="fa-solid fa-rss"></i> RSS</a></li>
+            </ul>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/about.html">About</a></li>
+        <li><a href="https://github.com/tobert/tobert.github.io/edit/master/src/post/2026-07-13-endgame-of-sre-rust.md">Edit</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+<!-- end of header.html -->
+<!-- begin container-top -->
+<div class="container">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <hr/>
+      <h1 style="display: inline;">The Endgame of SRE</h1>
+      <span class="pull-right social-links">
+        <a href="https://bsky.app/profile/renice.bsky.social" title="Bluesky">🦋 renice</a>
+        <a href="https://hachyderm.io/@renice" title="Mastodon"><i class="fa-brands fa-mastodon"></i> renice</a>
+        <a href="https://github.com/tobert" title="GitHub"><i class="fa-brands fa-github"></i> tobert</a>
+      </span>
+      <hr/>
+      <br/>
+    </div>
+  </div>
+
+<!-- end container-top -->
+<p>A few years ago I wrote a talk for <a href="https://qconsf.com/speakers/amytobey">QCon SF 2022</a> and
+<a href="https://www.usenix.org/conference/srecon23americas/presentation/tobey">SREcon23 Americas</a>
+that sought to weave resilience engineering concepts together with the realities of software engineering. The usual rule
+I have for a great talk is to hammer one topic home and have maybe one or two more ideas go along with it. This talk
+wanted to touch on dozens of things, and really, that network of things (psychological safety, incidents,
+production pressure, communication issues, service level objectives, etc.) is the one big thing I wanted people
+to take away. Here's the abstract:</p>
+
+<blockquote>
+<p>The containers are deployed and the builds are green. Yaml flows through the system, linted, reviewed, tested, and shipped with ease and regularity. Our intrepid SRE finds themself at a crossroads. The infrastructure is great but teams still struggle to maintain error budgets. These developers need help, and it doesn't seem like anyone else is coming to help them. We embark on a journey, to find out where resilience exists and how to make more. Join Amy on an epic quest into sociotechnical thinking, exploring ways SREs can impact reliability at scale beyond the bits and bytes that got us this far.</p>
+</blockquote>
+
+<p>Or, more succinctly:</p>
+
+<p><img src="/images/bluesky-sarahofswords-sre-game-2026-07-13.png" alt="Bluesky post from Sarah M., @sarahofswords.bsky.social: quote, SRE game: an overlap where Shadowrun meets Stardew Valley. fox decker with an eyepatch is waiting to hackety-hack." /></p>
+
+<p>Slides were not going to work for this. I've done several alternate presentation formats in the past, and it felt like
+it was time to try an idea I've kicked around for years: what if I present using a JRPG? I picked up
+<a href="https://store.steampowered.com/app/1096900/RPG_Maker_MZ/">RPGMaker MZ</a>
+to do a proof of concept along with the lovely <a href="https://visustella.itch.io/visumz-sample">VisuStella MZ Sample Game Project</a>
+to get started. RPGMaker MZ is amazing for prototyping, so I had something workable within an hour. The SREcon
+talk is on <a href="https://www.youtube.com/watch?v=BEs6j-BOl20">YouTube</a> if you want to see how I presented it.</p>
+
+<p>Life happened and I got distracted and never packaged the game in a way that I could share. I was really
+enjoying Claude Opus 4.6 in late 2025, and had it start on a port of the game to Rust and <a href="https://bevy.org">Bevy</a>.
+I had Claude try to do the port fairly hands off, and got some sprites on screen,
+but progress was slow so I set it aside for a while. More recently, I've been using Fable 5 more
+and decided to have it try to do better, and rapidly got it to a more recognizable but glitched state, then
+chipped away at that with Fable doing big hunks of work largely on its own. Once it was running well
+on Linux I sent another Fable off to get it compiling to wasm and loading in a web page so I could do
+this post. I checked in on it a few times as it worked but didn't have to interrupt or aid it until
+the final check.</p>
+
+<p>After a couple days of iteration, I am pleased to present The Endgame of SRE, the Rust rewrite. If your
+browser supports it, you'll see the game below here. Click into it so it gets your keyboard, then walk
+around using arrow keys, and the <code>e</code> key to interact with NPCs and the items in the inn. <code>escape</code> will
+get you out of a conversation. The final retrospective is an interaction with the table just inside
+the inn door. The NPCs there will repeat their prior lines as they are just copies.</p>
+
+<div style="position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 1em 0;">
+<iframe src="/sregame/" title="The Endgame of SRE"
+        style="position: absolute; inset: 0; width: 100%; height: 100%; border: 2px solid #444; border-radius: 4px;"
+        allow="fullscreen" loading="lazy"></iframe>
+</div>
+
+<p>You may also <a href="/sregame/">play it fullscreen</a>.</p>
+
+<p>Enjoy :)</p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://github.com/tobert/sregame">github.com/tobert/sregame</a></li>
+<li><a href="https://github.com/StarArawn/bevy_ecs_tilemap">bevy_ecs_tilemap</a>, <code>atlas</code> mode on web (WebGL2 has no texture arrays)</li>
+<li>Python converter ports RPGMaker's own autotile-decode algorithm; maps baked to plain PNG atlases at build time</li>
+<li>map data embedded at compile time (no filesystem in browsers); ~8MB gzipped wasm + pixel art</li>
+<li>art: Visustella Fantasy Tiles MZ, licensed for reuse</li>
+</ul>
+
+<h2>Screenshots</h2>
+
+<p><img src="/images/sregame-town-plaza-2026-07-13.png" alt="Overhead pixel-art view of the Town of Endgame: Amy's player character stands at the edge of a terracotta-brick plaza ringed by stone paths, lamp posts, flowering trees, and a lily pond. A wild-haired NPC waits on the path nearby, and a blue-roofed brick storefront anchors the east side of the square." /></p>
+
+<p><img src="/images/sregame-inn-sign-2026-07-13.png" alt="The town inn, a broad orange-roofed building with a wooden sign reading INN hanging over its door. A black-and-tan doggo stands in the grass out front, and stone paths wind past a well and picket fences toward the plaza." /></p>
+
+<p><img src="/images/sregame-paws-alljohn-sres-2026-07-13.png" alt="A dialogue box covers the lower third of the screen at presentation scale: a large portrait of Paws Alljohn, a wizened cyberpunk character with white hair and a gold-armored visor, beside his line: Haha not really. These folks have the best SREs and infrastructure money can buy, and they still have incidents! Behind the box, the town square with NPCs on the flowered paths." /></p>
+
+<p><img src="/images/sregame-disconnect-storefront-2026-07-13.png" alt="Amy's character stands outside Team Disconnect's brick storefront beside a wolf-headed NPC in blue armor. A wooden plaque with a coin purse hangs on the blue-shingled roof above the heavy wooden door, with pumpkin and lily planters flanking the entrance and an autumn orchard rising behind." /></p>
+
+<p><img src="/images/sregame-managear-greg-2026-07-13.png" alt="Inside Team Disconnect: two wood-paneled shop rooms with bookshelves, a crystal ball on a red-draped table, and boots and armor on display shelves. Amy stands face to face with Managear Greg, an NPC in a goggled aviator helmet, in the central hallway. His dialogue box reads: My people work so hard and it feels like we just cant win. I really hope this retro will help." /></p>
+</div><!-- container-bottom -->
+<!-- begin footer.html -->
+<footer class="footer">
+  <hr style="padding: 1em;"/>
+  <div id="footer" class="container">
+    <div class="row">
+      <div class="col-sm-6">
+        <a style="padding-left: 1em;" href="https://github.com/tobert/tobert.github.io/commits/master/src/post/2026-07-13-endgame-of-sre-rust.md">ChangeLog</a>
+      </div>
+      <div class="col-sm-6">
+        <span class="pull-right" style="padding-right: 1em;">By: <a href="/about.html">Amy Tobey</a></span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+</body>
+</html>

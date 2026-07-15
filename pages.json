@@ -1,5 +1,57 @@
 [
   {
+    "Id": "2026-07-13-endgame-of-sre-rust",
+    "Title": "The Endgame of SRE",
+    "Abstract": "The Endgaame of SRE port to Rust from RPGMaker",
+    "Tags": [
+      "sre",
+      "rust",
+      "bevy",
+      "srecon"
+    ],
+    "PubDate": "2026-07-13T23:00:00Z",
+    "Head": "",
+    "Date": "2026-07-13T23:00:00Z",
+    "AutoIdx": true,
+    "Script": "",
+    "SrcPath": "/home/atobey/src/tobert.github.io/src/post/2026-07-13-endgame-of-sre-rust.md",
+    "SrcRel": "/post/2026-07-13-endgame-of-sre-rust.md",
+    "PubPath": "/home/atobey/src/tobert.github.io/post/2026-07-13-endgame-of-sre-rust.html",
+    "PubRel": "/post/2026-07-13-endgame-of-sre-rust.html",
+    "PubFull": "https://tobert.github.io/post/2026-07-13-endgame-of-sre-rust.html",
+    "Dir": "post",
+    "Type": "md",
+    "SyntaxHl": false
+  },
+  {
+    "Id": "2026-06-24-issues-devlog-signoff-md",
+    "Title": "",
+    "Abstract": "Using signoff.md, issues.md, and devlog.md to organize agent workflow and share it.",
+    "Tags": [
+      "kaibo",
+      "kaish",
+      "software engineering",
+      "agentic engineering",
+      "claude",
+      "agents",
+      "context engineering",
+      "kaizen"
+    ],
+    "PubDate": "2026-06-24T21:00:00Z",
+    "Head": "",
+    "Date": "2026-06-24T21:00:00Z",
+    "AutoIdx": true,
+    "Script": "",
+    "SrcPath": "/home/atobey/src/tobert.github.io/src/post/2026-06-24-working-notes.md",
+    "SrcRel": "/post/2026-06-24-working-notes.md",
+    "PubPath": "/home/atobey/src/tobert.github.io/post/2026-06-24-issues-devlog-signoff-md.html",
+    "PubRel": "/post/2026-06-24-issues-devlog-signoff-md.html",
+    "PubFull": "https://tobert.github.io/post/2026-06-24-issues-devlog-signoff-md.html",
+    "Dir": "post",
+    "Type": "md",
+    "SyntaxHl": false
+  },
+  {
     "Id": "2026-04-12-amys-user-prompt",
     "Title": "A Breakdown of Amy's User Prompt",
     "Abstract": "A breakdown of the user-level prompt I use with Claude Code, covering cybernetics, kaizen, TDD, and mechanical sympathy.",
