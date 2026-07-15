@@ -40,10 +40,12 @@ this post. I checked in on it a few times as it worked but didn't have to interr
 the final check.
 
 After a couple days of iteration, I am pleased to present The Endgame of SRE, the Rust rewrite. If your
-browser supports it, you'll see the game below here. Click into it so it gets your keyboard, then walk
-around using arrow keys, and the `e` key to interact with NPCs and the items in the inn. `escape` will
-get you out of a conversation. The final retrospective is an interaction with the table just inside
-the inn door. The NPCs there will repeat their prior lines as they are just copies.
+browser supports it, you'll see the game below here.
+
+`Click into it` so it gets your keyboard, then walk around using `arrow keys`, and the `e` key to interact
+with NPCs and the items in the inn. `escape` will get you out of a conversation. The final retrospective
+is an interaction with the table just inside the inn door. The NPCs there will repeat their prior
+lines as they are just copies.
 
 <div style="position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 1em 0;">
 <iframe src="/sregame/" title="The Endgame of SRE"
