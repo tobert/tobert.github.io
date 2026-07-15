@@ -11,6 +11,15 @@
     {{ with .Page.Date }}<meta property="article:published_time" content="{{ .Format "2006-01-02" }}"/>{{ end }}
     {{ with .Page.Date }}<meta property="article:modified_time" content="{{ .Format "2006-01-02" }}"/>{{ end }}
 
+    <meta property="og:site_name" content="Amy Writes">
+    <meta property="og:title" content="{{ .Page.Title |html }}">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="{{ .Config.BaseURL }}{{ .Page.PubRel }}">
+    {{ with .Page.Abstract }}<meta property="og:description" content="{{ . |html }}">{{ end }}
+    {{ with .Page.Image }}<meta property="og:image" content="{{ $.Config.BaseURL }}{{ . }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ $.Config.BaseURL }}{{ . }}">{{ end }}
+
     <title>{{ .Page.Title |html }}</title>
     <link rel="canonical" href="{{ .Config.BaseURL }}{{ .Page.PubRel }}">
     <link href="{{ .Config.BaseURL }}/rss.xml" rel="alternate" type="application/rss+xml" title="Amy Writes" />

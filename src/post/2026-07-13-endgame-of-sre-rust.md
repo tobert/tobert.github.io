@@ -1,8 +1,9 @@
 ---
 id: "2026-07-13-endgame-of-sre-rust"
 title: "The Endgame of SRE"
-abstract: "The Endgaame of SRE port to Rust from RPGMaker"
+abstract: "The Endgame of SRE port to Rust from RPGMaker"
 tags: ["sre", "rust", "bevy", "srecon"]
+image: "/images/sregame-town-plaza-2026-07-13.png"
 pubdate: 2026-07-13T23:00:00Z
 autoidx: true
 ---

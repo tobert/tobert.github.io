@@ -58,6 +58,7 @@ type Page struct {
 	Id       string    // why-i-wrote-slobber, used to generate permalinks
 	Title    string    // <title>{{ .Title }}</title>
 	Abstract string    // A quick overview of the post for RSS
+	Image    string    // site-relative path to a social preview image, e.g. /images/foo.png
 	Tags     []string  // ["slobber", "golang"]
 	PubDate  string    // the string value, will be converted to Date after
 	Head     string    // additional <head> info (e.g. CSS)

@@ -2,7 +2,8 @@
   {
     "Id": "2026-07-13-endgame-of-sre-rust",
     "Title": "The Endgame of SRE",
-    "Abstract": "The Endgaame of SRE port to Rust from RPGMaker",
+    "Abstract": "The Endgame of SRE port to Rust from RPGMaker",
+    "Image": "/images/sregame-town-plaza-2026-07-13.png",
     "Tags": [
       "sre",
       "rust",
@@ -27,6 +28,7 @@
     "Id": "2026-04-12-amys-user-prompt",
     "Title": "A Breakdown of Amy's User Prompt",
     "Abstract": "A breakdown of the user-level prompt I use with Claude Code, covering cybernetics, kaizen, TDD, and mechanical sympathy.",
+    "Image": "",
     "Tags": [
       "claude",
       "agents",
@@ -52,6 +54,7 @@
     "Id": "2026-02-12-building-kaish",
     "Title": "Building kaish",
     "Abstract": "Looking back at building a shell for agents. 217 commits, 109 Claude sessions, and the messy reality of human-agent collaboration.",
+    "Image": "",
     "Tags": [
       "rust",
       "claude",
@@ -79,6 +82,7 @@
     "Id": "2025-12-30-building-sshwarma",
     "Title": "Building sshwarma",
     "Abstract": "How a rambling prompt became 15,000 lines of Rust and Lua in six days.",
+    "Image": "",
     "Tags": [
       "rust",
       "claude",
@@ -106,6 +110,7 @@
     "Id": "bevy-windows-wsl2",
     "Title": "TL;DR: Bevy Windows Wsl2",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "bevy",
       "windows",
@@ -129,6 +134,7 @@
     "Id": "btrfs-swapfile-setup",
     "Title": "TL;DR: Btrfs Swapfile Setup",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "btrfs",
       "swapfile",
@@ -152,6 +158,7 @@
     "Id": "als-cassandra-21-tuning-guide",
     "Title": "Amy's Cassandra 2.1 tuning guide",
     "Abstract": "Amy's Cassandra 2.1 tuning guide",
+    "Image": "",
     "Tags": [
       "tuning",
       "technical",
@@ -176,6 +183,7 @@
     "Id": "packaging",
     "Title": "Packaging for the Cassandra Ecosystem",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "cassandra",
       "datastax",
@@ -200,6 +208,7 @@
     "Id": "sitemap",
     "Title": "Sitemap",
     "Abstract": "sitemap",
+    "Image": "",
     "Tags": [],
     "PubDate": "2015-02-25T00:00:00Z",
     "Head": "\u003clink type=\"text/css\" rel=\"stylesheet\" href=\"/css/sitemap.css\"\u003e",
@@ -219,6 +228,7 @@
     "Id": "cassandra-java-huge-pages",
     "Title": "TL;DR: Cassandra Java Huge Pages",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "cassandra",
       "java",
@@ -243,6 +253,7 @@
     "Id": "2015-01-22-ioping",
     "Title": "ioping",
     "Abstract": "using ioping to observe storage latency",
+    "Image": "",
     "Tags": [
       "performance",
       "ioping",
@@ -268,6 +279,7 @@
     "Id": "dragon-age-inquisition-review",
     "Title": "TL;DR: Dragon Age Inquisition Review",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "dragon",
       "age",
@@ -292,6 +304,7 @@
     "Id": "isolcpus-workstation-experiment-gkrellm-screenshots",
     "Title": "TL;DR: Isolcpus Workstation Experiment Gkrellm Screenshots",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "isolcpus",
       "workstation",
@@ -317,6 +330,7 @@
     "Id": "my-blog-development-script",
     "Title": "TL;DR: My Blog Development Script",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "my",
       "blog",
@@ -341,6 +355,7 @@
     "Id": "xperia-z3-mtp-linux",
     "Title": "TL;DR: Xperia Z3 Mtp Linux",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "xperia",
       "z3",
@@ -365,6 +380,7 @@
     "Id": "tldr",
     "Title": "TL;DR: Tldr",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "tldr"
     ],
@@ -386,6 +402,7 @@
     "Id": "2014-11-13-slides-disk-latency-and-other-random-numbers",
     "Title": "Slides: Disk Latency and Other Random Numbers",
     "Abstract": "slides from the South Bay Cassandra Users meetup, Disk Latency and Other Random Numbers",
+    "Image": "",
     "Tags": [
       "cassandra",
       "hard drives",
@@ -410,6 +427,7 @@
     "Id": "2014-11-12-docker-entrypoints",
     "Title": "Docker Entrypoints and the UX of Containers",
     "Abstract": "Docker entrypoints provide an opportunity to give your users a better UX than they would have without Docker",
+    "Image": "",
     "Tags": [
       "docker",
       "cassandra",
@@ -434,6 +452,7 @@
     "Id": "2014-09-25-adhd",
     "Title": "ADHD",
     "Abstract": "My experience with ADHD so far.",
+    "Image": "",
     "Tags": [
       "adhd",
       "personal"
@@ -456,6 +475,7 @@
     "Id": "2014-08-11-f7u12-part1",
     "Title": "F7U12: The Demo (1/3) Implementing 2048",
     "Abstract": "A post-show overview of the F7U12 demo application and how it was built.",
+    "Image": "",
     "Tags": [
       "cassandra",
       "spark",
@@ -481,6 +501,7 @@
     "Id": "2014-07-15-installing-cassandra-spark-stack",
     "Title": "Installing the Cassandra / Spark OSS Stack",
     "Abstract": "An overview of the steps required to install the Apache Cassandra + Spark stack on Linux.",
+    "Image": "",
     "Tags": [
       "cassandra",
       "spark"
@@ -503,6 +524,7 @@
     "Id": "2014-07-14-portacluster-system-imaging",
     "Title": "Portacluster: System Imaging",
     "Abstract": "A simple PXE imaging setup for installing Arch Linux on my portable cluster",
+    "Image": "",
     "Tags": [
       "portacluster",
       "pxe",
@@ -531,6 +553,7 @@
     "Id": "2014-06-26-cassandra-and-docker",
     "Title": "Running Cassandra inside Docker",
     "Abstract": "Introduction to running Cassandra inside Docker.",
+    "Image": "",
     "Tags": [
       "docker",
       "cassandra"
@@ -553,6 +576,7 @@
     "Id": "2014-06-24-linux-defaults",
     "Title": "Improved default settings for Linux machines",
     "Abstract": "A quick overview of Linux settings I change on almost every machine I manage.",
+    "Image": "",
     "Tags": [
       "linux",
       "tuning"
@@ -575,6 +599,7 @@
     "Id": "2014-06-17-jbod-vs-raid",
     "Title": "JBOD vs RAID",
     "Abstract": "While waiting for a slow download, I decided to benchmark some JBOD and RAID configs.",
+    "Image": "",
     "Tags": [
       "fio",
       "storage",
@@ -599,6 +624,7 @@
     "Id": "2014-05-06-publishing-pcstat-binaries-on-github",
     "Title": "Publishing pcstat Binaries on Github",
     "Abstract": "How I publish pcstat binaries on Github without littering git's history with large binary objects.",
+    "Image": "",
     "Tags": [
       "golang",
       "github",
@@ -624,6 +650,7 @@
     "Id": "2014-04-29-a-quick-prototype",
     "Title": "A Quick Prototype",
     "Abstract": "A short story about hacking a prototype that is turning into an end-user tool.",
+    "Image": "",
     "Tags": [
       "fio",
       "effio",
@@ -648,6 +675,7 @@
     "Id": "2014-04-28-getting-started-with-fio",
     "Title": "Getting Started With Fio",
     "Abstract": "How to benchmark your storage with fio, the Flexible IO Tester",
+    "Image": "",
     "Tags": [
       "fio",
       "benchmark",
@@ -671,6 +699,7 @@
     "Id": "japanese-tech-terms",
     "Title": "Japanese Tech Terms",
     "Abstract": "A simple lookup table of Japanese/English technical terms.",
+    "Image": "",
     "Tags": [
       "japanese",
       "technical",
@@ -695,6 +724,7 @@
     "Id": "2014-04-17-fio-output-explained",
     "Title": "Fio Output Explained",
     "Abstract": "Fio packs a lot of information into its output. This is a section-by-section breakdown of what it's telling you.",
+    "Image": "",
     "Tags": [
       "fio",
       "benchmark",
@@ -718,6 +748,7 @@
     "Id": "2014-04-17-new-blog",
     "Title": "New Blog",
     "Abstract": "Sometimes you need a sharper tool.",
+    "Image": "",
     "Tags": [
       "blogging",
       "blogger",
@@ -741,6 +772,7 @@
     "Id": "index",
     "Title": "Amy Writes",
     "Abstract": "The Blog of Amy Tobey",
+    "Image": "",
     "Tags": [
       "altobey",
       "amytobey",
@@ -775,6 +807,7 @@
     "Id": "2014-03-29-benchmarking-disk-latency-setup",
     "Title": "Benchmarking Disk Latency: Setup",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2014-03-29T01:56:59-07:00",
     "Head": "",
@@ -794,6 +827,7 @@
     "Id": "2014-03-25-mirrored-fat32-efi-boot-partitions",
     "Title": "Mirrored FAT32 EFI Boot Partitions",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "efi",
       "arch",
@@ -818,6 +852,7 @@
     "Id": "2014-03-22-running-at-night",
     "Title": "Running at Night",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2014-03-22T01:52:58-07:00",
     "Head": "",
@@ -837,6 +872,7 @@
     "Id": "2014-03-19-primitive-tooling",
     "Title": "Primitive Tooling",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2014-03-19T20:54:14-07:00",
     "Head": "",
@@ -856,6 +892,7 @@
     "Id": "2014-03-10-open-source-video-production",
     "Title": "Open Source Video Production",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "opensource",
       "video editing",
@@ -880,6 +917,7 @@
     "Id": "2014-02-19-marriage-stuff",
     "Title": "Marriage Stuff",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2014-02-19T05:50:52-07:00",
     "Head": "",
@@ -899,6 +937,7 @@
     "Id": "2014-02-07-portacluster",
     "Title": "Portacluster",
     "Abstract": "Building a portable Cassandra cluster",
+    "Image": "",
     "Tags": [
       "cassandra",
       "portable",
@@ -923,6 +962,7 @@
     "Id": "2014-02-07-read-this-nao",
     "Title": "Read this NAO",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2014-02-07T20:27:59-07:00",
     "Head": "",
@@ -942,6 +982,7 @@
     "Id": "Japan-2014-02-07-2014",
     "Title": "日本2014訪問",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2014-02-07T00:37:29-07:00",
     "Head": "",
@@ -961,6 +1002,7 @@
     "Id": "2013-12-12-thermocouples-safe-silent-failures",
     "Title": "Thermocouples: safe \u0026 silent failures",
     "Abstract": "Learning about safety using appliances",
+    "Image": "",
     "Tags": [
       "safety",
       "hardware"
@@ -983,6 +1025,7 @@
     "Id": "2013-11-12-arch-linux-on-zfs",
     "Title": "Arch Linux on ZFS",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2013-11-12T22:12:48-07:00",
     "Head": "",
@@ -1002,6 +1045,7 @@
     "Id": "2013-11-06-foodfight",
     "Title": "Foodfight!",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2013-11-06T05:41:41-07:00",
     "Head": "",
@@ -1021,6 +1065,7 @@
     "Id": "2013-10-11-endurance-predation",
     "Title": "Endurance Predation",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "personal",
       "fitness",
@@ -1044,6 +1089,7 @@
     "Id": "2013-10-07-hello-again-world",
     "Title": "Hello (again) World",
     "Abstract": "",
+    "Image": "",
     "Tags": null,
     "PubDate": "2013-10-07T19:15:00-07:00",
     "Head": "",
@@ -1063,6 +1109,7 @@
     "Id": "2012-05-17-test-build-automation-with-btrfs",
     "Title": "Test \u0026 Build Automation with btrfs",
     "Abstract": "fast testing with btrfs",
+    "Image": "",
     "Tags": [
       "linux",
       "btrfs",
@@ -1087,6 +1134,7 @@
     "Id": "2011-07-21-new-experiment-language-choices",
     "Title": "New Experiment Language Choices",
     "Abstract": "Language choices",
+    "Image": "",
     "Tags": [
       "bespoke",
       "golang",
@@ -1113,6 +1161,7 @@
     "Id": "2011-09-21-over-breeding-culling-ec2-instances-for",
     "Title": "Over-breeding \u0026 Culling EC2 Instances for IO Performance",
     "Abstract": "Finding fast(er) instances in EC2",
+    "Image": "",
     "Tags": [
       "ec2",
       "performance",
@@ -1136,6 +1185,7 @@
     "Id": "2010-12-23-my-christmas-wish",
     "Title": "My Christmas Wish",
     "Abstract": "Secure your browsing experience please",
+    "Image": "",
     "Tags": [
       "chrome",
       "firefox",
@@ -1160,6 +1210,7 @@
     "Id": "2010-09-06-ride-report-2010-09-05",
     "Title": "Ride Report 2010-09-05",
     "Abstract": "Bicycle Commuting",
+    "Image": "",
     "Tags": [
       "bicycling",
       "commuting"
@@ -1182,6 +1233,7 @@
     "Id": "2010-08-12-blocking-ssh-attacks",
     "Title": "Blocking SSH Attacks",
     "Abstract": "Blocking SSH attacks with nothing but iptables",
+    "Image": "",
     "Tags": [
       "ssh",
       "iptables"
@@ -1204,6 +1256,7 @@
     "Id": "2008-04-06-virtualization-madness",
     "Title": "Virtualization Madness",
     "Abstract": "Virtualization Madness",
+    "Image": "",
     "Tags": [
       "redhat",
       "linux",
@@ -1233,6 +1286,7 @@
     "Id": "2007-09-07-xen-networking",
     "Title": "Xen Networking",
     "Abstract": "Xen Networking",
+    "Image": "",
     "Tags": [
       "redhat",
       "vlan",
@@ -1263,6 +1317,7 @@
     "Id": "2007-05-20-moving-sucks-can-i-have-amen",
     "Title": "Moving sucks.",
     "Abstract": "Moving sucks.",
+    "Image": "",
     "Tags": [
       "moving",
       "vstrom",
@@ -1291,6 +1346,7 @@
     "Id": "2007-04-04-new-job-new-city",
     "Title": "New Job, New City",
     "Abstract": "Moving West",
+    "Image": "",
     "Tags": [
       "interview",
       "job"
@@ -1313,6 +1369,7 @@
     "Id": "2007-02-27-hi-my-name-is-al-tobey",
     "Title": "First Post!",
     "Abstract": "Post from when I moved to Blogger",
+    "Image": "",
     "Tags": [
       "blogger",
       "first post",
@@ -1337,6 +1394,7 @@
     "Id": "2005-10-13-64-bit-perl-on-hp-ux-parisc-or-itanium",
     "Title": "64-bit perl on HP-UX (PARISC or Itanium)",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "64bit",
       "parisc",
@@ -1362,6 +1420,7 @@
     "Id": "2005-09-20-pdksh-5",
     "Title": "Building pdksh on HP-UX/Itanium",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "itanic",
       "ksh",
@@ -1389,6 +1448,7 @@
     "Id": "2004-07-01-i-hacked-root-tail-to-work-with",
     "Title": "root-tail on nautilus/kde/xfdesktop",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "desktop environments",
       "hacks",
@@ -1413,6 +1473,7 @@
     "Id": "2004-06-30-i-wrote-couple-snmp-plugins-for-nagios",
     "Title": "SNMP plugins for Nagios",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "snmp",
       "perl",
@@ -1436,6 +1497,7 @@
     "Id": "2003-12-02-here-is-drop-in-replacement-for-rajeev",
     "Title": "A shell implementation of bootprofile",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "redhat",
       "shell scripting",
@@ -1460,6 +1522,7 @@
     "Id": "rss",
     "Title": "Amy Writes: RSS",
     "Abstract": "RSS XML",
+    "Image": "",
     "Tags": [
       "altobey",
       "rss",
@@ -1483,6 +1546,7 @@
     "Id": "1970-01-01-NAME",
     "Title": "",
     "Abstract": "",
+    "Image": "",
     "Tags": [
       "cassandra"
     ],
@@ -1504,6 +1568,7 @@
     "Id": "lorem-ipsum",
     "Title": "Lorem Ipsum",
     "Abstract": "A fake post for testing purposes.",
+    "Image": "",
     "Tags": [
       "lorem ipsum",
       "testing"
@@ -1526,6 +1591,7 @@
     "Id": "about",
     "Title": "About Amy Tobey",
     "Abstract": "A blurb about Amy Tobey (that's me!).",
+    "Image": "",
     "Tags": [
       "altobey",
       "tobey",
