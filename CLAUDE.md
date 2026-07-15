@@ -6,6 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a bespoke static blog generator written in Go. It processes Markdown and HTML source files with YAML front matter into a static website hosted on GitHub Pages.
 
+## Writing for Amy
+
+Do not commit drafts you write for Amy. When she asks for a draft, produce
+an outline instead: the links, the images (write the alt text yourself),
+and all the structural scaffolding — Amy writes the prose.
+
 ## Build Commands
 
 ```bash
